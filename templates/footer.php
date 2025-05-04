@@ -64,51 +64,6 @@
     <!-- Custom JavaScript -->
     <script src="<?php echo SITE_URL; ?>/assets/js/main.js?v=<?php echo time(); ?>"></script>
     
-    <!-- Script para garantir que o menu mobile funcione corretamente -->
-    <script>
-    (function() {
-        // Garantir que o menu mobile funcione corretamente
-        document.addEventListener('DOMContentLoaded', function() {
-            const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-            const mainNav = document.getElementById('main-nav');
-            
-            if (mobileMenuToggle && mainNav) {
-                console.log('Menu mobile encontrado');
-                
-                mobileMenuToggle.addEventListener('click', function() {
-                    console.log('Botão de menu mobile clicado');
-                    mainNav.classList.toggle('active');
-                    
-                    // Alternar ícone entre hambúrguer e X
-                    const icon = this.querySelector('i');
-                    if (icon.classList.contains('fa-bars')) {
-                        icon.classList.remove('fa-bars');
-                        icon.classList.add('fa-times');
-                    } else {
-                        icon.classList.remove('fa-times');
-                        icon.classList.add('fa-bars');
-                    }
-                });
-                
-                // Fechar o menu mobile ao clicar em um link
-                const mobileNavLinks = mainNav.querySelectorAll('.nav-link');
-                mobileNavLinks.forEach(link => {
-                    link.addEventListener('click', function() {
-                        if (window.innerWidth <= 768) {
-                            mainNav.classList.remove('active');
-                            const icon = mobileMenuToggle.querySelector('i');
-                            icon.classList.remove('fa-times');
-                            icon.classList.add('fa-bars');
-                        }
-                    });
-                });
-            } else {
-                console.error('Menu mobile não encontrado');
-            }
-        });
-    })();
-    </script>
-    
     <!-- Script para o formulário de newsletter -->
     <script>
     document.addEventListener('DOMContentLoaded', function() {

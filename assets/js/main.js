@@ -26,8 +26,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const mainNav = document.getElementById('main-nav');
     
     if (mobileMenuToggle && mainNav) {
-        mobileMenuToggle.addEventListener('click', function() {
+        console.log('Menu mobile inicializado');
+        
+        // Garantir que o menu esteja inicialmente fechado em dispositivos móveis
+        if (window.innerWidth <= 768) {
+            mainNav.classList.remove('active');
+        }
+        
+        mobileMenuToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Botão de menu mobile clicado');
             mainNav.classList.toggle('active');
+            
             // Alternar ícone entre hambúrguer e X
             const icon = this.querySelector('i');
             if (icon.classList.contains('fa-bars')) {
@@ -46,10 +57,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (window.innerWidth <= 768) {
                     mainNav.classList.remove('active');
                     const icon = mobileMenuToggle.querySelector('i');
-                    icon.classList.remove('fa-times');
-                    icon.classList.add('fa-bars');
+                    if (icon) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
                 }
             });
+        });
+        
+        // Fechar o menu mobile ao clicar fora dele
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth <= 768 && mainNav.classList.contains('active')) {
+                if (!mainNav.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                    mainNav.classList.remove('active');
+                    const icon = mobileMenuToggle.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                }
+            }
         });
     }
     

@@ -210,6 +210,7 @@ a:hover {
     cursor: pointer;
     padding: 8px;
     z-index: 1001;
+    position: relative;
 }
 
 .nav-link {
@@ -376,8 +377,12 @@ a:hover {
         padding: 10px 15px;
     }
     
+    /* Exibir o botão de hambúrguer em telas pequenas */
     .mobile-menu-toggle {
-        display: block;
+        display: block !important;
+        position: absolute;
+        right: 15px;
+        top: 20px;
     }
     
     .nav {
@@ -391,7 +396,7 @@ a:hover {
         text-align: center;
         padding: 20px;
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-        transform: translateY(-150%); /* Aumentado para garantir que fique fora da tela */
+        transform: translateY(-150%);
         opacity: 0;
         visibility: hidden;
         transition: all 0.3s ease;
@@ -404,6 +409,12 @@ a:hover {
         transform: translateY(0);
         opacity: 1;
         visibility: visible;
+    }
+    
+    .nav-link {
+        display: block;
+        padding: 10px 0;
+        width: 100%;
     }
     
     .footer-container {

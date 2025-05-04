@@ -54,7 +54,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="<?php echo SITE_URL; ?>/assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo SITE_URL; ?>/assets/css/style.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="<?php echo SITE_URL; ?>/assets/css/home.css">
     <link rel="stylesheet" href="<?php echo SITE_URL; ?>/assets/css/vagas.css">
     <link rel="stylesheet" href="<?php echo SITE_URL; ?>/assets/css/layout-wide.css">
@@ -88,7 +88,7 @@
                     <img src="<?php echo SITE_URL; ?>/assets/images/logo_opentojob.svg" alt="OpenToJob" height="50">
                 </a>
             </div>
-            <button class="mobile-menu-toggle">
+            <button class="mobile-menu-toggle" aria-label="Menu" type="button">
                 <i class="fas fa-bars"></i>
             </button>
             <nav class="nav" id="main-nav">
