@@ -1,0 +1,44 @@
+/* OpenToJob - Estilos para layout mais amplo */
+
+/* Aumenta a largura máxima do container para corresponder ao menu */
+.container-wide {
+    width: 100%;
+    max-width: 1400px; /* Aumentado de 1200px para 1400px */
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Estilos específicos para cada página */
+
+/* Página inicial */
+.hero .container-wide .hero-content {
+    max-width: 600px; /* Ajustado para o novo layout */
+}
+
+/* Página de vagas */
+.jobs-container {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 30px;
+}
+
+/* Página de empresas */
+.empresa-card {
+    height: 100%;
+}
+
+/* Página de talentos */
+.talent-card {
+    height: 100%;
+}
+
+/* Responsividade */
+@media (max-width: 992px) {
+    .jobs-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .container-wide {
+        max-width: 100%;
+    }
+}

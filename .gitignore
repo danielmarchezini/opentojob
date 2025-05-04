@@ -1,0 +1,48 @@
+# Arquivos temporários e de diagnóstico
+*.log
+/cache/*
+/temp/*
+
+# Arquivos de configuração local
+/config/config.local.php
+
+# Scripts de criação/correção de tabelas
+adicionar_*.php
+adicionar_*.sql
+atualizar_*.sql
+corrigir_*.php
+corrigir_*.sql
+criar_*.php
+criar_*.sql
+verificar_*.php
+verificar_*.sql
+diagnostico_*.php
+debug_*.php
+temp_*.php
+testar_*.php
+teste_*.php
+limpar_*.php
+popular_*.php
+mapear_*.php
+importar_*.php
+executar_*.php
+instalar_*.php
+generate_*.php
+generate_*.html
+
+# Diretório de uploads (conteúdo)
+/uploads/*
+!/uploads/.htaccess
+!/uploads/perfil/
+/uploads/perfil/*
+!/uploads/perfil/.htaccess
+!/uploads/equipe/
+/uploads/equipe/*
+!/uploads/equipe/.htaccess
+
+# Dependências
+/vendor/
+
+# Arquivos específicos do ambiente
+.DS_Store
+Thumbs.db

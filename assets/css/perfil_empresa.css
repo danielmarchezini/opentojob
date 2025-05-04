@@ -1,0 +1,56 @@
+/* Estilos para a página de perfil da empresa */
+
+/* Cabeçalho do perfil */
+.section-perfil-empresa .card {
+    transition: all 0.3s ease;
+}
+
+.section-perfil-empresa .card:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.section-perfil-empresa .perfil-logo img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+}
+
+.section-perfil-empresa .logo-placeholder {
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    font-weight: bold;
+    margin: 0 auto;
+}
+
+/* Informações de contato */
+.section-perfil-empresa .flex-shrink-0 i {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Vagas */
+.section-perfil-empresa .card-title a {
+    color: #333;
+    text-decoration: none;
+}
+
+.section-perfil-empresa .card-title a:hover {
+    color: #007bff;
+}
+
+/* Responsividade */
+@media (max-width: 767px) {
+    .section-perfil-empresa .perfil-logo img,
+    .section-perfil-empresa .logo-placeholder {
+        width: 100px;
+        height: 100px;
+        font-size: 36px;
+    }
+}

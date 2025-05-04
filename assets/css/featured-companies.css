@@ -1,0 +1,46 @@
+/* Estilos para empresas em destaque */
+.featured-company-link {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.2s;
+    border-radius: 5px;
+}
+
+.featured-company-link:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+}
+
+.featured-company-item {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.featured-company-item:last-child {
+    border-bottom: none;
+}
+
+.featured-company-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    margin-right: 10px;
+    border-radius: 4px;
+}
+
+.featured-company-info {
+    flex: 1;
+}
+
+.featured-company-name {
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.featured-company-jobs {
+    font-size: 0.8rem;
+    color: #666;
+}

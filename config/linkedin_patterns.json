@@ -1,0 +1,15 @@
+{
+    "nome": "\/([^\\r\\n]+)(?=\\r|\\n|$)(?=.*?Especialista em Inova\u00e7\u00e3o)/s",
+    "profissao": "\/Especialista em Inova\u00e7\u00e3o e Tecnologia[^\\r\\n]*(?:\\r|\\n)(.*?)(?=\\r|\\n|Belo Horizonte)/s",
+    "telefone": "\/([0-9]{10,11})\\s*\\(Mobile\\)/",
+    "email": "\/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})\/",
+    "linkedin": "\/www\\.linkedin\\.com\\/in\\/[^\\s\\)]+(?:-[^\\s\\)]+)*/",
+    "website": "\/www\\.[^\\s\\)]+\\.(?:com|com\\.br|net|org)(?:\\.[a-z]{2})?/",
+    "resumo": "\/Resumo[^\\r\\n]*(?:\\r|\\n)(.*?)(?=\\r|\\n|Experi\u00eancia)/s",
+    "carta_apresentacao": "\/Resumo[^\\r\\n]*(?:\\r|\\n)(.*?)(?=\\r|\\n|Experi\u00eancia)/s",
+    "experiencia": "\/(?:fevereiro|mar\u00e7o|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro)\\s+de\\s+\\d{4}\\s+-\\s+(?:Present|janeiro|fevereiro|mar\u00e7o|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro)[^\\(]*\\(([0-9]+)\\s+anos?\\s+([0-9]+)?\\s*(?:m[eê]s(?:es)?)?\\)/",
+    "detalhes_experiencia": "\/Principais compet\u00eancias[^\\r\\n]*(?:\\r|\\n)(.*?)(?=Daniel Marchezini)/s",
+    "formacao": "\/Forma\u00e7\u00e3o acad\u00eamica[^\\r\\n]*(?:\\r|\\n)(.*?)(?=Page)/s",
+    "habilidades": "\/Principais compet\u00eancias[^\\r\\n]*(?:\\r|\\n)(.*?)(?=Daniel Marchezini)/s",
+    "idiomas": "\/Idiomas[^\\r\\n]*(?:\\r|\\n)(.*?)(?=\\r|\\n|$)/s"
+}

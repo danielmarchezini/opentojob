@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="60" viewBox="0 0 300 60">
+  <style>
+    .text-primary { fill: #2c3e50; }
+    .text-accent { fill: #3498db; }
+    .highlight { fill: #e74c3c; }
+  </style>
+  <g>
+    <text x="10" y="40" font-family="Arial, sans-serif" font-weight="bold" font-size="28" class="text-primary">Open</text>
+    <text x="85" y="40" font-family="Arial, sans-serif" font-weight="bold" font-size="28" class="text-accent">To</text>
+    <text x="120" y="40" font-family="Arial, sans-serif" font-weight="bold" font-size="28" class="text-primary">Job</text>
+    <circle cx="260" cy="30" r="10" class="highlight" />
+    <text x="10" y="55" font-family="Arial, sans-serif" font-size="10" class="text-primary">Conectando talentos prontos a oportunidades imediatas</text>
+  </g>
+</svg>

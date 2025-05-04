@@ -1,0 +1,16 @@
+<svg width="150" height="150" viewBox="-70 -70 140 140" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="0" cy="0" r="70" fill="#0077b6" />
+  <text x="0" y="15" font-family="Arial, sans-serif" font-size="38" font-weight="bold" fill="white" text-anchor="middle" dx="-25">O</text>
+  <text x="0" y="15" font-family="Arial, sans-serif" font-size="38" font-weight="bold" fill="#ff7f50" text-anchor="middle">B</text>
+  <text x="0" y="15" font-family="Arial, sans-serif" font-size="38" font-weight="bold" fill="white" text-anchor="middle" dx="25">J</text>
+  <!-- Pontos de conexão animados -->
+  <circle cx="-20" cy="35" r="3" fill="#ff7f50">
+    <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite" />
+  </circle>
+  <circle cx="0" cy="40" r="3" fill="#ff7f50">
+    <animate attributeName="opacity" values="1;0.3;1" dur="2s" begin="0.5s" repeatCount="indefinite" />
+  </circle>
+  <circle cx="20" cy="35" r="3" fill="#ff7f50">
+    <animate attributeName="opacity" values="1;0.3;1" dur="2s" begin="1s" repeatCount="indefinite" />
+  </circle>
+</svg>

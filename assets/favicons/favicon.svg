@@ -1,0 +1,10 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="16" cy="16" r="16" fill="#0077b6" />
+  <text x="16" y="20" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white" text-anchor="middle" dx="-8">O</text>
+  <text x="16" y="20" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ff7f50" text-anchor="middle">B</text>
+  <text x="16" y="20" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white" text-anchor="middle" dx="8">J</text>
+  <!-- Pontos de conexão -->
+  <circle cx="8" cy="24" r="2" fill="#ff7f50" />
+  <circle cx="16" cy="26" r="2" fill="#ff7f50" />
+  <circle cx="24" cy="24" r="2" fill="#ff7f50" />
+</svg>
