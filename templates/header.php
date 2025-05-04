@@ -87,7 +87,7 @@
                     <img src="<?php echo SITE_URL; ?>/assets/images/logo_opentojob.svg" alt="OpenToJob" height="50">
                 </a>
             </div>
-            <button class="mobile-menu-toggle d-md-none">
+            <button class="mobile-menu-toggle">
                 <i class="fas fa-bars"></i>
             </button>
             <nav class="nav" id="main-nav">

@@ -208,6 +208,8 @@ a:hover {
     color: white;
     font-size: 24px;
     cursor: pointer;
+    padding: 8px;
+    z-index: 1001;
 }
 
 .nav-link {
@@ -371,10 +373,11 @@ a:hover {
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
+        padding: 10px 15px;
     }
     
     .mobile-menu-toggle {
-        display: block;
+        display: block !important; /* Força a exibição do botão em dispositivos móveis */
     }
     
     .nav {
@@ -388,11 +391,13 @@ a:hover {
         text-align: center;
         padding: 20px;
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-        transform: translateY(-100%);
+        transform: translateY(-150%); /* Aumentado para garantir que fique fora da tela */
         opacity: 0;
         visibility: hidden;
         transition: all 0.3s ease;
         z-index: 999;
+        width: 100%;
+        height: auto;
     }
     
     .nav.active {
