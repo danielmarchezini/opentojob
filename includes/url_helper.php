@@ -12,6 +12,7 @@
  */
 function url($route = 'inicio', $params = []) {
     // Verificar se estamos usando URLs amigáveis
+    // As regras de reescrita já estão configuradas no servidor
     $use_friendly_urls = true;
     
     // Obter URL base do site
