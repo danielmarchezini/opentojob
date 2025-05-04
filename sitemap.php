@@ -12,7 +12,7 @@ require_once 'includes/Database.php';
 // Definir cabeçalho XML
 header('Content-Type: application/xml; charset=utf-8');
 
-// Iniciar XML
+// Iniciar XML - Usar echo diretamente sem buffer para evitar problemas
 echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
 echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . PHP_EOL;
 
@@ -22,13 +22,13 @@ $db = Database::getInstance();
 // Adicionar URLs estáticas
 $static_urls = [
     ['loc' => SITE_URL . '/', 'priority' => '1.0', 'changefreq' => 'daily'],
-    ['loc' => SITE_URL . '/?route=sobre', 'priority' => '0.8', 'changefreq' => 'monthly'],
-    ['loc' => SITE_URL . '/?route=contato', 'priority' => '0.8', 'changefreq' => 'monthly'],
-    ['loc' => SITE_URL . '/?route=vagas', 'priority' => '0.9', 'changefreq' => 'daily'],
-    ['loc' => SITE_URL . '/?route=talentos', 'priority' => '0.9', 'changefreq' => 'daily'],
-    ['loc' => SITE_URL . '/?route=entrar', 'priority' => '0.7', 'changefreq' => 'monthly'],
-    ['loc' => SITE_URL . '/?route=cadastrar', 'priority' => '0.7', 'changefreq' => 'monthly'],
-    ['loc' => SITE_URL . '/?route=blog', 'priority' => '0.8', 'changefreq' => 'weekly'],
+    ['loc' => SITE_URL . '/sobre', 'priority' => '0.8', 'changefreq' => 'monthly'],
+    ['loc' => SITE_URL . '/contato', 'priority' => '0.8', 'changefreq' => 'monthly'],
+    ['loc' => SITE_URL . '/vagas', 'priority' => '0.9', 'changefreq' => 'daily'],
+    ['loc' => SITE_URL . '/talentos', 'priority' => '0.9', 'changefreq' => 'daily'],
+    ['loc' => SITE_URL . '/entrar', 'priority' => '0.7', 'changefreq' => 'monthly'],
+    ['loc' => SITE_URL . '/cadastrar', 'priority' => '0.7', 'changefreq' => 'monthly'],
+    ['loc' => SITE_URL . '/blog', 'priority' => '0.8', 'changefreq' => 'weekly'],
 ];
 
 foreach ($static_urls as $url) {
@@ -53,7 +53,7 @@ try {
         $lastmod = date('Y-m-d', strtotime($data));
         
         echo "\t<url>" . PHP_EOL;
-        echo "\t\t<loc>" . htmlspecialchars(SITE_URL . "/?route=vaga&slug=" . $vaga['slug']) . "</loc>" . PHP_EOL;
+        echo "\t\t<loc>" . htmlspecialchars(SITE_URL . "/vaga/" . $vaga['slug']) . "</loc>" . PHP_EOL;
         echo "\t\t<lastmod>" . $lastmod . "</lastmod>" . PHP_EOL;
         echo "\t\t<priority>0.8</priority>" . PHP_EOL;
         echo "\t\t<changefreq>weekly</changefreq>" . PHP_EOL;
@@ -78,7 +78,7 @@ try {
         $lastmod = date('Y-m-d', strtotime($data));
         
         echo "\t<url>" . PHP_EOL;
-        echo "\t\t<loc>" . htmlspecialchars(SITE_URL . "/?route=artigo&slug=" . $artigo['slug']) . "</loc>" . PHP_EOL;
+        echo "\t\t<loc>" . htmlspecialchars(SITE_URL . "/artigo/" . $artigo['slug']) . "</loc>" . PHP_EOL;
         echo "\t\t<lastmod>" . $lastmod . "</lastmod>" . PHP_EOL;
         echo "\t\t<priority>0.7</priority>" . PHP_EOL;
         echo "\t\t<changefreq>monthly</changefreq>" . PHP_EOL;
@@ -99,7 +99,7 @@ try {
 
     foreach ($categorias as $categoria) {
         echo "\t<url>" . PHP_EOL;
-        echo "\t\t<loc>" . htmlspecialchars(SITE_URL . "/?route=categoria&slug=" . $categoria['slug']) . "</loc>" . PHP_EOL;
+        echo "\t\t<loc>" . htmlspecialchars(SITE_URL . "/categoria/" . $categoria['slug']) . "</loc>" . PHP_EOL;
         echo "\t\t<priority>0.6</priority>" . PHP_EOL;
         echo "\t\t<changefreq>weekly</changefreq>" . PHP_EOL;
         echo "\t</url>" . PHP_EOL;
@@ -112,9 +112,6 @@ try {
 // Finalizar XML
 echo '</urlset>';
 
-// Salvar o conteúdo em um arquivo sitemap.xml
-$sitemap_content = ob_get_clean();
-file_put_contents(__DIR__ . '/sitemap.xml', $sitemap_content);
-
-// Exibir o sitemap
-echo $sitemap_content;
+// Limpar qualquer saída em buffer e encerrar
+ob_end_flush();
+exit;
