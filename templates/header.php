@@ -81,21 +81,6 @@
     echo $gtm_code_body;
     ?>
     
-    <!-- Script para detectar dispositivos móveis reais -->
-    <script>
-        // Detectar se é um dispositivo móvel real (com tela de toque)
-        function isMobileDevice() {
-            return (('ontouchstart' in window) || 
-                (navigator.maxTouchPoints > 0) || 
-                (navigator.msMaxTouchPoints > 0));
-        }
-        
-        // Adicionar classe ao body se for um dispositivo móvel real
-        if (isMobileDevice()) {
-            document.body.classList.add('is-mobile-device');
-        }
-    </script>
-    
     <header class="header">
         <div class="container-wide header-container">
             <div class="logo">

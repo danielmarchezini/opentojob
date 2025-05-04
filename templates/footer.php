@@ -6,11 +6,11 @@
             <div class="footer-column">
                 <h3>OpenToJob</h3>
                 <ul class="footer-links">
-                    <li class="footer-link"><a href="<?php echo SITE_URL; ?>/?route=sobre">Sobre nós</a></li>
-                    <li class="footer-link"><a href="<?php echo SITE_URL; ?>/?route=contato">Contato</a></li>
-                    <li class="footer-link"><a href="<?php echo SITE_URL; ?>/?route=termos">Termos de uso</a></li>
-                    <li class="footer-link"><a href="<?php echo SITE_URL; ?>/?route=privacidade">Política de privacidade</a></li>
-                    <li class="footer-link"><a href="<?php echo SITE_URL; ?>/?route=cookies">Política de cookies</a></li>
+                    <li class="footer-link"><a href="<?php echo url('sobre'); ?>">Sobre nós</a></li>
+                    <li class="footer-link"><a href="<?php echo url('contato'); ?>">Contato</a></li>
+                    <li class="footer-link"><a href="<?php echo url('termos'); ?>">Termos de uso</a></li>
+                    <li class="footer-link"><a href="<?php echo url('privacidade'); ?>">Política de privacidade</a></li>
+                    <li class="footer-link"><a href="<?php echo url('cookies'); ?>">Política de cookies</a></li>
                     <li class="footer-link"><a href="#" id="cookie-settings-btn">Gerenciar cookies</a></li>
                 </ul>
             </div>
@@ -18,20 +18,20 @@
             <div class="footer-column">
                 <h3>Para Talentos</h3>
                 <ul class="footer-links">
-                    <li class="footer-link"><a href="<?php echo SITE_URL; ?>/?route=cadastro_talento">Cadastre-se</a></li>
-                    <li class="footer-link"><a href="<?php echo SITE_URL; ?>/?route=vagas">Buscar vagas</a></li>
-                    <li class="footer-link"><a href="<?php echo SITE_URL; ?>/?route=blog">Dicas de carreira</a></li>
-                    <li class="footer-link"><a href="<?php echo SITE_URL; ?>/?route=faq_talento">Perguntas frequentes</a></li>
+                    <li class="footer-link"><a href="<?php echo url('cadastro_talento'); ?>">Cadastre-se</a></li>
+                    <li class="footer-link"><a href="<?php echo url('vagas'); ?>">Buscar vagas</a></li>
+                    <li class="footer-link"><a href="<?php echo url('blog'); ?>">Dicas de carreira</a></li>
+                    <li class="footer-link"><a href="<?php echo url('faq_talento'); ?>">Perguntas frequentes</a></li>
                 </ul>
             </div>
             
             <div class="footer-column">
                 <h3>Para Empresas</h3>
                 <ul class="footer-links">
-                    <li class="footer-link"><a href="<?php echo SITE_URL; ?>/?route=cadastro_empresa">Cadastre sua empresa</a></li>
-                    <li class="footer-link"><a href="<?php echo SITE_URL; ?>/?route=buscar_talentos">Encontre talentos</a></li>
-                    <li class="footer-link"><a href="<?php echo SITE_URL; ?>/?route=publicar_vaga">Publique uma vaga</a></li>
-                    <li class="footer-link"><a href="<?php echo SITE_URL; ?>/?route=faq_empresa">Perguntas frequentes</a></li>
+                    <li class="footer-link"><a href="<?php echo url('cadastro_empresa'); ?>">Cadastre sua empresa</a></li>
+                    <li class="footer-link"><a href="<?php echo url('buscar_talentos'); ?>">Encontre talentos</a></li>
+                    <li class="footer-link"><a href="<?php echo url('publicar_vaga'); ?>">Publique uma vaga</a></li>
+                    <li class="footer-link"><a href="<?php echo url('faq_empresa'); ?>">Perguntas frequentes</a></li>
                 </ul>
             </div>
             
