@@ -9,6 +9,25 @@ require_once __DIR__ . '/includes/Auth.php';
 require_once __DIR__ . '/includes/url_helper.php';
 require_once __DIR__ . '/includes/functions.php';
 
+// Verificar se é uma URL antiga de vaga com ID e redirecionar para URL com slug
+if (isset($_GET['route']) && $_GET['route'] === 'vaga' && isset($_GET['id']) && !isset($_GET['slug'])) {
+    $vaga_id = (int)$_GET['id'];
+    if ($vaga_id > 0) {
+        $db = Database::getInstance();
+        try {
+            $vaga = $db->fetch("SELECT slug FROM vagas WHERE id = :id AND status = 'aberta'", ['id' => $vaga_id]);
+            if ($vaga && !empty($vaga['slug'])) {
+                // Redirecionar para a URL com slug
+                redirect(url('vaga', ['slug' => $vaga['slug']]));
+                exit;
+            }
+        } catch (Exception $e) {
+            // Silenciar erro e continuar com a URL antiga
+            error_log("Erro ao buscar slug da vaga: " . $e->getMessage());
+        }
+    }
+}
+
 // Verificar modo de manutenção
 $db = Database::getInstance();
 try {

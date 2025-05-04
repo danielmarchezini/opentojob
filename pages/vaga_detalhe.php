@@ -5,11 +5,13 @@ $vaga_slug = isset($_GET['slug']) ? $_GET['slug'] : '';
 // Obter ID da vaga (para compatibilidade com URLs antigas)
 $vaga_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
+// Obter instância do banco de dados
+$db = Database::getInstance();
+
 // Verificar se temos slug ou ID
 if (!empty($vaga_slug)) {
     // Buscar vaga pelo slug
     try {
-        $db = Database::getInstance();
         $vaga = $db->fetch("
             SELECT v.*, e.razao_social as empresa_nome, u.nome as empresa_usuario_nome, 
                    e.logo as empresa_logo, e.descricao as empresa_descricao,
@@ -32,7 +34,6 @@ if (!empty($vaga_slug)) {
 } elseif ($vaga_id > 0) {
     // Buscar vaga pelo ID (compatibilidade com URLs antigas)
     try {
-        $db = Database::getInstance();
         $vaga = $db->fetch("
             SELECT v.*, e.razao_social as empresa_nome, u.nome as empresa_usuario_nome, 
                    e.logo as empresa_logo, e.descricao as empresa_descricao,
@@ -49,11 +50,8 @@ if (!empty($vaga_slug)) {
             WHERE v.id = :id AND v.status = 'aberta'
         ", ['id' => $vaga_id]);
         
-        // Se encontrou a vaga pelo ID e ela tem slug, redirecionar para a URL com slug
-        if ($vaga && !empty($vaga['slug'])) {
-            redirect(url('vaga', ['slug' => $vaga['slug']]));
-            exit;
-        }
+        // Não redirecionamos aqui para evitar o erro "headers already sent"
+        // O redirecionamento deve ser feito no index.php antes de incluir os templates
     } catch (Exception $e) {
         echo '<div class="alert alert-danger">Erro ao buscar vaga: ' . $e->getMessage() . '</div>';
         exit;
@@ -282,7 +280,7 @@ if ($is_logged_in && $is_talento) {
                             <i class="fas fa-check me-2"></i> Você já se candidatou
                         </button>
                     <?php else: ?>
-                        <a href="<?php echo SITE_URL; ?>/?route=candidatar&id=<?php echo $vaga['id']; ?>" class="btn btn-primary job-apply-btn">Candidatar-se</a>
+                        <a href="<?php echo url('candidatar', ['id' => $vaga['id']]); ?>" class="btn btn-primary job-apply-btn">Candidatar-se</a>
                     <?php endif; ?>
                     <button class="job-save-btn">
                         <i class="far fa-bookmark"></i> Salvar vaga
