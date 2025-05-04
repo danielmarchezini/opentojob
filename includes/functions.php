@@ -12,8 +12,21 @@ function sanitize($data) {
 
 /**
  * Redireciona para uma URL
+ * 
+ * @param string $url URL ou nome da rota
+ * @param array $params Parâmetros adicionais (opcional)
  */
-function redirect($url) {
+function redirect($url, $params = []) {
+    // Verificar se é uma URL completa ou uma rota
+    if (filter_var($url, FILTER_VALIDATE_URL) === false && strpos($url, '/') === false) {
+        // É uma rota, usar a função url() para gerar a URL amigável
+        $url = url($url, $params);
+    } elseif (!empty($params)) {
+        // É uma URL, mas tem parâmetros adicionais
+        $separator = (strpos($url, '?') !== false) ? '&' : '?';
+        $url .= $separator . http_build_query($params);
+    }
+    
     header("Location: $url");
     exit;
 }

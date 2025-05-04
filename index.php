@@ -3,10 +3,11 @@
 session_start();
 
 // Incluir configurações e funções principais
-require_once 'config/config.php';
-require_once 'includes/functions.php';
-require_once 'includes/Database.php';
-require_once 'includes/Auth.php';
+require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/includes/Database.php';
+require_once __DIR__ . '/includes/Auth.php';
+require_once __DIR__ . '/includes/url_helper.php';
+require_once __DIR__ . '/includes/functions.php';
 
 // Verificar modo de manutenção
 $db = Database::getInstance();

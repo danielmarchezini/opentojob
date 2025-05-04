@@ -212,6 +212,10 @@ a:hover {
     z-index: 1001;
 }
 
+.is-mobile-device .mobile-menu-toggle {
+    display: block;
+}
+
 .nav-link {
     color: white;
     text-decoration: none;
@@ -376,10 +380,6 @@ a:hover {
         padding: 10px 15px;
     }
     
-    .mobile-menu-toggle {
-        display: block !important; /* Força a exibição do botão em dispositivos móveis */
-    }
-    
     .nav {
         position: fixed;
         top: 80px;
@@ -400,7 +400,14 @@ a:hover {
         height: auto;
     }
     
-    .nav.active {
+    .is-mobile-device .nav {
+        transform: translateY(-150%);
+        opacity: 0;
+        visibility: hidden;
+    }
+    
+    .nav.active,
+    .is-mobile-device .nav.active {
         transform: translateY(0);
         opacity: 1;
         visibility: visible;

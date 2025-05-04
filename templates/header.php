@@ -80,10 +80,26 @@
     // Exibir código GTM para o corpo
     echo $gtm_code_body;
     ?>
+    
+    <!-- Script para detectar dispositivos móveis reais -->
+    <script>
+        // Detectar se é um dispositivo móvel real (com tela de toque)
+        function isMobileDevice() {
+            return (('ontouchstart' in window) || 
+                (navigator.maxTouchPoints > 0) || 
+                (navigator.msMaxTouchPoints > 0));
+        }
+        
+        // Adicionar classe ao body se for um dispositivo móvel real
+        if (isMobileDevice()) {
+            document.body.classList.add('is-mobile-device');
+        }
+    </script>
+    
     <header class="header">
         <div class="container-wide header-container">
             <div class="logo">
-                <a href="<?php echo SITE_URL; ?>">
+                <a href="<?php echo url('inicio'); ?>">
                     <img src="<?php echo SITE_URL; ?>/assets/images/logo_opentojob.svg" alt="OpenToJob" height="50">
                 </a>
             </div>
@@ -91,12 +107,12 @@
                 <i class="fas fa-bars"></i>
             </button>
             <nav class="nav" id="main-nav">
-                <a href="<?php echo SITE_URL; ?>/?route=inicio" class="nav-link">Início</a>
-                <a href="<?php echo SITE_URL; ?>/?route=vagas" class="nav-link">Vagas</a>
-                <a href="<?php echo SITE_URL; ?>/?route=demandas" class="nav-link highlight-link">Procura-se</a>
-                <a href="<?php echo SITE_URL; ?>/?route=talentos" class="nav-link">Talentos</a>
-                <a href="<?php echo SITE_URL; ?>/?route=empresas" class="nav-link">Empresas</a>
-                <a href="<?php echo SITE_URL; ?>/?route=perfis_linkedin" class="nav-link">Perfis LinkedIn</a>
+                <a href="<?php echo url('inicio'); ?>" class="nav-link">Início</a>
+                <a href="<?php echo url('vagas'); ?>" class="nav-link">Vagas</a>
+                <a href="<?php echo url('demandas'); ?>" class="nav-link highlight-link">Procura-se</a>
+                <a href="<?php echo url('talentos'); ?>" class="nav-link">Talentos</a>
+                <a href="<?php echo url('empresas'); ?>" class="nav-link">Empresas</a>
+                <a href="<?php echo url('perfis_linkedin'); ?>" class="nav-link">Perfis LinkedIn</a>
                 
                 <?php if (Auth::isLoggedIn()): ?>
                     <div class="user-menu">
@@ -105,31 +121,31 @@
                         </button>
                         <div class="user-menu-dropdown">
                             <?php if (Auth::checkUserType('talento')): ?>
-                                <a href="<?php echo SITE_URL; ?>/?route=painel_talento" class="user-menu-item">Meu Painel</a>
-                                <a href="<?php echo SITE_URL; ?>/?route=perfil_talento" class="user-menu-item">Meu Perfil</a>
-                                <a href="<?php echo SITE_URL; ?>/?route=minhas_candidaturas" class="user-menu-item">Minhas Candidaturas</a>
-                                <a href="<?php echo SITE_URL; ?>/?route=mensagens_talento" class="user-menu-item">Mensagens</a>
+                                <a href="<?php echo url('painel_talento'); ?>" class="user-menu-item">Meu Painel</a>
+                                <a href="<?php echo url('perfil_talento'); ?>" class="user-menu-item">Meu Perfil</a>
+                                <a href="<?php echo url('minhas_candidaturas'); ?>" class="user-menu-item">Minhas Candidaturas</a>
+                                <a href="<?php echo url('mensagens_talento'); ?>" class="user-menu-item">Mensagens</a>
                             <?php elseif (Auth::checkUserType('empresa')): ?>
-                                <a href="<?php echo SITE_URL; ?>/?route=painel_empresa" class="user-menu-item">Meu Painel</a>
-                                <a href="<?php echo SITE_URL; ?>/?route=perfil_empresa" class="user-menu-item">Perfil da Empresa</a>
-                                <a href="<?php echo SITE_URL; ?>/?route=gerenciar_vagas" class="user-menu-item">Gerenciar Vagas</a>
-                                <a href="<?php echo SITE_URL; ?>/?route=gerenciar_demandas" class="user-menu-item">Gerenciar Anúncios de Procura</a>
-                                <a href="<?php echo SITE_URL; ?>/?route=buscar_talentos" class="user-menu-item">Buscar Talentos</a>
-                                <a href="<?php echo SITE_URL; ?>/?route=talentos_favoritos" class="user-menu-item"><i class="fas fa-heart text-danger me-1"></i> Talentos Favoritos</a>
-                                <a href="<?php echo SITE_URL; ?>/?route=mensagens_empresa" class="user-menu-item">Mensagens</a>
+                                <a href="<?php echo url('painel_empresa'); ?>" class="user-menu-item">Meu Painel</a>
+                                <a href="<?php echo url('perfil_empresa'); ?>" class="user-menu-item">Perfil da Empresa</a>
+                                <a href="<?php echo url('gerenciar_vagas'); ?>" class="user-menu-item">Gerenciar Vagas</a>
+                                <a href="<?php echo url('gerenciar_demandas'); ?>" class="user-menu-item">Gerenciar Anúncios de Procura</a>
+                                <a href="<?php echo url('buscar_talentos'); ?>" class="user-menu-item">Buscar Talentos</a>
+                                <a href="<?php echo url('talentos_favoritos'); ?>" class="user-menu-item"><i class="fas fa-heart text-danger me-1"></i> Talentos Favoritos</a>
+                                <a href="<?php echo url('mensagens_empresa'); ?>" class="user-menu-item">Mensagens</a>
                             <?php elseif (Auth::checkUserType('admin')): ?>
-                                <a href="<?php echo SITE_URL; ?>/?route=painel_admin" class="user-menu-item">Painel Admin</a>
-                                <a href="<?php echo SITE_URL; ?>/?route=gerenciar_usuarios" class="user-menu-item">Gerenciar Usuários</a>
-                                <a href="<?php echo SITE_URL; ?>/?route=aprovar_cadastros" class="user-menu-item">Aprovar Cadastros</a>
-                                <a href="<?php echo SITE_URL; ?>/?route=gerenciar_vagas_admin" class="user-menu-item">Gerenciar Vagas</a>
-                                <a href="<?php echo SITE_URL; ?>/?route=gerenciar_blog" class="user-menu-item">Gerenciar Blog</a>
+                                <a href="<?php echo url('painel_admin'); ?>" class="user-menu-item">Painel Admin</a>
+                                <a href="<?php echo url('gerenciar_usuarios'); ?>" class="user-menu-item">Gerenciar Usuários</a>
+                                <a href="<?php echo url('aprovar_cadastros'); ?>" class="user-menu-item">Aprovar Cadastros</a>
+                                <a href="<?php echo url('gerenciar_vagas_admin'); ?>" class="user-menu-item">Gerenciar Vagas</a>
+                                <a href="<?php echo url('gerenciar_blog'); ?>" class="user-menu-item">Gerenciar Blog</a>
                             <?php endif; ?>
-                            <a href="<?php echo SITE_URL; ?>/?route=sair" class="user-menu-item">Sair</a>
+                            <a href="<?php echo url('sair'); ?>" class="user-menu-item">Sair</a>
                         </div>
                     </div>
                 <?php else: ?>
-                    <a href="<?php echo SITE_URL; ?>/?route=entrar" class="nav-link">Entrar</a>
-                    <a href="<?php echo SITE_URL; ?>/?route=escolha_cadastro" class="btn btn-accent">Cadastre-se</a>
+                    <a href="<?php echo url('entrar'); ?>" class="nav-link">Entrar</a>
+                    <a href="<?php echo url('escolha_cadastro'); ?>" class="btn btn-accent">Cadastre-se</a>
                 <?php endif; ?>
             </nav>
         </div>
