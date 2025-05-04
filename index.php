@@ -65,12 +65,17 @@ $route = isset($_GET['route']) ? $_GET['route'] : 'inicio';
 // Verificar se é uma rota de API
 $is_api_route = (strpos($route, 'api_') === 0);
 
-// Carregar cabeçalho apenas se não for uma rota de API
+// Adicionar log para depuração em produção
+if ($route === 'vaga') {
+    error_log("Rota vaga acessada. Parâmetros: " . json_encode($_GET));
+}
+
+// Incluir cabeçalho apenas se não for uma rota de API
 if (!$is_api_route) {
     include 'templates/header.php';
 }
 
-// Roteamento de páginas
+// Rotear para a página correspondente
 switch ($route) {
     // Páginas públicas
     case 'inicio':
@@ -127,10 +132,16 @@ switch ($route) {
     case 'detalhes_vaga':
     case 'vaga':
     case 'vaga_detalhe':
-        // Definir página atual para carregar o CSS específico
-        $page = 'vaga_detalhe';
-        // Incluir página de detalhes da vaga
-        include 'pages/vaga_detalhe.php';
+        // Adicionar log para depuração
+        error_log("Processando rota vaga. Parâmetros: " . json_encode($_GET));
+        
+        // Verificar se temos slug ou id
+        if (isset($_GET['slug']) || isset($_GET['id'])) {
+            include 'pages/vaga_detalhe.php';
+        } else {
+            // Redirecionar para a página de vagas se não houver slug ou id
+            redirect('vagas');
+        }
         break;
     case 'blog':
         include 'pages/blog.php';
