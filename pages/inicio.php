@@ -227,8 +227,15 @@
                 foreach ($talentos as $talento) {
                     // Definir foto, localidade e disponibilidade
                     $foto = !empty($talento['foto_perfil']) ? $talento['foto_perfil'] : 'default-user.jpg';
-                    $localidade = !empty($talento['cidade']) ? $talento['cidade'] . '/' . $talento['estado'] : 'Brasil';
-                    $disponibilidade = !empty($talento['disponibilidade']) ? $talento['disponibilidade'] : 'Imediata';
+                    $localidade = '';
+                    if (!empty($talento['cidade']) && !empty($talento['estado'])) {
+                        $localidade = $talento['cidade'] . ', ' . $talento['estado'];
+                    } elseif (!empty($talento['cidade'])) {
+                        $localidade = $talento['cidade'];
+                    } elseif (!empty($talento['estado'])) {
+                        $localidade = $talento['estado'];
+                    }
+                    $disponibilidade = isset($talento['disponibilidade']) ? $talento['disponibilidade'] : 'Imediata';
             ?>
             <div class="talent-card">
                 <div class="talent-header">

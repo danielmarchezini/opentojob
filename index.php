@@ -8,6 +8,37 @@ require_once 'includes/functions.php';
 require_once 'includes/Database.php';
 require_once 'includes/Auth.php';
 
+// Verificar modo de manutenção
+$db = Database::getInstance();
+try {
+    $manutencao = $db->fetch("SELECT valor FROM configuracoes WHERE chave = 'manutencao_ativo'");
+    $modo_manutencao = ($manutencao && $manutencao['valor'] == 1);
+    
+    // Se o modo de manutenção estiver ativo e o usuário não for admin, exibir página de manutenção
+    if ($modo_manutencao && !Auth::checkUserType('admin')) {
+        // Definir cabeçalho HTTP
+        header('HTTP/1.1 503 Service Temporarily Unavailable');
+        header('Status: 503 Service Temporarily Unavailable');
+        header('Retry-After: 3600'); // 1 hora
+        
+        // Incluir template de manutenção
+        include 'templates/header.php';
+        echo '<div class="container-wide maintenance-mode">
+                <div class="maintenance-content">
+                    <h1>Site em Manutenção</h1>
+                    <p>Estamos realizando melhorias em nosso sistema. Por favor, tente novamente mais tarde.</p>
+                    <p>Agradecemos sua compreensão.</p>
+                </div>
+              </div>';
+        include 'templates/footer.php';
+        exit;
+    }
+} catch (Exception $e) {
+    // Em caso de erro, continuar normalmente
+    // Registrar erro em log se necessário
+    error_log("Erro ao verificar modo de manutenção: " . $e->getMessage());
+}
+
 // Definir rota padrão
 $route = isset($_GET['route']) ? $_GET['route'] : 'inicio';
 
