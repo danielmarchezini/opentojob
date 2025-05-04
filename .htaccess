@@ -8,6 +8,12 @@ RewriteBase /open2w/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
+# Regra específica para vagas com slug
+RewriteRule ^vaga/([^/]+)/?$ index.php?route=vaga&slug=$1 [QSA,L]
+
+# Regra específica para perfil de talento
+RewriteRule ^talento/([^/]+)/?$ index.php?route=perfil_talento&id=$1 [QSA,L]
+
 # Redirecionar URLs amigáveis para o sistema de rotas
 RewriteRule ^([a-zA-Z0-9_-]+)/?$ index.php?route=$1 [QSA,L]
 RewriteRule ^([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)/?$ index.php?route=$1&id=$2 [QSA,L]

@@ -37,6 +37,19 @@ function url($route = 'inicio', $params = []) {
             // Em produção, usar URLs amigáveis
             $url = $base_url . '/' . $route;
             
+            // Tratamento especial para vagas com slug
+            if ($route === 'vaga' && isset($params['slug'])) {
+                $url = $base_url . '/vaga/' . $params['slug'];
+                // Remover o slug dos parâmetros para não duplicar
+                unset($params['slug']);
+            }
+            // Tratamento especial para perfil de talento com id
+            elseif ($route === 'perfil_talento' && isset($params['id'])) {
+                $url = $base_url . '/talento/' . $params['id'];
+                // Remover o id dos parâmetros para não duplicar
+                unset($params['id']);
+            }
+            
             // Adicionar parâmetros adicionais como query string
             if (!empty($params)) {
                 $query_string = http_build_query($params);

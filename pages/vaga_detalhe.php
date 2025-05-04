@@ -1,70 +1,100 @@
 <?php
-// Obter ID da vaga
+// Obter slug da vaga (se disponível)
+$vaga_slug = isset($_GET['slug']) ? $_GET['slug'] : '';
+
+// Obter ID da vaga (para compatibilidade com URLs antigas)
 $vaga_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-// Verificar se o ID da vaga foi fornecido
-if ($vaga_id <= 0) {
-    echo '<div class="alert alert-danger">ID da vaga não fornecido.</div>';
-    exit;
-}
-
-// Obter instância do banco de dados
-$db = Database::getInstance();
-
-// Buscar dados da vaga
-try {
-    $vaga = $db->fetch("
-        SELECT v.*, e.razao_social as empresa_nome, u.nome as empresa_usuario_nome, 
-               e.logo as empresa_logo, e.descricao as empresa_descricao,
-               e.tamanho as empresa_tamanho, u.website as empresa_website,
-               tc.nome as tipo_contrato_nome,
-               rt.nome as regime_trabalho_nome,
-               ne.nome as nivel_experiencia_nome
-        FROM vagas v
-        LEFT JOIN usuarios u ON v.empresa_id = u.id
-        LEFT JOIN empresas e ON u.id = e.usuario_id
-        LEFT JOIN tipos_contrato tc ON v.tipo_contrato_id = tc.id
-        LEFT JOIN regimes_trabalho rt ON v.regime_trabalho_id = rt.id
-        LEFT JOIN niveis_experiencia ne ON v.nivel_experiencia_id = ne.id
-        WHERE v.id = :id AND v.status = 'aberta'
-    ", ['id' => $vaga_id]);
-    
-    if (!$vaga) {
-        echo '<div class="alert alert-danger">Vaga não encontrada ou não está ativa.</div>';
-        exit;
-    }
-    
-    // Verificar se é uma vaga externa e se o usuário está logado
-    $is_logged_in = Auth::isLoggedIn();
-    $is_talento = $is_logged_in && Auth::checkUserType('talento');
-    
-    // Verificar se o recrutamento interno está habilitado
+// Verificar se temos slug ou ID
+if (!empty($vaga_slug)) {
+    // Buscar vaga pelo slug
     try {
-        $recrutamento_interno_habilitado = $db->fetch("
-            SELECT valor FROM configuracoes WHERE chave = 'recrutamento_interno_habilitado'
-        ");
-        $recrutamento_interno_habilitado = $recrutamento_interno_habilitado['valor'] ?? '1';
-    } catch (PDOException $e) {
-        error_log("Erro ao verificar configuração de recrutamento interno: " . $e->getMessage());
-        $recrutamento_interno_habilitado = '1'; // Valor padrão caso ocorra erro
-    }
-    
-    // Se for uma vaga externa e o recrutamento interno estiver desabilitado, redirecionar
-    if ($vaga['tipo_vaga'] === 'interna' && $recrutamento_interno_habilitado === '0') {
-        echo '<div class="alert alert-danger">O recrutamento interno está temporariamente desabilitado.</div>';
+        $db = Database::getInstance();
+        $vaga = $db->fetch("
+            SELECT v.*, e.razao_social as empresa_nome, u.nome as empresa_usuario_nome, 
+                   e.logo as empresa_logo, e.descricao as empresa_descricao,
+                   e.tamanho as empresa_tamanho, u.website as empresa_website,
+                   tc.nome as tipo_contrato_nome,
+                   rt.nome as regime_trabalho_nome,
+                   ne.nome as nivel_experiencia_nome
+            FROM vagas v
+            LEFT JOIN usuarios u ON v.empresa_id = u.id
+            LEFT JOIN empresas e ON u.id = e.usuario_id
+            LEFT JOIN tipos_contrato tc ON v.tipo_contrato_id = tc.id
+            LEFT JOIN regimes_trabalho rt ON v.regime_trabalho_id = rt.id
+            LEFT JOIN niveis_experiencia ne ON v.nivel_experiencia_id = ne.id
+            WHERE v.slug = :slug AND v.status = 'aberta'
+        ", ['slug' => $vaga_slug]);
+    } catch (Exception $e) {
+        echo '<div class="alert alert-danger">Erro ao buscar vaga: ' . $e->getMessage() . '</div>';
         exit;
     }
-    
-    // Incrementar visualizações
-    $db->query("
-        UPDATE vagas SET visualizacoes = visualizacoes + 1 WHERE id = :id
-    ", ['id' => $vaga_id]);
-    
-} catch (PDOException $e) {
-    error_log("Erro ao buscar vaga: " . $e->getMessage());
-    echo '<div class="alert alert-danger">Erro ao buscar detalhes da vaga. Por favor, tente novamente mais tarde.</div>';
+} elseif ($vaga_id > 0) {
+    // Buscar vaga pelo ID (compatibilidade com URLs antigas)
+    try {
+        $db = Database::getInstance();
+        $vaga = $db->fetch("
+            SELECT v.*, e.razao_social as empresa_nome, u.nome as empresa_usuario_nome, 
+                   e.logo as empresa_logo, e.descricao as empresa_descricao,
+                   e.tamanho as empresa_tamanho, u.website as empresa_website,
+                   tc.nome as tipo_contrato_nome,
+                   rt.nome as regime_trabalho_nome,
+                   ne.nome as nivel_experiencia_nome
+            FROM vagas v
+            LEFT JOIN usuarios u ON v.empresa_id = u.id
+            LEFT JOIN empresas e ON u.id = e.usuario_id
+            LEFT JOIN tipos_contrato tc ON v.tipo_contrato_id = tc.id
+            LEFT JOIN regimes_trabalho rt ON v.regime_trabalho_id = rt.id
+            LEFT JOIN niveis_experiencia ne ON v.nivel_experiencia_id = ne.id
+            WHERE v.id = :id AND v.status = 'aberta'
+        ", ['id' => $vaga_id]);
+        
+        // Se encontrou a vaga pelo ID e ela tem slug, redirecionar para a URL com slug
+        if ($vaga && !empty($vaga['slug'])) {
+            redirect(url('vaga', ['slug' => $vaga['slug']]));
+            exit;
+        }
+    } catch (Exception $e) {
+        echo '<div class="alert alert-danger">Erro ao buscar vaga: ' . $e->getMessage() . '</div>';
+        exit;
+    }
+} else {
+    // Nem slug nem ID fornecidos
+    echo '<div class="alert alert-danger">Vaga não encontrada.</div>';
     exit;
 }
+
+// Verificar se a vaga foi encontrada
+if (!$vaga) {
+    echo '<div class="alert alert-danger">Vaga não encontrada ou não está ativa.</div>';
+    exit;
+}
+
+// Verificar se é uma vaga externa e se o usuário está logado
+$is_logged_in = Auth::isLoggedIn();
+$is_talento = $is_logged_in && Auth::checkUserType('talento');
+
+// Verificar se o recrutamento interno está habilitado
+try {
+    $recrutamento_interno_habilitado = $db->fetch("
+        SELECT valor FROM configuracoes WHERE chave = 'recrutamento_interno_habilitado'
+    ");
+    $recrutamento_interno_habilitado = $recrutamento_interno_habilitado['valor'] ?? '1';
+} catch (PDOException $e) {
+    error_log("Erro ao verificar configuração de recrutamento interno: " . $e->getMessage());
+    $recrutamento_interno_habilitado = '1'; // Valor padrão caso ocorra erro
+}
+
+// Se for uma vaga externa e o recrutamento interno estiver desabilitado, redirecionar
+if ($vaga['tipo_vaga'] === 'interna' && $recrutamento_interno_habilitado === '0') {
+    echo '<div class="alert alert-danger">O recrutamento interno está temporariamente desabilitado.</div>';
+    exit;
+}
+
+// Incrementar visualizações
+$db->query("
+    UPDATE vagas SET visualizacoes = visualizacoes + 1 WHERE id = :id
+", ['id' => $vaga['id']]);
 
 // Formatar data de publicação
 $data_publicacao = !empty($vaga['data_publicacao']) ? date('d/m/Y', strtotime($vaga['data_publicacao'])) : 'Não informada';
@@ -91,6 +121,7 @@ $empresa_nome = $vaga['empresa_nome'] ?: $vaga['empresa_usuario_nome'] ?: 'Empre
 
 // Logo da empresa (usar placeholder se não existir)
 $empresa_logo = !empty($vaga['empresa_logo']) ? SITE_URL . '/uploads/empresas/' . $vaga['empresa_logo'] : SITE_URL . '/assets/img/placeholder-company.png';
+
 // Converter requisitos, responsabilidades e benefícios em arrays
 $requisitos = !empty($vaga['requisitos']) ? explode("\n", $vaga['requisitos']) : [];
 $responsabilidades = !empty($vaga['responsabilidades']) ? explode("\n", $vaga['responsabilidades']) : [];
@@ -111,7 +142,7 @@ if ($is_logged_in && $is_talento) {
             SELECT id FROM candidaturas 
             WHERE vaga_id = :vaga_id AND talento_id = :talento_id
         ", [
-            'vaga_id' => $vaga_id,
+            'vaga_id' => $vaga['id'],
             'talento_id' => $_SESSION['user_id']
         ]);
         
@@ -251,7 +282,7 @@ if ($is_logged_in && $is_talento) {
                             <i class="fas fa-check me-2"></i> Você já se candidatou
                         </button>
                     <?php else: ?>
-                        <a href="<?php echo SITE_URL; ?>/?route=candidatar&id=<?php echo $vaga_id; ?>" class="btn btn-primary job-apply-btn">Candidatar-se</a>
+                        <a href="<?php echo SITE_URL; ?>/?route=candidatar&id=<?php echo $vaga['id']; ?>" class="btn btn-primary job-apply-btn">Candidatar-se</a>
                     <?php endif; ?>
                     <button class="job-save-btn">
                         <i class="far fa-bookmark"></i> Salvar vaga
@@ -263,16 +294,16 @@ if ($is_logged_in && $is_talento) {
             <?php endif; ?>
             
             <div class="job-share-options">
-                <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(SITE_URL . '/?route=vaga&id=' . $vaga_id); ?>" target="_blank" class="job-share-btn share-facebook">
+                <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(url('vaga', ['slug' => $vaga['slug']])); ?>" target="_blank" class="job-share-btn share-facebook">
                     <i class="fab fa-facebook-f"></i>
                 </a>
-                <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode(SITE_URL . '/?route=vaga&id=' . $vaga_id); ?>&text=<?php echo urlencode('Vaga: ' . $vaga['titulo']); ?>" target="_blank" class="job-share-btn share-twitter">
+                <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode(url('vaga', ['slug' => $vaga['slug']])); ?>&text=<?php echo urlencode('Vaga: ' . $vaga['titulo']); ?>" target="_blank" class="job-share-btn share-twitter">
                     <i class="fab fa-twitter"></i>
                 </a>
-                <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo urlencode(SITE_URL . '/?route=vaga&id=' . $vaga_id); ?>" target="_blank" class="job-share-btn share-linkedin">
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo urlencode(url('vaga', ['slug' => $vaga['slug']])); ?>" target="_blank" class="job-share-btn share-linkedin">
                     <i class="fab fa-linkedin-in"></i>
                 </a>
-                <a href="https://api.whatsapp.com/send?text=<?php echo urlencode('Vaga: ' . $vaga['titulo'] . ' - ' . SITE_URL . '/?route=vaga&id=' . $vaga_id); ?>" target="_blank" class="job-share-btn share-whatsapp">
+                <a href="https://api.whatsapp.com/send?text=<?php echo urlencode('Vaga: ' . $vaga['titulo'] . ' - ' . url('vaga', ['slug' => $vaga['slug']])); ?>" target="_blank" class="job-share-btn share-whatsapp">
                     <i class="fab fa-whatsapp"></i>
                 </a>
             </div>
@@ -344,7 +375,7 @@ if ($is_logged_in && $is_talento) {
                       AND (v.nivel_experiencia = :nivel_experiencia OR v.tipo_contrato = :tipo_contrato)
                     LIMIT 3
                 ", [
-                    'vaga_id' => $vaga_id,
+                    'vaga_id' => $vaga['id'],
                     'nivel_experiencia' => $vaga['nivel_experiencia'],
                     'tipo_contrato' => $vaga['tipo_contrato']
                 ]);
