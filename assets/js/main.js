@@ -21,6 +21,38 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Menu mobile (hambúrguer)
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const mainNav = document.getElementById('main-nav');
+    
+    if (mobileMenuToggle && mainNav) {
+        mobileMenuToggle.addEventListener('click', function() {
+            mainNav.classList.toggle('active');
+            // Alternar ícone entre hambúrguer e X
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+        
+        // Fechar o menu mobile ao clicar em um link
+        const mobileNavLinks = mainNav.querySelectorAll('.nav-link');
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    mainNav.classList.remove('active');
+                    const icon = mobileMenuToggle.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+        });
+    }
+    
     // Formulário de busca na página inicial
     const searchForm = document.querySelector('.search-form');
     if (searchForm) {

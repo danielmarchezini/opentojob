@@ -1037,7 +1037,138 @@ switch ($route) {
             // Incluir funções administrativas
             include 'admin/includes/admin_functions.php';
             // Incluir página de configurações do site
+            include 'admin/includes/header.php';
+            include 'admin/includes/sidebar.php';
             include 'admin/pages/configuracoes.php';
+            include 'admin/includes/footer.php';
+        } else {
+            include 'pages/acesso_negado.php';
+        }
+        break;
+        
+    case 'gerenciar_blog_admin':
+        if (Auth::checkUserType('admin')) {
+            // Definir página atual para carregar o CSS específico
+            $page = 'gerenciar_blog';
+            // Incluir funções administrativas
+            include 'admin/includes/admin_functions.php';
+            // Incluir cabeçalho, barra lateral e conteúdo
+            include 'admin/includes/header.php';
+            include 'admin/includes/sidebar.php';
+            include 'admin/pages/gerenciar_blog.php';
+            include 'admin/includes/footer.php';
+        } else {
+            include 'pages/acesso_negado.php';
+        }
+        break;
+        
+    case 'gerenciar_contratacoes':
+        if (Auth::checkUserType('admin')) {
+            // Definir página atual para carregar o CSS específico
+            $page = 'gerenciar_contratacoes';
+            // Incluir funções administrativas
+            include 'admin/includes/admin_functions.php';
+            // Incluir cabeçalho, barra lateral e conteúdo
+            include 'admin/includes/header.php';
+            include 'admin/includes/sidebar.php';
+            include 'admin/pages/gerenciar_contratacoes.php';
+            include 'admin/includes/footer.php';
+        } else {
+            include 'pages/acesso_negado.php';
+        }
+        break;
+        
+    case 'gerenciar_reportes':
+        if (Auth::checkUserType('admin')) {
+            // Definir página atual para carregar o CSS específico
+            $page = 'gerenciar_reportes';
+            // Incluir funções administrativas
+            include 'admin/includes/admin_functions.php';
+            // Incluir cabeçalho, barra lateral e conteúdo
+            include 'admin/includes/header.php';
+            include 'admin/includes/sidebar.php';
+            include 'admin/pages/gerenciar_reportes.php';
+            include 'admin/includes/footer.php';
+        } else {
+            include 'pages/acesso_negado.php';
+        }
+        break;
+        
+    case 'gerenciar_avaliacoes_admin':
+        if (Auth::checkUserType('admin')) {
+            // Definir página atual para carregar o CSS específico
+            $page = 'gerenciar_avaliacoes';
+            // Incluir funções administrativas
+            include 'admin/includes/admin_functions.php';
+            // Incluir cabeçalho, barra lateral e conteúdo
+            include 'admin/includes/header.php';
+            include 'admin/includes/sidebar.php';
+            include 'admin/pages/gerenciar_avaliacoes.php';
+            include 'admin/includes/footer.php';
+        } else {
+            include 'pages/acesso_negado.php';
+        }
+        break;
+        
+    case 'gerenciar_cache_admin':
+        if (Auth::checkUserType('admin')) {
+            // Definir página atual para carregar o CSS específico
+            $page = 'gerenciar_cache';
+            // Incluir funções administrativas
+            include 'admin/includes/admin_functions.php';
+            // Incluir cabeçalho, barra lateral e conteúdo
+            include 'admin/includes/header.php';
+            include 'admin/includes/sidebar.php';
+            include 'admin/pages/gerenciar_cache.php';
+            include 'admin/includes/footer.php';
+        } else {
+            include 'pages/acesso_negado.php';
+        }
+        break;
+        
+    case 'gerenciar_talentos_admin':
+        if (Auth::checkUserType('admin')) {
+            // Definir página atual para carregar o CSS específico
+            $page = 'gerenciar_talentos';
+            // Incluir funções administrativas
+            include 'admin/includes/admin_functions.php';
+            // Incluir cabeçalho, barra lateral e conteúdo
+            include 'admin/includes/header.php';
+            include 'admin/includes/sidebar.php';
+            include 'admin/pages/gerenciar_talentos.php';
+            include 'admin/includes/footer.php';
+        } else {
+            include 'pages/acesso_negado.php';
+        }
+        break;
+        
+    case 'gerenciar_usuarios_admin':
+        if (Auth::checkUserType('admin')) {
+            // Definir página atual para carregar o CSS específico
+            $page = 'gerenciar_usuarios';
+            // Incluir funções administrativas
+            include 'admin/includes/admin_functions.php';
+            // Incluir cabeçalho, barra lateral e conteúdo
+            include 'admin/includes/header.php';
+            include 'admin/includes/sidebar.php';
+            include 'admin/pages/gerenciar_usuarios.php';
+            include 'admin/includes/footer.php';
+        } else {
+            include 'pages/acesso_negado.php';
+        }
+        break;
+        
+    case 'configuracoes_admin':
+        if (Auth::checkUserType('admin')) {
+            // Definir página atual para carregar o CSS específico
+            $page = 'configuracoes';
+            // Incluir funções administrativas
+            include 'admin/includes/admin_functions.php';
+            // Incluir cabeçalho, barra lateral e conteúdo
+            include 'admin/includes/header.php';
+            include 'admin/includes/sidebar.php';
+            include 'admin/pages/configuracoes.php';
+            include 'admin/includes/footer.php';
         } else {
             include 'pages/acesso_negado.php';
         }

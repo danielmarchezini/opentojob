@@ -87,7 +87,10 @@
                     <img src="<?php echo SITE_URL; ?>/assets/images/logo_opentojob.svg" alt="OpenToJob" height="50">
                 </a>
             </div>
-            <nav class="nav">
+            <button class="mobile-menu-toggle d-md-none">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="nav" id="main-nav">
                 <a href="<?php echo SITE_URL; ?>/?route=inicio" class="nav-link">Início</a>
                 <a href="<?php echo SITE_URL; ?>/?route=vagas" class="nav-link">Vagas</a>
                 <a href="<?php echo SITE_URL; ?>/?route=demandas" class="nav-link highlight-link">Procura-se</a>

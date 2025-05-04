@@ -9,11 +9,11 @@ $db = Database::getInstance();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['salvar_configuracoes'])) {
     // Validar e salvar configurações
     $configuracoes = [
-        'site_titulo' => filter_input(INPUT_POST, 'site_titulo', FILTER_SANITIZE_STRING),
-        'site_descricao' => filter_input(INPUT_POST, 'site_descricao', FILTER_SANITIZE_STRING),
+        'site_titulo' => htmlspecialchars(trim($_POST['site_titulo'] ?? ''), ENT_QUOTES, 'UTF-8'),
+        'site_descricao' => htmlspecialchars(trim($_POST['site_descricao'] ?? ''), ENT_QUOTES, 'UTF-8'),
         'email_contato' => filter_input(INPUT_POST, 'email_contato', FILTER_SANITIZE_EMAIL),
-        'telefone_contato' => filter_input(INPUT_POST, 'telefone_contato', FILTER_SANITIZE_STRING),
-        'endereco' => filter_input(INPUT_POST, 'endereco', FILTER_SANITIZE_STRING),
+        'telefone_contato' => htmlspecialchars(trim($_POST['telefone_contato'] ?? ''), ENT_QUOTES, 'UTF-8'),
+        'endereco' => htmlspecialchars(trim($_POST['endereco'] ?? ''), ENT_QUOTES, 'UTF-8'),
         'redes_sociais_facebook' => filter_input(INPUT_POST, 'redes_sociais_facebook', FILTER_SANITIZE_URL),
         'redes_sociais_instagram' => filter_input(INPUT_POST, 'redes_sociais_instagram', FILTER_SANITIZE_URL),
         'redes_sociais_linkedin' => filter_input(INPUT_POST, 'redes_sociais_linkedin', FILTER_SANITIZE_URL),

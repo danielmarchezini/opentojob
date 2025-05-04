@@ -128,13 +128,13 @@ if (!ob_get_level()) {
                 </a>
             </li>
             <li class="<?php echo ($page == 'gerenciar_depoimentos') ? 'active' : ''; ?>">
-                <a href="<?php echo SITE_URL; ?>/?route=gerenciar_depoimentos">
+                <a href="<?php echo SITE_URL; ?>/?route=gerenciar_depoimentos_admin">
                     <i class="fas fa-comment-dots"></i>
                     <span>Gerenciar Depoimentos</span>
                 </a>
             </li>
             <li class="<?php echo ($page == 'gerenciar_equipe') ? 'active' : ''; ?>">
-                <a href="<?php echo SITE_URL; ?>/admin/?page=gerenciar_equipe">
+                <a href="<?php echo SITE_URL; ?>/?route=gerenciar_equipe_admin">
                     <i class="fas fa-users-cog"></i>
                     <span>Gerenciar Equipe</span>
                 </a>
@@ -204,12 +204,29 @@ if (!ob_get_level()) {
             
             <li class="menu-header">Sistema</li>
             <li class="<?php echo ($page == 'gerenciar_cache') ? 'active' : ''; ?>">
-                <a href="<?php echo SITE_URL; ?>/admin/?page=gerenciar_cache">
-                    <i class="fas fa-bolt"></i>
+                <a href="<?php echo SITE_URL; ?>/?route=gerenciar_cache_admin">
+                    <i class="fas fa-memory"></i>
                     <span>Gerenciar Cache</span>
                 </a>
             </li>
-            
+            <li class="<?php echo ($page == 'gerenciar_reportes') ? 'active' : ''; ?>">
+                <a href="<?php echo SITE_URL; ?>/?route=gerenciar_reportes">
+                    <i class="fas fa-flag"></i>
+                    <span>Gerenciar Reportes</span>
+                </a>
+            </li>
+            <li class="<?php echo ($page == 'gerenciar_avaliacoes') ? 'active' : ''; ?>">
+                <a href="<?php echo SITE_URL; ?>/?route=gerenciar_avaliacoes_admin">
+                    <i class="fas fa-star"></i>
+                    <span>Gerenciar Avaliações</span>
+                </a>
+            </li>
+            <li class="<?php echo ($page == 'gerenciar_contratacoes') ? 'active' : ''; ?>">
+                <a href="<?php echo SITE_URL; ?>/?route=gerenciar_contratacoes">
+                    <i class="fas fa-handshake"></i>
+                    <span>Gerenciar Contratações</span>
+                </a>
+            </li>
             <li class="<?php echo ($page == 'estatisticas_interacoes') ? 'active' : ''; ?>">
                 <a href="<?php echo SITE_URL; ?>/?route=estatisticas_interacoes">
                     <i class="fas fa-exchange-alt"></i>

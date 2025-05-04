@@ -201,6 +201,15 @@ a:hover {
     gap: 20px;
 }
 
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
 .nav-link {
     color: white;
     text-decoration: none;
@@ -359,14 +368,37 @@ a:hover {
 /* Responsividade */
 @media (max-width: 768px) {
     .header-container {
-        flex-direction: column;
-        gap: 15px;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .mobile-menu-toggle {
+        display: block;
     }
     
     .nav {
+        position: fixed;
+        top: 80px;
+        left: 0;
+        right: 0;
+        background-color: var(--primary-color);
         flex-direction: column;
         gap: 10px;
         text-align: center;
+        padding: 20px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        transform: translateY(-100%);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 999;
+    }
+    
+    .nav.active {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
     }
     
     .footer-container {
