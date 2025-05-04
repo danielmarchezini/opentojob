@@ -268,7 +268,7 @@
                     <div class="talent-info">
                         <h3 class="talent-name"><?php echo htmlspecialchars($talento['nome']); ?></h3>
                         <p class="talent-title"><?php echo htmlspecialchars($talento['profissao']); ?></p>
-                        <p class="talent-location"><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($localidade); ?></p>
+                        <p class="talent-location"><i class="fas fa-map-marker-alt"></i> <?php echo !empty($localidade) ? htmlspecialchars($localidade) : ''; ?></p>
                     </div>
                 </div>
                 

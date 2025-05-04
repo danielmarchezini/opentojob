@@ -999,6 +999,19 @@ switch ($route) {
         }
         break;
         
+    case 'configuracoes_site_admin':
+        if (Auth::checkUserType('admin')) {
+            // Definir página atual para carregar o CSS específico
+            $page = 'configuracoes_site';
+            // Incluir funções administrativas
+            include 'admin/includes/admin_functions.php';
+            // Incluir página de configurações do site
+            include 'admin/pages/configuracoes.php';
+        } else {
+            include 'pages/acesso_negado.php';
+        }
+        break;
+        
     // Rota padrão (página inicial)
     default:
         include 'pages/inicio.php';
