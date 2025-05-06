@@ -155,10 +155,8 @@ foreach ($static_urls as $url) {
     echo '    <changefreq>' . $url['changefreq'] . '</changefreq>' . PHP_EOL;
     echo '    <lastmod>' . $data_atual . '</lastmod>' . PHP_EOL;
     
-    // Adicionar meta descrição se disponível
-    if (isset($meta_descricoes[$url['pagina']])) {
-        echo '    <description>' . htmlspecialchars($meta_descricoes[$url['pagina']]) . '</description>' . PHP_EOL;
-    }
+    // Removendo a tag description que não é padrão do sitemap XML
+    // As meta descrições devem ser usadas nas páginas, não no sitemap
     
     echo '  </url>' . PHP_EOL;
 }
