@@ -2,9 +2,9 @@
 // Script para desativar o modo de manutenção
 // Este arquivo deve ser removido após o uso
 
-// Configurar para não exibir erros na saída, mas registrá-los em log
+// Configurar para exibir erros na saída para depuração
 error_reporting(E_ALL);
-ini_set('display_errors', 0);
+ini_set('display_errors', 1);
 ini_set('log_errors', 1);
 ini_set('error_log', __DIR__ . '/logs/manutencao_errors.log');
 
@@ -12,22 +12,14 @@ ini_set('error_log', __DIR__ . '/logs/manutencao_errors.log');
 require_once __DIR__ . '/config/config.php';
 require_once __DIR__ . '/includes/Database.php';
 
-// Definir senha de segurança - ALTERE ESTA SENHA ANTES DE USAR!
-$senha_seguranca = 'admin123';
-
-// Verificar se a senha foi enviada
-$senha_enviada = isset($_GET['senha']) ? $_GET['senha'] : '';
-
-// Verificar se a senha está correta
-if ($senha_enviada !== $senha_seguranca) {
-    header('HTTP/1.1 403 Forbidden');
-    echo "Acesso negado. Senha incorreta.";
-    exit;
-}
-
-// Desativar o modo de manutenção
+// Desativar o modo de manutenção diretamente
 try {
     $db = Database::getInstance();
+    
+    // Verificar status atual
+    $status_atual = $db->fetch("SELECT valor FROM configuracoes WHERE chave = 'manutencao_ativo'");
+    echo "<p>Status atual do modo de manutenção: " . ($status_atual['valor'] == '1' ? 'ATIVADO' : 'DESATIVADO') . "</p>";
+    
     $result = $db->execute(
         "UPDATE configuracoes SET valor = '0' WHERE chave = 'manutencao_ativo'"
     );
