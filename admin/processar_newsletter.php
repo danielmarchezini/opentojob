@@ -5,9 +5,9 @@
  */
 
 // Incluir configurações e funções necessárias
-require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../includes/functions.php';
-require_once __DIR__ . '/../classes/Database.php';
+require_once __DIR__ . '/../includes/Database.php';
 
 // Verificar se o usuário está logado como admin
 session_start();
@@ -219,7 +219,7 @@ switch ($acao) {
         // Se for apenas um teste, enviar apenas para o admin
         if ($enviar_teste) {
             try {
-                $admin = $db->fetchOne("SELECT email, nome FROM usuarios WHERE id = ?", [$_SESSION['user_id']]);
+                $admin = $db->fetch("SELECT email, nome FROM usuarios WHERE id = ?", [$_SESSION['user_id']]);
                 
                 if (!$admin) {
                     setFlashMessage('Erro ao obter dados do administrador', 'danger');
@@ -240,7 +240,7 @@ switch ($acao) {
                 // Configurar cabeçalhos
                 $headers = "MIME-Version: 1.0\r\n";
                 $headers .= "Content-type: text/html; charset=UTF-8\r\n";
-                $headers .= "From: " . SITE_NAME . " <" . SITE_EMAIL . ">\r\n";
+                $headers .= "From: " . SITE_NAME . " <" . EMAIL_FROM . ">\r\n";
                 
                 // Enviar email
                 if (mail($admin['email'], $assunto_teste, $conteudo_personalizado, $headers)) {
@@ -287,7 +287,7 @@ switch ($acao) {
             // Configurar cabeçalhos
             $headers = "MIME-Version: 1.0\r\n";
             $headers .= "Content-type: text/html; charset=UTF-8\r\n";
-            $headers .= "From: " . SITE_NAME . " <" . SITE_EMAIL . ">\r\n";
+            $headers .= "From: " . SITE_NAME . " <" . EMAIL_FROM . ">\r\n";
             
             // Enviar email
             if (mail($destinatario['email'], $assunto, $conteudo_personalizado, $headers)) {

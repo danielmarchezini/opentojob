@@ -107,112 +107,94 @@ try {
 }
 ?>
 
-<div class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0">Gerenciar Blog</h1>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>/?route=painel_admin">Dashboard</a></li>
-                    <li class="breadcrumb-item active">Gerenciar Blog</li>
-                </ol>
-            </div>
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Gerenciar Blog</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>/?route=painel_admin">Dashboard</a></li>
+        <li class="breadcrumb-item active">Gerenciar Blog</li>
+    </ol>
+
+    <?php if (isset($_SESSION['flash_message'])): ?>
+    <div class="alert alert-<?php echo $_SESSION['flash_type']; ?> alert-dismissible fade show">
+        <?php echo $_SESSION['flash_message']; ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <?php 
+        // Limpar mensagem flash
+        unset($_SESSION['flash_message']);
+        unset($_SESSION['flash_type']);
+    endif; ?>
+
+    <div class="row mb-3">
+        <div class="col-12">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAdicionarArtigo">
+                <i class="fas fa-plus me-1"></i> Novo Artigo
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modalGerenciarCategorias">
+                <i class="fas fa-tags me-1"></i> Gerenciar Categorias
+            </button>
         </div>
     </div>
-</div>
 
-<?php if (isset($_SESSION['flash_message'])): ?>
-<div class="alert alert-<?php echo $_SESSION['flash_type']; ?> alert-dismissible fade show">
-    <?php echo $_SESSION['flash_message']; ?>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-<?php 
-    // Limpar mensagem flash
-    unset($_SESSION['flash_message']);
-    unset($_SESSION['flash_type']);
-endif; ?>
-
-<section class="content">
-    <div class="container-fluid">
-        <div class="row mb-3">
-            <div class="col-12">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAdicionarArtigo">
-                    <i class="fas fa-plus"></i> Novo Artigo
-                </button>
-                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modalGerenciarCategorias">
-                    <i class="fas fa-tags"></i> Gerenciar Categorias
-                </button>
-            </div>
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-newspaper me-1"></i>
+            Artigos do Blog
         </div>
-        
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Artigos do Blog</h3>
-                <div class="card-tools">
-                    <div class="input-group input-group-sm" style="width: 150px;">
-                        <input type="text" id="pesquisarArtigo" class="form-control float-right" placeholder="Buscar">
-                        <div class="input-group-append">
-                            <button type="button" class="btn btn-outline-secondary">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
+        <div class="card-body">
+            <?php if (empty($artigos)): ?>
+                <div class="alert alert-info">
+                    Nenhum artigo encontrado. Clique em "Novo Artigo" para começar.
                 </div>
-            </div>
-            <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
+            <?php else: ?>
+                <table id="artigosTable" class="table table-striped table-bordered table-hover">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Título</th>
                             <th>Categoria</th>
                             <th>Autor</th>
+                            <th>Data</th>
                             <th>Status</th>
-                            <th>Data de Publicação</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($artigos as $artigo): ?>
-                        <tr>
-                            <td><?php echo $artigo['id']; ?></td>
-                            <td><?php echo truncateAdminText($artigo['titulo'], 50); ?></td>
-                            <td><?php echo $artigo['categoria_nome']; ?></td>
-                            <td><?php echo $artigo['autor_nome']; ?></td>
-                            <td><?php echo getStatusBadge($artigo['status'], 'artigo'); ?></td>
-                            <td><?php echo formatAdminDate($artigo['data_publicacao']); ?></td>
-                            <td>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-info" onclick="visualizarArtigo(<?php echo $artigo['id']; ?>, '<?php echo htmlspecialchars($artigo['titulo']); ?>')">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-warning" onclick="editarArtigo(<?php echo $artigo['id']; ?>, '<?php echo htmlspecialchars($artigo['titulo']); ?>')">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
+                            <tr>
+                                <td><?php echo $artigo['id']; ?></td>
+                                <td><?php echo htmlspecialchars($artigo['titulo']); ?></td>
+                                <td><?php echo htmlspecialchars($artigo['categoria_nome']); ?></td>
+                                <td><?php echo htmlspecialchars($artigo['autor_nome']); ?></td>
+                                <td><?php echo date('d/m/Y H:i', strtotime($artigo['data_publicacao'])); ?></td>
+                                <td>
                                     <?php if ($artigo['status'] == 'publicado'): ?>
-                                    <button type="button" class="btn btn-sm btn-secondary" onclick="confirmarAcao('despublicar', <?php echo $artigo['id']; ?>, '<?php echo htmlspecialchars($artigo['titulo']); ?>')">
-                                        <i class="fas fa-archive"></i>
-                                    </button>
+                                        <span class="badge bg-success">Publicado</span>
                                     <?php else: ?>
-                                    <button type="button" class="btn btn-sm btn-success" onclick="confirmarAcao('publicar', <?php echo $artigo['id']; ?>, '<?php echo htmlspecialchars($artigo['titulo']); ?>')">
-                                        <i class="fas fa-check"></i>
-                                    </button>
+                                        <span class="badge bg-secondary">Rascunho</span>
                                     <?php endif; ?>
-                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmarAcao('excluir', <?php echo $artigo['id']; ?>, '<?php echo htmlspecialchars($artigo['titulo']); ?>')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="<?php echo SITE_URL; ?>/?route=artigo&id=<?php echo $artigo['id']; ?>" target="_blank" class="btn btn-sm btn-info">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-primary" onclick="editarArtigo(<?php echo $artigo['id']; ?>, '<?php echo addslashes($artigo['titulo']); ?>')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-danger" onclick="confirmarAcao('excluir', <?php echo $artigo['id']; ?>, '<?php echo addslashes($artigo['titulo']); ?>')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-            </div>
+            <?php endif; ?>
         </div>
     </div>
-</section>
+</div>
 
 <!-- Modal Adicionar Artigo -->
 <div class="modal fade" id="modalAdicionarArtigo" tabindex="-1" role="dialog" aria-labelledby="modalAdicionarArtigoLabel" aria-hidden="true">
@@ -521,17 +503,59 @@ function confirmarAcao(acao, id, titulo) {
         mensagem = `Tem certeza que deseja despublicar o artigo "${titulo}"?`;
         tituloModal = 'Despublicar Artigo';
     } else if (acao === 'excluir') {
-        mensagem = `ATENÇÃO: Esta ação não pode ser desfeita. Tem certeza que deseja excluir o artigo "${titulo}"?`;
+        mensagem = `Tem certeza que deseja excluir o artigo "${titulo}"? Esta ação não pode ser desfeita.`;
         tituloModal = 'Excluir Artigo';
+    } else {
+        console.error('Ação inválida:', acao);
+        return;
     }
     
-    document.getElementById('modalConfirmacaoLabel').textContent = tituloModal;
-    document.getElementById('mensagem_confirmacao').textContent = mensagem;
-    document.getElementById('acao_confirmacao').value = acao;
-    document.getElementById('artigo_id_confirmacao').value = id;
-    
-    const modalConfirmacao = new bootstrap.Modal(document.getElementById('modalConfirmacao'));
-    modalConfirmacao.show();
+    if (confirm(mensagem)) {
+        // Criar formulário dinâmico para enviar a ação
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '<?php echo SITE_URL; ?>/admin/processar_blog.php';
+        
+        const inputAcao = document.createElement('input');
+        inputAcao.type = 'hidden';
+        inputAcao.name = 'acao';
+        inputAcao.value = acao;
+        form.appendChild(inputAcao);
+        
+        const inputId = document.createElement('input');
+        inputId.type = 'hidden';
+        inputId.name = 'artigo_id';
+        inputId.value = id;
+        form.appendChild(inputId);
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+// Função para excluir artigo
+function excluirArtigo(id, titulo) {
+    if (confirm(`Tem certeza que deseja excluir o artigo "${titulo}"? Esta ação não pode ser desfeita.`)) {
+        // Criar formulário dinâmico para enviar a ação
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '<?php echo SITE_URL; ?>/admin/processar_blog.php';
+        
+        const inputAcao = document.createElement('input');
+        inputAcao.type = 'hidden';
+        inputAcao.name = 'acao';
+        inputAcao.value = 'excluir';
+        form.appendChild(inputAcao);
+        
+        const inputId = document.createElement('input');
+        inputId.type = 'hidden';
+        inputId.name = 'artigo_id';
+        inputId.value = id;
+        form.appendChild(inputId);
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
 }
 
 // Função para pesquisar artigos na tabela

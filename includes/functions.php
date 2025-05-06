@@ -53,6 +53,10 @@ function slugify($text) {
  * Formata a data para exibição
  */
 function formatDate($date, $format = 'd/m/Y') {
+    if ($format === 'c' || $format === 'iso8601') {
+        return date('c', strtotime($date));
+    }
+    
     $dateObj = new DateTime($date);
     return $dateObj->format($format);
 }

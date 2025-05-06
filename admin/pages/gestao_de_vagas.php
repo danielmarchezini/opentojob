@@ -104,23 +104,27 @@ function getStatusClassVaga($status) {
 }
 ?>
 
-<div class="container-fluid">
-    <h1 class="h3 mb-4 text-gray-800">Gestão de Vagas</h1>
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Gestão de Vagas</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>/?route=painel_admin">Dashboard</a></li>
+        <li class="breadcrumb-item active">Gestão de Vagas</li>
+    </ol>
     
     <?php if (!empty($flash_message)): ?>
         <div class="alert alert-<?php echo $flash_type; ?> alert-dismissible fade show" role="alert">
             <?php echo $flash_message; ?>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Fechar">
-                <span aria-hidden="true">&times;</span>
-            </button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
         </div>
     <?php endif; ?>
     
-    <div class="card shadow mb-4">
-        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-            <h6 class="m-0 font-weight-bold text-primary">Lista de Vagas</h6>
-            <div class="dropdown no-arrow">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAdicionarVaga">
+    <!-- Lista de Vagas -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-briefcase me-1"></i>
+            Lista de Vagas
+            <div class="float-end">
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalAdicionarVaga">
                     <i class="fas fa-plus fa-sm"></i> Nova Vaga
                 </button>
             </div>
@@ -143,7 +147,7 @@ function getStatusClassVaga($status) {
                     </thead>
                     <tbody>
                         <?php foreach ($vagas as $vaga): ?>
-                            <tr>
+                            <tr data-vaga-id="<?php echo $vaga['id']; ?>">
                                 <td><?php echo $vaga['id']; ?></td>
                                 <td><?php echo htmlspecialchars($vaga['titulo']); ?></td>
                                 <td>
@@ -189,5 +193,77 @@ function getStatusClassVaga($status) {
 
 <!-- Scripts -->
 <script>var SITE_URL = '<?php echo SITE_URL; ?>';</script>
-<script src="<?php echo SITE_URL; ?>/admin/js/gestao_vagas_acoes.js"></script>
-<script src="<?php echo SITE_URL; ?>/admin/js/toggle_gestao_vagas.js"></script>
+<script src="<?php echo SITE_URL; ?>/admin/js/gestao_vagas_acoes.js?v=<?php echo time(); ?>"></script>
+<script src="<?php echo SITE_URL; ?>/admin/js/toggle_gestao_vagas.js?v=<?php echo time(); ?>"></script>
+
+<!-- Script para excluir vaga via AJAX -->
+<script>
+// Função para excluir vaga via AJAX
+function excluirVaga() {
+    const vagaId = document.getElementById('vaga_id_confirmacao').value;
+    const formData = new FormData();
+    formData.append('acao', 'excluir');
+    formData.append('vaga_id', vagaId);
+    
+    // Mostrar indicador de carregamento
+    document.getElementById('btnConfirmarExclusao').innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Excluindo...';
+    document.getElementById('btnConfirmarExclusao').disabled = true;
+    
+    // Enviar requisição AJAX
+    fetch(SITE_URL + '/admin/processar_gestao_vagas.php', {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Fechar o modal
+        const modalElement = document.getElementById('modalConfirmacao');
+        if (typeof bootstrap !== 'undefined') {
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            modal.hide();
+        } else if (typeof $ !== 'undefined') {
+            $(modalElement).modal('hide');
+        }
+        
+        // Exibir mensagem de sucesso
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-' + (data.success ? 'success' : 'danger') + ' alert-dismissible fade show';
+        alertDiv.innerHTML = `
+            ${data.message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+        `;
+        
+        // Inserir alerta antes da tabela
+        const cardBody = document.querySelector('.card-body');
+        cardBody.insertBefore(alertDiv, cardBody.firstChild);
+        
+        // Se a exclusão foi bem-sucedida, remover a linha da tabela
+        if (data.success) {
+            const row = document.querySelector(`tr[data-vaga-id="${vagaId}"]`);
+            if (row) {
+                row.remove();
+            } else {
+                // Se não encontrou a linha pelo atributo data, recarregar a tabela
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            }
+        }
+        
+        // Rolar para o topo para mostrar a mensagem
+        window.scrollTo(0, 0);
+    })
+    .catch(error => {
+        console.error('Erro ao excluir vaga:', error);
+        alert('Erro ao excluir vaga. Por favor, tente novamente.');
+    })
+    .finally(() => {
+        // Restaurar botão
+        document.getElementById('btnConfirmarExclusao').innerHTML = 'Excluir';
+        document.getElementById('btnConfirmarExclusao').disabled = false;
+    });
+}
+</script>

@@ -73,14 +73,8 @@ if (!ob_get_level()) {
                     <span>Empresas</span>
                 </a>
             </li>
-            <li class="<?php echo ($page == 'gerenciar_vagas') ? 'active' : ''; ?>">
-                <a href="<?php echo SITE_URL; ?>/?route=gerenciar_vagas_admin">
-                    <i class="fas fa-briefcase"></i>
-                    <span>Gerenciar Vagas</span>
-                </a>
-            </li>
             <li class="<?php echo ($page == 'gestao_de_vagas') ? 'active' : ''; ?>">
-                <a href="<?php echo SITE_URL; ?>/admin/?page=gestao_de_vagas">
+                <a href="<?php echo rtrim(SITE_URL, '/'); ?>/admin/index.php?page=gestao_de_vagas">
                     <i class="fas fa-tasks"></i>
                     <span>Nova Gestão de Vagas</span>
                 </a>
@@ -101,7 +95,6 @@ if (!ob_get_level()) {
                 </a>
                 <div class="collapse" id="collapseVagas" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="<?php echo SITE_URL; ?>/?route=gerenciar_vagas_admin">Gerenciar Vagas</a>
                         <a class="nav-link" href="<?php echo SITE_URL; ?>/?route=cadastrar_vaga_externa">Cadastrar Vaga Externa</a>
                     </nav>
                 </div>

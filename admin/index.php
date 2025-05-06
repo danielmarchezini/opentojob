@@ -58,7 +58,9 @@ $valid_pages = [
     'gestao_de_vagas',
     'gerenciar_newsletter',
     'gerenciar_equipe',
-    'editar_membro_equipe'
+    'editar_membro_equipe',
+    'gerenciar_emails',
+    'enviar_newsletter'
 ];
 
 // Verificar se a página solicitada é válida

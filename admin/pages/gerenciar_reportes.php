@@ -1,4 +1,26 @@
 <?php
+// Verificar se a tabela de reportes existe, caso contrário, criá-la
+try {
+    $db->execute("
+        CREATE TABLE IF NOT EXISTS reportes (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            usuario_reportado_id INT NOT NULL,
+            tipo_usuario_reportado ENUM('talento', 'empresa') NOT NULL,
+            usuario_reportante_id INT NULL,
+            motivo VARCHAR(255) NOT NULL,
+            descricao TEXT NOT NULL,
+            status ENUM('pendente', 'revisado', 'arquivado') DEFAULT 'pendente',
+            data_reporte DATETIME DEFAULT CURRENT_TIMESTAMP,
+            data_atualizacao DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            FOREIGN KEY (usuario_reportado_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+            FOREIGN KEY (usuario_reportante_id) REFERENCES usuarios(id) ON DELETE SET NULL
+        )
+    ");
+} catch (PDOException $e) {
+    $_SESSION['flash_message'] = "Erro ao criar tabela de reportes: " . $e->getMessage();
+    $_SESSION['flash_type'] = "danger";
+}
+
 // Obter lista de reportes
 $db = Database::getInstance();
 try {
@@ -61,255 +83,246 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<div class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1 class="m-0">Gerenciar Reportes</h1>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>/?route=painel_admin">Dashboard</a></li>
-                    <li class="breadcrumb-item active">Gerenciar Reportes</li>
-                </ol>
-            </div>
-        </div>
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Gerenciar Reportes</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>/?route=painel_admin">Dashboard</a></li>
+        <li class="breadcrumb-item active">Gerenciar Reportes</li>
+    </ol>
+
+    <?php if (isset($_SESSION['flash_message'])): ?>
+    <div class="alert alert-<?php echo $_SESSION['flash_type']; ?> alert-dismissible fade show">
+        <?php echo $_SESSION['flash_message']; ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-</div>
+    <?php 
+        // Limpar mensagem flash
+        unset($_SESSION['flash_message']);
+        unset($_SESSION['flash_type']);
+    endif; ?>
 
-<?php if (isset($_SESSION['flash_message'])): ?>
-<div class="alert alert-<?php echo $_SESSION['flash_type']; ?> alert-dismissible fade show">
-    <?php echo $_SESSION['flash_message']; ?>
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-<?php 
-    // Limpar mensagem flash
-    unset($_SESSION['flash_message']);
-    unset($_SESSION['flash_type']);
-endif; ?>
-
-<section class="content">
-    <div class="container-fluid">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Reportes de Usuários</h3>
-                <div class="card-tools">
-                    <div class="input-group input-group-sm" style="width: 150px;">
-                        <input type="text" id="pesquisarReporte" class="form-control float-right" placeholder="Buscar">
-                        <div class="input-group-append">
-                            <button type="button" class="btn btn-default">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
-                    <thead>
+    <!-- Lista de Reportes -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-flag me-1"></i>
+            Reportes de Usuários
+        </div>
+        <div class="card-body">
+            <table id="reportesTable" class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuário Reportado</th>
+                        <th>Reportado por</th>
+                        <th>Motivo</th>
+                        <th>Data</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (empty($reportes)): ?>
                         <tr>
-                            <th>ID</th>
-                            <th>Usuário Reportado</th>
-                            <th>Tipo</th>
-                            <th>Motivo</th>
-                            <th>Reportado por</th>
-                            <th>Data</th>
-                            <th>Status</th>
-                            <th>Ações</th>
+                            <td colspan="7" class="text-center">Nenhum reporte encontrado</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (empty($reportes)): ?>
+                    <?php else: ?>
+                        <?php foreach ($reportes as $reporte): ?>
                             <tr>
-                                <td colspan="8" class="text-center">Nenhum reporte encontrado</td>
-                            </tr>
-                        <?php else: ?>
-                            <?php foreach ($reportes as $reporte): ?>
-                                <tr>
-                                    <td><?php echo $reporte['id']; ?></td>
-                                    <td>
-                                        <a href="<?php echo SITE_URL; ?>/?route=<?php echo $reporte['tipo_usuario_reportado'] === 'talento' ? 'perfil_talento' : 'perfil_empresa'; ?>&id=<?php echo $reporte['usuario_reportado_id']; ?>" target="_blank">
-                                            <?php echo htmlspecialchars($reporte['usuario_reportado_nome']); ?>
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <span class="badge <?php echo $reporte['tipo_usuario_reportado'] === 'talento' ? 'badge-info' : 'badge-primary'; ?>">
-                                            <?php echo ucfirst($reporte['tipo_usuario_reportado']); ?>
-                                        </span>
-                                    </td>
-                                    <td><?php echo htmlspecialchars($reporte['motivo']); ?></td>
-                                    <td>
-                                        <?php if (!empty($reporte['usuario_reportante_id'])): ?>
-                                            <?php echo htmlspecialchars($reporte['usuario_reportante_nome']); ?>
-                                        <?php else: ?>
-                                            <span class="text-muted">Anônimo</span>
+                                <td><?php echo $reporte['id']; ?></td>
+                                <td>
+                                    <a href="<?php echo SITE_URL; ?>/?route=<?php echo $reporte['tipo_usuario_reportado'] === 'talento' ? 'perfil_talento' : 'perfil_empresa'; ?>&id=<?php echo $reporte['usuario_reportado_id']; ?>" target="_blank">
+                                        <?php echo htmlspecialchars($reporte['usuario_reportado_nome']); ?>
+                                    </a>
+                                    <span class="badge bg-<?php echo $reporte['tipo_usuario_reportado'] === 'talento' ? 'info' : 'primary'; ?>">
+                                        <?php echo $reporte['tipo_usuario_reportado'] === 'talento' ? 'Talento' : 'Empresa'; ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <?php if (!empty($reporte['usuario_reportante_id'])): ?>
+                                        <?php echo htmlspecialchars($reporte['usuario_reportante_nome']); ?>
+                                    <?php else: ?>
+                                        <span class="text-muted">Anônimo</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td><?php echo htmlspecialchars($reporte['motivo']); ?></td>
+                                <td><?php echo date('d/m/Y H:i', strtotime($reporte['data_reporte'])); ?></td>
+                                <td>
+                                    <?php 
+                                    $status_class = '';
+                                    switch ($reporte['status']) {
+                                        case 'revisado':
+                                            $status_class = 'success';
+                                            break;
+                                        case 'arquivado':
+                                            $status_class = 'secondary';
+                                            break;
+                                        case 'pendente':
+                                        default:
+                                            $status_class = 'warning';
+                                            break;
+                                    }
+                                    ?>
+                                    <span class="badge bg-<?php echo $status_class; ?>">
+                                        <?php echo ucfirst($reporte['status']); ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#modalDetalhes<?php echo $reporte['id']; ?>">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <?php if ($reporte['status'] === 'pendente'): ?>
+                                        <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalRevisar<?php echo $reporte['id']; ?>">
+                                            <i class="fas fa-check"></i>
+                                        </button>
                                         <?php endif; ?>
-                                    </td>
-                                    <td><?php echo date('d/m/Y H:i', strtotime($reporte['data_reporte'])); ?></td>
-                                    <td>
-                                        <?php
-                                        $status = $reporte['status'];
-                                        $status_class = '';
-                                        switch ($status) {
-                                            case 'revisado':
-                                                $status_class = 'badge-success';
-                                                break;
-                                            case 'arquivado':
-                                                $status_class = 'badge-secondary';
-                                                break;
-                                            case 'pendente':
-                                            default:
-                                                $status_class = 'badge-warning';
-                                                break;
-                                        }
-                                        ?>
-                                        <span class="badge <?php echo $status_class; ?>"><?php echo ucfirst($status); ?></span>
-                                    </td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#modalDetalhes<?php echo $reporte['id']; ?>">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            
+                                        <?php if ($reporte['status'] !== 'arquivado'): ?>
+                                        <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#modalArquivar<?php echo $reporte['id']; ?>">
+                                            <i class="fas fa-archive"></i>
+                                        </button>
+                                        <?php endif; ?>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <!-- Modal de Detalhes -->
+                            <div class="modal fade" id="modalDetalhes<?php echo $reporte['id']; ?>" tabindex="-1" aria-labelledby="modalDetalhesLabel<?php echo $reporte['id']; ?>" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="modalDetalhesLabel<?php echo $reporte['id']; ?>">Detalhes do Reporte #<?php echo $reporte['id']; ?></h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row mb-3">
+                                                <div class="col-md-4 text-right"><strong>Usuário Reportado:</strong></div>
+                                                <div class="col-md-8">
+                                                    <a href="<?php echo SITE_URL; ?>/?route=<?php echo $reporte['tipo_usuario_reportado'] === 'talento' ? 'perfil_talento' : 'perfil_empresa'; ?>&id=<?php echo $reporte['usuario_reportado_id']; ?>" target="_blank">
+                                                        <?php echo htmlspecialchars($reporte['usuario_reportado_nome']); ?>
+                                                    </a>
+                                                    <span class="badge bg-<?php echo $reporte['tipo_usuario_reportado'] === 'talento' ? 'info' : 'primary'; ?>">
+                                                        <?php echo $reporte['tipo_usuario_reportado'] === 'talento' ? 'Talento' : 'Empresa'; ?>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-4 text-right"><strong>Reportado por:</strong></div>
+                                                <div class="col-md-8">
+                                                    <?php if (!empty($reporte['usuario_reportante_id'])): ?>
+                                                        <?php echo htmlspecialchars($reporte['usuario_reportante_nome']); ?>
+                                                    <?php else: ?>
+                                                        <span class="text-muted">Anônimo</span>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-4 text-right"><strong>Motivo:</strong></div>
+                                                <div class="col-md-8"><?php echo htmlspecialchars($reporte['motivo']); ?></div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-4 text-right"><strong>Data:</strong></div>
+                                                <div class="col-md-8"><?php echo date('d/m/Y H:i', strtotime($reporte['data_reporte'])); ?></div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-4 text-right"><strong>Status:</strong></div>
+                                                <div class="col-md-8">
+                                                    <span class="badge bg-<?php echo $status_class; ?>">
+                                                        <?php echo ucfirst($reporte['status']); ?>
+                                                    </span>
+                                                    <?php if ($reporte['status'] !== 'pendente'): ?>
+                                                        <small class="text-muted d-block">Atualizado em: <?php echo date('d/m/Y H:i', strtotime($reporte['data_atualizacao'])); ?></small>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-4 text-right"><strong>Descrição:</strong></div>
+                                                <div class="col-md-8">
+                                                    <div class="p-2 bg-light rounded">
+                                                        <?php echo nl2br(htmlspecialchars($reporte['descricao'])); ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="alert alert-info mt-3">
+                                                <i class="fas fa-info-circle me-2"></i>
+                                                <small>Você pode tomar ações como suspender o usuário reportado ou entrar em contato para esclarecer a situação.</small>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                                             <?php if ($reporte['status'] === 'pendente'): ?>
                                             <form method="post" style="display: inline;">
                                                 <input type="hidden" name="reporte_id" value="<?php echo $reporte['id']; ?>">
                                                 <input type="hidden" name="acao" value="revisar">
-                                                <button type="submit" class="btn btn-sm btn-success" title="Marcar como revisado">
-                                                    <i class="fas fa-check"></i>
-                                                </button>
+                                                <button type="submit" class="btn btn-success">Marcar como Revisado</button>
                                             </form>
                                             <?php endif; ?>
-                                            
-                                            <?php if ($reporte['status'] !== 'arquivado'): ?>
-                                            <form method="post" style="display: inline;">
-                                                <input type="hidden" name="reporte_id" value="<?php echo $reporte['id']; ?>">
-                                                <input type="hidden" name="acao" value="arquivar">
-                                                <button type="submit" class="btn btn-sm btn-secondary" title="Arquivar reporte">
-                                                    <i class="fas fa-archive"></i>
-                                                </button>
-                                            </form>
-                                            <?php endif; ?>
-                                            
-                                            <form method="post" style="display: inline;">
-                                                <input type="hidden" name="reporte_id" value="<?php echo $reporte['id']; ?>">
-                                                <input type="hidden" name="acao" value="excluir">
-                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Excluir este reporte? Esta ação não pode ser desfeita.')" title="Excluir reporte">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                                
-                                <!-- Modal de Detalhes -->
-                                <div class="modal fade" id="modalDetalhes<?php echo $reporte['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="modalDetalhesLabel<?php echo $reporte['id']; ?>" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="modalDetalhesLabel<?php echo $reporte['id']; ?>">Detalhes do Reporte #<?php echo $reporte['id']; ?></h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <div class="row mb-3">
-                                                    <div class="col-md-4 text-right"><strong>Usuário Reportado:</strong></div>
-                                                    <div class="col-md-8">
-                                                        <a href="<?php echo SITE_URL; ?>/?route=<?php echo $reporte['tipo_usuario_reportado'] === 'talento' ? 'perfil_talento' : 'perfil_empresa'; ?>&id=<?php echo $reporte['usuario_reportado_id']; ?>" target="_blank">
-                                                            <?php echo htmlspecialchars($reporte['usuario_reportado_nome']); ?>
-                                                        </a>
-                                                        <span class="badge <?php echo $reporte['tipo_usuario_reportado'] === 'talento' ? 'badge-info' : 'badge-primary'; ?> ml-2">
-                                                            <?php echo ucfirst($reporte['tipo_usuario_reportado']); ?>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="row mb-3">
-                                                    <div class="col-md-4 text-right"><strong>Reportado por:</strong></div>
-                                                    <div class="col-md-8">
-                                                        <?php if (!empty($reporte['usuario_reportante_id'])): ?>
-                                                            <?php echo htmlspecialchars($reporte['usuario_reportante_nome']); ?>
-                                                        <?php else: ?>
-                                                            <span class="text-muted">Anônimo</span>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                </div>
-                                                <div class="row mb-3">
-                                                    <div class="col-md-4 text-right"><strong>Motivo:</strong></div>
-                                                    <div class="col-md-8"><?php echo htmlspecialchars($reporte['motivo']); ?></div>
-                                                </div>
-                                                <div class="row mb-3">
-                                                    <div class="col-md-4 text-right"><strong>Data:</strong></div>
-                                                    <div class="col-md-8"><?php echo date('d/m/Y H:i', strtotime($reporte['data_reporte'])); ?></div>
-                                                </div>
-                                                <div class="row mb-3">
-                                                    <div class="col-md-4 text-right"><strong>Status:</strong></div>
-                                                    <div class="col-md-8">
-                                                        <span class="badge <?php echo $status_class; ?>"><?php echo ucfirst($status); ?></span>
-                                                        <?php if ($reporte['status'] !== 'pendente' && !empty($reporte['data_atualizacao'])): ?>
-                                                            <small class="text-muted d-block">Atualizado em: <?php echo date('d/m/Y H:i', strtotime($reporte['data_atualizacao'])); ?></small>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                </div>
-                                                <?php if (!empty($reporte['descricao'])): ?>
-                                                <div class="row mb-3">
-                                                    <div class="col-md-4 text-right"><strong>Descrição:</strong></div>
-                                                    <div class="col-md-8">
-                                                        <div class="p-2 bg-light rounded">
-                                                            <?php echo nl2br(htmlspecialchars($reporte['descricao'])); ?>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <?php endif; ?>
-                                                
-                                                <div class="alert alert-info mt-3">
-                                                    <i class="fas fa-info-circle mr-2"></i>
-                                                    <small>Você pode tomar ações como suspender o usuário reportado ou entrar em contato para esclarecer a situação.</small>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                                                <?php if ($reporte['status'] === 'pendente'): ?>
-                                                <form method="post" style="display: inline;">
-                                                    <input type="hidden" name="reporte_id" value="<?php echo $reporte['id']; ?>">
-                                                    <input type="hidden" name="acao" value="revisar">
-                                                    <button type="submit" class="btn btn-success">Marcar como Revisado</button>
-                                                </form>
-                                                <?php endif; ?>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
+                            </div>
+                            
+                            <!-- Modal de Revisar -->
+                            <div class="modal fade" id="modalRevisar<?php echo $reporte['id']; ?>" tabindex="-1" aria-labelledby="modalRevisarLabel<?php echo $reporte['id']; ?>" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="modalRevisarLabel<?php echo $reporte['id']; ?>">Revisar Reporte #<?php echo $reporte['id']; ?></h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Deseja marcar este reporte como revisado?</p>
+                                            <p>Isso indica que você analisou o reporte e tomou as medidas necessárias.</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <form method="post">
+                                                <input type="hidden" name="reporte_id" value="<?php echo $reporte['id']; ?>">
+                                                <input type="hidden" name="acao" value="revisar">
+                                                <button type="submit" class="btn btn-success">Marcar como Revisado</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Modal de Arquivar -->
+                            <div class="modal fade" id="modalArquivar<?php echo $reporte['id']; ?>" tabindex="-1" aria-labelledby="modalArquivarLabel<?php echo $reporte['id']; ?>" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="modalArquivarLabel<?php echo $reporte['id']; ?>">Arquivar Reporte #<?php echo $reporte['id']; ?></h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Deseja arquivar este reporte?</p>
+                                            <p>Reportes arquivados ficam ocultos da lista principal.</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <form method="post">
+                                                <input type="hidden" name="reporte_id" value="<?php echo $reporte['id']; ?>">
+                                                <input type="hidden" name="acao" value="arquivar">
+                                                <button type="submit" class="btn btn-primary">Arquivar Reporte</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
         </div>
     </div>
-</section>
+</div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Filtro de pesquisa
-    const inputPesquisa = document.getElementById('pesquisarReporte');
-    if (inputPesquisa) {
-        inputPesquisa.addEventListener('keyup', function() {
-            const termo = this.value.toLowerCase();
-            const tabela = document.querySelector('table tbody');
-            const linhas = tabela.querySelectorAll('tr');
-            
-            linhas.forEach(function(linha) {
-                const texto = linha.textContent.toLowerCase();
-                if (texto.indexOf(termo) > -1) {
-                    linha.style.display = '';
-                } else {
-                    linha.style.display = 'none';
-                }
-            });
-        });
-    }
+$(document).ready(function() {
+    $('#reportesTable').DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese-Brasil.json'
+        },
+        order: [[0, 'desc']]
+    });
 });
 </script>

@@ -180,20 +180,69 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const emailInput = this.querySelector('input[type="email"]');
             const email = emailInput.value.trim();
+            const messageDiv = document.getElementById('newsletterMessage');
             
             if (!email) {
-                alert('Por favor, digite seu e-mail.');
+                showNewsletterMessage('Por favor, digite seu e-mail.', 'danger');
                 return;
             }
             
             if (!isValidEmail(email)) {
-                alert('Por favor, digite um e-mail válido.');
+                showNewsletterMessage('Por favor, digite um e-mail válido.', 'danger');
                 return;
             }
             
-            alert('Obrigado por se inscrever em nossa newsletter!');
-            emailInput.value = '';
+            // Mostrar indicador de carregamento
+            const submitButton = this.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.innerHTML;
+            submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Enviando...';
+            submitButton.disabled = true;
+            
+            // Enviar dados via AJAX
+            fetch(window.location.origin + '/open2w/processar_newsletter.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'email=' + encodeURIComponent(email)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Mostrar mensagem de sucesso
+                showNewsletterMessage(data.message, data.success ? 'success' : 'danger');
+                
+                // Limpar campo de e-mail se for bem-sucedido
+                if (data.success) {
+                    emailInput.value = '';
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao processar inscrição:', error);
+                showNewsletterMessage('Ocorreu um erro ao processar sua inscrição. Por favor, tente novamente.', 'danger');
+            })
+            .finally(() => {
+                // Restaurar botão
+                submitButton.innerHTML = originalButtonText;
+                submitButton.disabled = false;
+            });
         });
+        
+        // Função para mostrar mensagens
+        function showNewsletterMessage(message, type) {
+            const messageDiv = document.getElementById('newsletterMessage');
+            if (messageDiv) {
+                messageDiv.className = 'mt-2 alert alert-' + type;
+                messageDiv.textContent = message;
+                messageDiv.style.display = 'block';
+                
+                // Esconder a mensagem após 5 segundos
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            } else {
+                alert(message);
+            }
+        }
     }
     
     // Função para validar e-mail

@@ -70,6 +70,39 @@ if ($route === 'vaga') {
     error_log("Rota vaga acessada. Parâmetros: " . json_encode($_GET));
 }
 
+// Rotas de API
+if (strpos($route, 'api_') === 0) {
+    $is_api_route = true;
+    header('Content-Type: application/json');
+    
+    switch ($route) {
+        case 'api_salvar_meta_descricao':
+            include __DIR__ . '/api/salvar_meta_descricao.php';
+            break;
+            
+        case 'api_salvar_meta_descricoes':
+            include __DIR__ . '/api/salvar_meta_descricoes.php';
+            break;
+            
+        case 'gerar_sitemap':
+            // Redirecionar para o arquivo sitemap_generator.php
+            header('Location: ' . SITE_URL . '/sitemap_generator.php?save=1');
+            exit;
+            break;
+            
+        default:
+            // API não encontrada
+            echo json_encode([
+                'success' => false,
+                'message' => 'API não encontrada'
+            ]);
+            break;
+    }
+    
+    // Encerrar execução após processar a API
+    exit;
+}
+
 // Incluir cabeçalho apenas se não for uma rota de API
 if (!$is_api_route) {
     include 'templates/header.php';
@@ -672,7 +705,7 @@ switch ($route) {
         }
         break;
         
-    case 'gerenciar_depoimentos':
+    case 'gerenciar_depoimentos_admin':
         if (Auth::checkUserType('admin')) {
             // Definir página atual para carregar o CSS específico
             $page = 'gerenciar_depoimentos';
@@ -682,6 +715,22 @@ switch ($route) {
             include 'admin/includes/header.php';
             include 'admin/includes/sidebar.php';
             include 'admin/pages/gerenciar_depoimentos.php';
+            include 'admin/includes/footer.php';
+        } else {
+            include 'pages/acesso_negado.php';
+        }
+        break;
+        
+    case 'gerenciar_equipe_admin':
+        if (Auth::checkUserType('admin')) {
+            // Definir página atual para carregar o CSS específico
+            $page = 'gerenciar_equipe';
+            // Incluir funções administrativas
+            include 'admin/includes/admin_functions.php';
+            // Incluir cabeçalho, barra lateral e conteúdo
+            include 'admin/includes/header.php';
+            include 'admin/includes/sidebar.php';
+            include 'admin/pages/gerenciar_equipe.php';
             include 'admin/includes/footer.php';
         } else {
             include 'pages/acesso_negado.php';
@@ -912,7 +961,32 @@ switch ($route) {
     case 'api_mensagem_detalhe':
         include 'api/mensagem_detalhe.php';
         break;
+        
+    case 'api_salvar_meta_descricao':
+        $is_api_route = true;
+        include 'api/salvar_meta_descricao.php';
+        break;
+        
+    case 'api_salvar_meta_descricoes':
+        $is_api_route = true;
+        include 'api/salvar_meta_descricoes.php';
+        break;
     
+    // Páginas administrativas que precisam de redirecionamento especial
+    case 'gerenciar_depoimentos_admin':
+    case 'gerenciar_equipe_admin':
+    case 'configurar_smtp':
+    case 'gerenciar_blog_admin':
+    case 'gerenciar_webhooks_admin':
+    case 'gerenciar_contratacoes':
+    case 'gerenciar_reportes':
+    case 'gerenciar_avaliacoes_admin':
+    case 'estatisticas_interacoes':
+    case 'configuracoes_admin':
+    case 'configuracoes_monetizacao_admin':
+        include 'pages/admin_redirect.php';
+        break;
+        
     // Rota para página sobre (URL amigável)
     case 'sobre':
         include 'pages/sobre.php';
@@ -1212,7 +1286,7 @@ switch ($route) {
 }
 
 // Carregar rodapé apenas se não for uma rota de API
-if (!$is_api_route) {
+if (!isset($is_api_route) || !$is_api_route) {
     include 'templates/footer.php';
 }
 ?>

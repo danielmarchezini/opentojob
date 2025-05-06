@@ -28,6 +28,26 @@
         error_log('Erro ao carregar configurações SEO: ' . $e->getMessage());
     }
     
+    // Verificar se existe uma meta description específica para a página atual
+    $current_route = isset($_GET['route']) ? $_GET['route'] : 'home';
+    
+    // Tentar obter meta descrição específica do banco de dados
+    $meta_description_pagina = '';
+    try {
+        $meta_db = $db->fetch("SELECT descricao FROM meta_descricoes_paginas WHERE pagina = :pagina", ['pagina' => $current_route]);
+        if ($meta_db) {
+            $meta_description_pagina = $meta_db['descricao'];
+        }
+    } catch (Exception $e) {
+        // Silenciar erros para não afetar a exibição da página
+        error_log('Erro ao carregar meta descrição da página: ' . $e->getMessage());
+    }
+    
+    // Se encontrou uma meta descrição específica, usar ela
+    if (!empty($meta_description_pagina)) {
+        $meta_description = $meta_description_pagina;
+    }
+    
     // Carregar configurações de AdSense
     require_once 'includes/AdSense.php';
     $adsense = AdSense::getInstance();

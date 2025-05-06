@@ -155,6 +155,9 @@ switch ($acao) {
         break;
         
     case 'excluir':
+        // Definir o tipo de conteúdo como JSON antes de qualquer saída
+        header('Content-Type: application/json');
+        
         // Excluir vaga
         try {
             $db->delete('vagas', 'id = :id', [
@@ -162,22 +165,15 @@ switch ($acao) {
             ]);
             
             // Retornar sucesso em formato JSON
-            if ($is_ajax) {
-                header('Content-Type: application/json');
-                echo json_encode([
-                    'success' => true,
-                    'message' => 'Vaga excluída com sucesso!'
-                ]);
-                exit;
-            }
-            
-            $_SESSION['flash_message'] = "Vaga excluída com sucesso!";
-            $_SESSION['flash_type'] = "success";
-            header("Location: " . SITE_URL . "/admin/?page=gestao_de_vagas");
-            exit;
+            echo json_encode([
+                'success' => true,
+                'message' => 'Vaga excluída com sucesso!'
+            ]);
         } catch (Exception $e) {
+            // Registrar erro no log
+            error_log('Erro ao excluir vaga: ' . $e->getMessage());
+            
             // Retornar erro em formato JSON
-            header('Content-Type: application/json');
             echo json_encode([
                 'success' => false,
                 'message' => 'Erro ao excluir vaga: ' . $e->getMessage()

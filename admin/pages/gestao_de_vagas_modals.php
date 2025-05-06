@@ -368,10 +368,10 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <form action="<?php echo SITE_URL; ?>/admin/processar_gestao_vagas.php" method="post">
+                <button type="button" class="btn btn-danger" id="btnConfirmarExclusao" onclick="excluirVaga()">Excluir</button>
+                <form id="formExcluirVaga" action="<?php echo SITE_URL; ?>/admin/processar_gestao_vagas.php" method="post" style="display:none;">
                     <input type="hidden" name="acao" value="excluir">
                     <input type="hidden" name="vaga_id" id="vaga_id_confirmacao">
-                    <button type="submit" class="btn btn-danger">Excluir</button>
                 </form>
             </div>
         </div>

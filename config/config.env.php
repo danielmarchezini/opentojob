@@ -38,7 +38,7 @@ if (strpos($hostname, 'opentojob.com.br') !== false) {
 
 // Configurações comuns a todos os ambientes
 define('SITE_NAME', 'OpenToJob - Conectando talentos prontos a oportunidades imediatas');
-define('ADMIN_EMAIL', 'admin@opentojob.com.br');
+define('ADMIN_EMAIL', 'contato@open2w.com.br');
 
 // Verificar se ADMIN_PATH já está definida
 if (!defined('ADMIN_PATH')) {
@@ -46,7 +46,7 @@ if (!defined('ADMIN_PATH')) {
 }
 
 // Configurações de E-mail
-define('EMAIL_FROM', 'contato@opentojob.com.br');
+define('EMAIL_FROM', 'contato@open2w.com.br');
 define('EMAIL_FROM_NAME', 'OpenToJob');
 
 // Configurações de Upload

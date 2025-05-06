@@ -184,7 +184,7 @@ try {
                         <div class="form-text text-warning">
                             <i class="fas fa-exclamation-triangle"></i>
                             Não há modelos de email do tipo 'newsletter' cadastrados. 
-                            <a href="<?php echo SITE_URL; ?>/?route=gerenciar_emails">Clique aqui</a> para criar um modelo.
+                            <a href="<?php echo rtrim(SITE_URL, '/'); ?>/admin/index.php?page=gerenciar_emails">Clique aqui</a> para criar um modelo.
                         </div>
                     <?php endif; ?>
                 </div>
@@ -261,6 +261,27 @@ document.addEventListener('DOMContentLoaded', function() {
             conteudoPersonalizadoDiv.style.display = 'none';
         }
     });
+    
+    // Inicializar a exibição dos campos com base nos valores selecionados
+    if (destinatariosSelect.value === 'selecionar') {
+        destinatariosManuaisDiv.style.display = 'block';
+    }
+    
+    if (tipoConteudoSelect.value === 'modelo') {
+        modeloEmailDiv.style.display = 'block';
+        conteudoPersonalizadoDiv.style.display = 'none';
+    } else if (tipoConteudoSelect.value === 'personalizado') {
+        modeloEmailDiv.style.display = 'none';
+        conteudoPersonalizadoDiv.style.display = 'block';
+    }
+    
+    // Pré-selecionar a opção "Usar modelo de email" se houver modelos disponíveis
+    <?php if (!empty($modelos)): ?>
+    if (tipoConteudoSelect.value === '') {
+        tipoConteudoSelect.value = 'modelo';
+        modeloEmailDiv.style.display = 'block';
+    }
+    <?php endif; ?>
     
     // Selecionar/deselecionar todos os inscritos
     const selecionarTodosCheckbox = document.getElementById('selecionar_todos');

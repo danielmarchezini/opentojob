@@ -1,0 +1,15 @@
+# Habilitar o motor de reescrita
+RewriteEngine On
+
+# Definir diretório base para o subdiretório admin
+RewriteBase /open2w/admin/
+
+# Não aplicar regras a arquivos e diretórios existentes
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Redirecionar rotas administrativas para o router
+RewriteRule ^route/([a-zA-Z0-9_-]+)/?$ admin_router.php?route=$1 [QSA,L]
+
+# Impedir listagem de diretórios
+Options -Indexes

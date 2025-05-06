@@ -287,6 +287,72 @@ function confirmarExclusao(id, titulo) {
     }
 }
 
+// Função para excluir vaga via AJAX
+function excluirVaga() {
+    const vagaId = document.getElementById('vaga_id_confirmacao').value;
+    const formData = new FormData();
+    formData.append('acao', 'excluir');
+    formData.append('vaga_id', vagaId);
+    
+    // Mostrar indicador de carregamento
+    document.getElementById('btnConfirmarExclusao').innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Excluindo...';
+    document.getElementById('btnConfirmarExclusao').disabled = true;
+    
+    // Enviar requisição AJAX
+    fetch(SITE_URL + '/admin/processar_gestao_vagas.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Fechar o modal
+        const modalElement = document.getElementById('modalConfirmacao');
+        if (typeof bootstrap !== 'undefined') {
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            modal.hide();
+        } else if (typeof $ !== 'undefined') {
+            $(modalElement).modal('hide');
+        }
+        
+        // Exibir mensagem de sucesso
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-' + (data.success ? 'success' : 'danger') + ' alert-dismissible fade show';
+        alertDiv.innerHTML = `
+            ${data.message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+        `;
+        
+        // Inserir alerta antes da tabela
+        const cardBody = document.querySelector('.card-body');
+        cardBody.insertBefore(alertDiv, cardBody.firstChild);
+        
+        // Se a exclusão foi bem-sucedida, remover a linha da tabela
+        if (data.success) {
+            const row = document.querySelector(`tr[data-vaga-id="${vagaId}"]`);
+            if (row) {
+                row.remove();
+            } else {
+                // Se não encontrou a linha pelo atributo data, recarregar a tabela
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            }
+        }
+        
+        // Rolar para o topo para mostrar a mensagem
+        window.scrollTo(0, 0);
+    })
+    .catch(error => {
+        console.error('Erro ao excluir vaga:', error);
+        alert('Erro ao excluir vaga. Por favor, tente novamente.');
+    })
+    .finally(() => {
+        // Restaurar botão
+        document.getElementById('btnConfirmarExclusao').innerHTML = 'Excluir';
+        document.getElementById('btnConfirmarExclusao').disabled = false;
+    });
+}
+
 // Função para editar vaga a partir do modal de visualização
 function editarVagaDoModal() {
     const btnEditarVagaDetalhe = document.getElementById('btnEditarVagaDetalhe');

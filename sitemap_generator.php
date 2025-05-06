@@ -1,31 +1,12 @@
 <?php
-// Verificar se estamos forçando a regeneração do sitemap
-$force = isset($_GET['force']) && $_GET['force'] == '1';
-
-// Verificar se o sitemap.xml já existe e se não estamos forçando a regeneração
-$sitemap_path = __DIR__ . '/sitemap.xml';
-if (!$force && file_exists($sitemap_path) && filemtime($sitemap_path) > (time() - 86400)) {
-    // Se o sitemap.xml existir e tiver menos de 24 horas, apenas exibi-lo
-    // Definir cabeçalho XML antes de qualquer saída
-    if (!headers_sent()) {
-        header('Content-Type: application/xml; charset=utf-8');
-    }
-    readfile($sitemap_path);
-    exit;
-}
+// Este arquivo é usado exclusivamente para gerar o sitemap XML
+// Não inclui o header e footer do site
 
 // Desativar qualquer saída anterior
-if (ob_get_level()) {
-    ob_end_clean();
-}
+@ob_clean();
 
-// Definir cabeçalho XML antes de qualquer saída
-if (!headers_sent()) {
-    header('Content-Type: application/xml; charset=utf-8');
-}
-
-// Iniciar buffer de saída para capturar o XML
-ob_start();
+// Definir cabeçalho XML
+header('Content-Type: application/xml; charset=utf-8');
 
 // Incluir arquivos de configuração
 require_once 'config/config.php';
@@ -186,19 +167,17 @@ foreach ($static_urls as $url) {
 echo '</urlset>';
 
 // Salvar o XML gerado em um arquivo sitemap.xml
-$xml = ob_get_contents();
-ob_end_clean();
-
-try {
-    if (is_writable(dirname($sitemap_path))) {
-        file_put_contents($sitemap_path, $xml);
-    } else {
-        error_log("Não foi possível escrever o arquivo sitemap.xml - diretório sem permissão de escrita");
+if (isset($_GET['save']) && $_GET['save'] == '1') {
+    $sitemap_path = __DIR__ . '/sitemap.xml';
+    $xml = ob_get_contents();
+    
+    try {
+        if (is_writable(dirname($sitemap_path))) {
+            file_put_contents($sitemap_path, $xml);
+        } else {
+            error_log("Não foi possível escrever o arquivo sitemap.xml - diretório sem permissão de escrita");
+        }
+    } catch (Exception $e) {
+        error_log("Erro ao salvar sitemap.xml: " . $e->getMessage());
     }
-} catch (Exception $e) {
-    error_log("Erro ao salvar sitemap.xml: " . $e->getMessage());
 }
-
-// Exibir o XML gerado
-echo $xml;
-?>
