@@ -155,7 +155,7 @@ switch ($acao) {
             }
             
             try {
-                $modelo = $db->fetchOne("SELECT assunto, conteudo FROM modelos_email WHERE id = ?", [$modelo_id]);
+                $modelo = $db->fetchOne("SELECT assunto, conteudo FROM modelos_email WHERE id = ? AND tipo = 'newsletter'", [$modelo_id]);
                 
                 if (!$modelo) {
                     setFlashMessage('Modelo de email não encontrado', 'danger');

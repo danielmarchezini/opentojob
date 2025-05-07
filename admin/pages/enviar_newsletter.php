@@ -35,6 +35,7 @@ try {
     $modelos = $db->fetchAll("
         SELECT id, nome, assunto
         FROM modelos_email
+        WHERE tipo = 'newsletter'
         ORDER BY nome ASC
     ");
 } catch (PDOException $e) {
