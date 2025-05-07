@@ -155,7 +155,7 @@ switch ($acao) {
             }
             
             try {
-                $modelo = $db->fetch("SELECT assunto, conteudo FROM modelos_email WHERE id = ? AND tipo = 'newsletter'", [$modelo_id]);
+                $modelo = $db->fetch("SELECT assunto, corpo FROM modelos_email WHERE id = ? AND tipo = 'newsletter'", [$modelo_id]);
                 
                 if (!$modelo) {
                     setFlashMessage('Modelo de email não encontrado', 'danger');
@@ -164,7 +164,7 @@ switch ($acao) {
                 }
                 
                 $assunto = $modelo['assunto'];
-                $conteudo = $modelo['conteudo'];
+                $conteudo = $modelo['corpo'];
             } catch (Exception $e) {
                 setFlashMessage('Erro ao obter modelo de email: ' . $e->getMessage(), 'danger');
                 header('Location: ' . SITE_URL . '/?route=enviar_newsletter');
