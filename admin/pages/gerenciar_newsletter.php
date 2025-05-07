@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (typeof $.fn.DataTable !== 'undefined') {
         $('#inscritosTable').DataTable({
             "language": {
-                "url": "/open2w/assets/js/pt-BR.json"
+                "url": "/open2w/assets/js/serve-json.php?file=pt-BR.json"
             },
             "order": [[3, "desc"]] // Ordenar por data de inscrição (decrescente)
         });
