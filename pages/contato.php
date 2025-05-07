@@ -1,3 +1,43 @@
+<?php
+// Obter configurações do site
+$db = Database::getInstance();
+$configuracoes = [];
+
+// Verificar se a tabela existe
+$tabela_existe = $db->fetch("SELECT COUNT(*) as count FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = 'configuracoes'");
+
+if ($tabela_existe && $tabela_existe['count'] > 0) {
+    try {
+        $configs = $db->fetchAll("SELECT chave, valor FROM configuracoes");
+        foreach ($configs as $config) {
+            $configuracoes[$config['chave']] = $config['valor'];
+        }
+    } catch (Exception $e) {
+        // Silenciar erros
+    }
+}
+
+// Definir valores padrão para configurações não existentes
+$defaults = [
+    'site_titulo' => 'Open2W - Plataforma de Recrutamento',
+    'site_descricao' => 'Conectando talentos e empresas',
+    'email_contato' => 'contato@open2w.com',
+    'telefone_contato' => '(11) 1234-5678',
+    'endereco' => 'Av. Paulista, 1000 - São Paulo/SP',
+    'redes_sociais_facebook' => 'https://facebook.com/open2w',
+    'redes_sociais_instagram' => 'https://instagram.com/open2w',
+    'redes_sociais_linkedin' => 'https://linkedin.com/company/open2w',
+    'redes_sociais_twitter' => 'https://twitter.com/open2w'
+];
+
+// Mesclar configurações com valores padrão
+foreach ($defaults as $chave => $valor) {
+    if (!isset($configuracoes[$chave])) {
+        $configuracoes[$chave] = $valor;
+    }
+}
+?>
+
 <div class="contact-header">
     <div class="container">
         <h1 class="contact-title">Entre em Contato</h1>
@@ -13,7 +53,7 @@
             </div>
             <div class="info-content">
                 <h3>Endereço</h3>
-                <p>Av. Paulista, 1000, 10º andar<br>Bela Vista, São Paulo - SP<br>CEP: 01310-100</p>
+                <p><?php echo nl2br(htmlspecialchars($configuracoes['endereco'])); ?></p>
             </div>
         </div>
         
@@ -23,7 +63,7 @@
             </div>
             <div class="info-content">
                 <h3>Telefone</h3>
-                <p>(11) 3456-7890<br>(11) 98765-4321</p>
+                <p><?php echo htmlspecialchars($configuracoes['telefone_contato']); ?></p>
             </div>
         </div>
         
@@ -33,7 +73,7 @@
             </div>
             <div class="info-content">
                 <h3>E-mail</h3>
-                <p>contato@open2w.com.br<br>suporte@open2w.com.br</p>
+                <p><?php echo htmlspecialchars($configuracoes['email_contato']); ?></p>
             </div>
         </div>
         
@@ -48,10 +88,18 @@
         </div>
         
         <div class="social-links">
-            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+            <?php if (!empty($configuracoes['redes_sociais_facebook'])): ?>
+                <a href="<?php echo htmlspecialchars($configuracoes['redes_sociais_facebook']); ?>" class="social-link" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <?php endif; ?>
+            <?php if (!empty($configuracoes['redes_sociais_twitter'])): ?>
+                <a href="<?php echo htmlspecialchars($configuracoes['redes_sociais_twitter']); ?>" class="social-link" target="_blank"><i class="fab fa-twitter"></i></a>
+            <?php endif; ?>
+            <?php if (!empty($configuracoes['redes_sociais_linkedin'])): ?>
+                <a href="<?php echo htmlspecialchars($configuracoes['redes_sociais_linkedin']); ?>" class="social-link" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+            <?php endif; ?>
+            <?php if (!empty($configuracoes['redes_sociais_instagram'])): ?>
+                <a href="<?php echo htmlspecialchars($configuracoes['redes_sociais_instagram']); ?>" class="social-link" target="_blank"><i class="fab fa-instagram"></i></a>
+            <?php endif; ?>
         </div>
     </div>
     
@@ -89,11 +137,46 @@
             
             // Se não houver erros, processar a mensagem
             if (empty($erros)) {
-                // Em um sistema real, enviar e-mail ou salvar no banco de dados
-                // Aqui, apenas simulamos o envio
+                // Preparar o conteúdo do email
+                $assunto_email = "Contato via site: " . $assunto;
                 
-                $_SESSION['flash_message'] = "Sua mensagem foi enviada com sucesso! Entraremos em contato em breve.";
-                $_SESSION['flash_type'] = "success";
+                // Montar o corpo do email
+                $corpo_email = "<html><body>";
+                $corpo_email .= "<h2>Nova mensagem de contato</h2>";
+                $corpo_email .= "<p><strong>Nome:</strong> " . htmlspecialchars($nome) . "</p>";
+                $corpo_email .= "<p><strong>E-mail:</strong> " . htmlspecialchars($email) . "</p>";
+                $corpo_email .= "<p><strong>Assunto:</strong> " . htmlspecialchars($assunto) . "</p>";
+                $corpo_email .= "<p><strong>Mensagem:</strong></p>";
+                $corpo_email .= "<p>" . nl2br(htmlspecialchars($mensagem)) . "</p>";
+                $corpo_email .= "<p><small>Esta mensagem foi enviada através do formulário de contato do site " . htmlspecialchars(SITE_NAME) . ".</small></p>";
+                $corpo_email .= "</body></html>";
+                
+                // Configurar cabeçalhos do e-mail
+                $headers = [
+                    'MIME-Version: 1.0',
+                    'Content-type: text/html; charset=UTF-8',
+                    'From: ' . $nome . ' <' . $email . '>',
+                    'Reply-To: ' . $email,
+                    'X-Mailer: PHP/' . phpversion()
+                ];
+                
+                // Tentar enviar o email
+                $email_destino = $configuracoes['email_contato'];
+                $enviado = mail($email_destino, $assunto_email, $corpo_email, implode("\r\n", $headers));
+                
+                if ($enviado) {
+                    // Registrar no log
+                    error_log("Mensagem de contato enviada de {$email} para {$email_destino}");
+                    
+                    $_SESSION['flash_message'] = "Sua mensagem foi enviada com sucesso! Entraremos em contato em breve.";
+                    $_SESSION['flash_type'] = "success";
+                } else {
+                    // Registrar erro no log
+                    error_log("Falha ao enviar mensagem de contato de {$email} para {$email_destino}");
+                    
+                    $_SESSION['flash_message'] = "Houve um problema ao enviar sua mensagem. Por favor, tente novamente mais tarde ou entre em contato pelo e-mail " . htmlspecialchars($configuracoes['email_contato']) . ".";
+                    $_SESSION['flash_type'] = "danger";
+                }
                 
                 // Redirecionar para evitar reenvio do formulário
                 echo "<script>window.location.href = '" . SITE_URL . "/?route=contato';</script>";
