@@ -20,6 +20,7 @@ diagnostico_*.php
 debug_*.php
 temp_*.php
 testar_*.php
+!admin/testar_email.php
 teste_*.php
 limpar_*.php
 popular_*.php
