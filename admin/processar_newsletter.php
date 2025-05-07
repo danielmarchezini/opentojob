@@ -42,7 +42,7 @@ switch ($acao) {
         
         try {
             // Obter email do inscrito para o log
-            $inscrito = $db->fetchOne("SELECT email FROM newsletter_inscritos WHERE id = ?", [$inscrito_id]);
+            $inscrito = $db->fetch("SELECT email FROM newsletter_inscritos WHERE id = ?", [$inscrito_id]);
             
             if (!$inscrito) {
                 setFlashMessage('Inscrito não encontrado', 'danger');
@@ -91,7 +91,7 @@ switch ($acao) {
         
         try {
             // Obter email do inscrito para o log
-            $inscrito = $db->fetchOne("SELECT email FROM newsletter_inscritos WHERE id = ?", [$inscrito_id]);
+            $inscrito = $db->fetch("SELECT email FROM newsletter_inscritos WHERE id = ?", [$inscrito_id]);
             
             if (!$inscrito) {
                 setFlashMessage('Inscrito não encontrado', 'danger');
@@ -199,10 +199,12 @@ switch ($acao) {
                 }
                 
                 // Escapar IDs para evitar SQL injection
-                $inscritos_ids = array_map('intval', $inscritos_ids);
-                $ids_string = implode(',', $inscritos_ids);
-                
-                $lista_destinatarios = $db->fetchAll("SELECT id, email, nome, data_inscricao FROM newsletter_inscritos WHERE id IN ($ids_string) AND status = 'ativo'");
+                $ids_placeholders = implode(',', array_fill(0, count($inscritos_ids), '?'));
+                $lista_destinatarios = $db->fetchAll("
+                    SELECT id, email, nome, data_inscricao 
+                    FROM newsletter_inscritos 
+                    WHERE id IN ($ids_placeholders) AND status = 'ativo'
+                ", $inscritos_ids);
             }
             
             if (empty($lista_destinatarios)) {
@@ -216,64 +218,36 @@ switch ($acao) {
             exit;
         }
         
-        // Se for apenas um teste, enviar apenas para o admin
+        // Se for apenas um teste, enviar apenas para o email de teste
         if ($enviar_teste) {
             try {
                 // Incluir classe Mailer
                 require_once __DIR__ . '/../includes/Mailer.php';
                 $mailer = Mailer::getInstance();
                 
-                $admin = $db->fetch("SELECT email, nome FROM usuarios WHERE id = ?", [$_SESSION['user_id']]);
+                $email_teste = isset($_POST['email_teste']) ? trim($_POST['email_teste']) : '';
                 
-                if (!$admin) {
-                    setFlashMessage('Erro ao obter dados do administrador', 'danger');
+                if (empty($email_teste) || !filter_var($email_teste, FILTER_VALIDATE_EMAIL)) {
+                    setFlashMessage('Email de teste inválido', 'danger');
                     header('Location: ' . SITE_URL . '/?route=enviar_newsletter');
                     exit;
                 }
                 
-                // Verificar se existe um modelo de newsletter
-                $modelo = $db->fetch("SELECT id FROM modelos_email WHERE tipo = 'newsletter' ORDER BY id DESC LIMIT 1");
+                // Dados para o template
+                $dados = [
+                    'nome' => 'Usuário de Teste',
+                    'email' => $email_teste,
+                    'data_atual' => date('d/m/Y'),
+                    'url_cancelamento' => SITE_URL . '/?route=cancelar_newsletter&token=token_teste'
+                ];
                 
-                if ($modelo) {
-                    // Usar o modelo existente
-                    $dados = [
-                        'nome' => $admin['nome'],
-                        'email' => $admin['email'],
-                        'data_inscricao' => date('d/m/Y'),
-                        'link_cancelar' => SITE_URL . '/?route=cancelar_newsletter&token=TESTE',
-                        'assunto_personalizado' => $assunto,
-                        'conteudo_personalizado' => $conteudo
-                    ];
-                    
-                    // Enviar usando o Mailer
-                    if ($mailer->enviarNewsletter($modelo['id'], $admin['email'], $dados, true)) {
-                        setFlashMessage('Email de teste enviado com sucesso para ' . $admin['email'], 'success');
-                    } else {
-                        setFlashMessage('Erro ao enviar email de teste. Verifique as configurações de email do servidor.', 'danger');
-                    }
+                // Enviar email de teste
+                $resultado = $mailer->enviarNewsletter($modelo_id ?? 'personalizado', $email_teste, $dados, true);
+                
+                if ($resultado) {
+                    setFlashMessage('Email de teste enviado com sucesso para ' . $email_teste, 'success');
                 } else {
-                    // Se não houver modelo, usar o método tradicional
-                    // Substituir variáveis no conteúdo
-                    $conteudo_personalizado = str_replace(
-                        ['{nome}', '{email}', '{data_inscricao}', '{link_cancelar}'],
-                        [$admin['nome'], $admin['email'], date('d/m/Y'), SITE_URL . '/?route=cancelar_newsletter&token=TESTE'],
-                        $conteudo
-                    );
-                    
-                    // Enviar email de teste
-                    $assunto_teste = "[TESTE] " . $assunto;
-                    
-                    // Configurar cabeçalhos
-                    $headers = "MIME-Version: 1.0\r\n";
-                    $headers .= "Content-type: text/html; charset=UTF-8\r\n";
-                    $headers .= "From: " . SITE_NAME . " <" . EMAIL_FROM . ">\r\n";
-                    
-                    // Enviar email
-                    if (mail($admin['email'], $assunto_teste, $conteudo_personalizado, $headers)) {
-                        setFlashMessage('Email de teste enviado com sucesso para ' . $admin['email'] . ' (usando método direto)', 'success');
-                    } else {
-                        setFlashMessage('Erro ao enviar email de teste. Verifique as configurações de email do servidor.', 'danger');
-                    }
+                    setFlashMessage('Erro ao enviar email de teste', 'danger');
                 }
                 
                 header('Location: ' . SITE_URL . '/?route=enviar_newsletter');
@@ -285,72 +259,116 @@ switch ($acao) {
             }
         }
         
-        // Enviar newsletter para todos os destinatários
+        // Iniciar envio de newsletter para todos os destinatários
         $enviados = 0;
-        $erros = 0;
+        $falhas = 0;
         
+        // Incluir classe Mailer
+        require_once __DIR__ . '/../includes/Mailer.php';
+        $mailer = Mailer::getInstance();
+        
+        // Registrar início do envio
+        $admin_id = $_SESSION['user_id'];
+        $admin_nome = $_SESSION['user_nome'];
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $acao_log = "Início do envio de newsletter para " . count($lista_destinatarios) . " destinatários";
+        
+        $db->execute(
+            "INSERT INTO logs (usuario_id, usuario_nome, acao, ip, data_hora) VALUES (?, ?, ?, ?, NOW())",
+            [$admin_id, $admin_nome, $acao_log, $ip]
+        );
+        
+        // Processar cada destinatário
         foreach ($lista_destinatarios as $destinatario) {
             // Gerar token de cancelamento
             $token = md5($destinatario['email'] . time() . rand(1000, 9999));
             
             // Atualizar token no banco de dados
             try {
-                $db->execute("UPDATE newsletter_inscritos SET token = ? WHERE id = ?", [$token, $destinatario['id']]);
+                $db->execute(
+                    "UPDATE newsletter_inscritos SET token_cancelamento = ? WHERE id = ?",
+                    [$token, $destinatario['id']]
+                );
             } catch (Exception $e) {
-                // Continuar mesmo se houver erro ao atualizar o token
-                error_log('Erro ao atualizar token para ' . $destinatario['email'] . ': ' . $e->getMessage());
+                error_log("Erro ao atualizar token de cancelamento: " . $e->getMessage());
+                // Continuar mesmo com erro
             }
             
-            // Link para cancelar inscrição
-            $link_cancelar = SITE_URL . '/?route=cancelar_newsletter&token=' . $token;
+            // Dados para o template
+            $dados = [
+                'nome' => $destinatario['nome'] ?? 'Assinante',
+                'email' => $destinatario['email'],
+                'data_atual' => date('d/m/Y'),
+                'url_cancelamento' => SITE_URL . '/?route=cancelar_newsletter&token=' . $token
+            ];
             
-            // Substituir variáveis no conteúdo
-            $conteudo_personalizado = str_replace(
-                ['{nome}', '{email}', '{data_inscricao}', '{link_cancelar}'],
-                [$destinatario['nome'] ?: 'Assinante', $destinatario['email'], date('d/m/Y', strtotime($destinatario['data_inscricao'])), $link_cancelar],
-                $conteudo
-            );
+            // Enviar newsletter
+            $resultado = false;
             
-            // Configurar cabeçalhos
-            $headers = "MIME-Version: 1.0\r\n";
-            $headers .= "Content-type: text/html; charset=UTF-8\r\n";
-            $headers .= "From: " . SITE_NAME . " <" . EMAIL_FROM . ">\r\n";
+            if ($tipo_conteudo === 'modelo') {
+                // Usar modelo existente
+                $resultado = $mailer->enviarNewsletter($modelo_id, $destinatario['email'], $dados);
+            } else {
+                // Usar conteúdo personalizado
+                try {
+                    // Verificar se já existe um modelo temporário para esta newsletter
+                    $modelo = $db->fetch("SELECT id FROM modelos_email WHERE tipo = 'newsletter' ORDER BY id DESC LIMIT 1");
+                    
+                    if ($modelo) {
+                        // Atualizar modelo existente
+                        $db->execute(
+                            "UPDATE modelos_email SET assunto = ?, corpo = ? WHERE id = ?",
+                            [$assunto, $conteudo, $modelo['id']]
+                        );
+                        $modelo_id = $modelo['id'];
+                    } else {
+                        // Criar novo modelo temporário
+                        $modelo_id = $db->insert('modelos_email', [
+                            'codigo' => 'newsletter_temp_' . time(),
+                            'nome' => 'Newsletter Temporária',
+                            'assunto' => $assunto,
+                            'corpo' => $conteudo,
+                            'tipo' => 'newsletter',
+                            'data_criacao' => date('Y-m-d H:i:s')
+                        ]);
+                    }
+                    
+                    // Enviar usando o modelo temporário
+                    $resultado = $mailer->enviarNewsletter($modelo_id, $destinatario['email'], $dados);
+                } catch (Exception $e) {
+                    error_log("Erro ao criar/atualizar modelo temporário: " . $e->getMessage());
+                    $falhas++;
+                    continue;
+                }
+            }
             
-            // Enviar email
-            if (mail($destinatario['email'], $assunto, $conteudo_personalizado, $headers)) {
+            if ($resultado) {
                 $enviados++;
             } else {
-                $erros++;
+                $falhas++;
             }
             
-            // Pequena pausa para evitar sobrecarga do servidor de email
-            usleep(100000); // 0.1 segundo
+            // Pequena pausa para não sobrecarregar o servidor
+            usleep(100000); // 100ms
         }
         
-        // Registrar ação no log
-        $admin_id = $_SESSION['user_id'];
-        $admin_nome = $_SESSION['user_nome'];
-        $ip = $_SERVER['REMOTE_ADDR'];
-        $acao_log = "Envio de newsletter: $assunto (Enviados: $enviados, Erros: $erros)";
+        // Registrar conclusão do envio
+        $acao_log = "Conclusão do envio de newsletter: $enviados enviados, $falhas falhas";
         
-        try {
-            $db->execute(
-                "INSERT INTO logs (usuario_id, usuario_nome, acao, ip, data_hora) VALUES (?, ?, ?, ?, NOW())",
-                [$admin_id, $admin_nome, $acao_log, $ip]
-            );
-        } catch (Exception $e) {
-            // Ignorar erro ao registrar log
-            error_log('Erro ao registrar log: ' . $e->getMessage());
-        }
+        $db->execute(
+            "INSERT INTO logs (usuario_id, usuario_nome, acao, ip, data_hora) VALUES (?, ?, ?, ?, NOW())",
+            [$admin_id, $admin_nome, $acao_log, $ip]
+        );
         
-        if ($erros > 0) {
-            setFlashMessage("Newsletter enviada com $enviados sucesso(s) e $erros erro(s)", 'warning');
+        // Mensagem de sucesso/falha
+        if ($enviados > 0) {
+            setFlashMessage("Newsletter enviada com sucesso para $enviados destinatários" . ($falhas > 0 ? " ($falhas falhas)" : ""), 'success');
         } else {
-            setFlashMessage("Newsletter enviada com sucesso para $enviados destinatário(s)", 'success');
+            setFlashMessage("Falha ao enviar newsletter. Verifique os logs para mais detalhes.", 'danger');
         }
         
-        header('Location: ' . SITE_URL . '/?route=gerenciar_newsletter');
-        exit;
+        header('Location: ' . SITE_URL . '/?route=enviar_newsletter');
+        break;
         
     case 'exportar':
         // Exportar lista de inscritos
@@ -358,7 +376,7 @@ switch ($acao) {
         $status = isset($_POST['status']) ? $_POST['status'] : 'todos';
         
         try {
-            // Construir a consulta SQL com base no status selecionado
+            // Construir consulta SQL
             $sql = "SELECT id, email, nome, data_inscricao, status, ip_inscricao FROM newsletter_inscritos";
             $params = [];
             
@@ -369,12 +387,11 @@ switch ($acao) {
             
             $sql .= " ORDER BY data_inscricao DESC";
             
-            // Obter os inscritos
+            // Obter dados
             $inscritos = $db->fetchAll($sql, $params);
             
-            // Verificar se há inscritos
             if (empty($inscritos)) {
-                setFlashMessage('Não há inscritos para exportar', 'warning');
+                setFlashMessage('Nenhum inscrito encontrado para exportação', 'warning');
                 header('Location: ' . SITE_URL . '/admin/?page=gerenciar_newsletter');
                 exit;
             }
@@ -382,11 +399,24 @@ switch ($acao) {
             // Definir cabeçalhos
             $headers = ['ID', 'Email', 'Nome', 'Data de Inscrição', 'Status', 'IP'];
             
-            // Exportar de acordo com o formato
+            // Preparar dados para exportação
+            $dados = [];
+            foreach ($inscritos as $inscrito) {
+                $dados[] = [
+                    $inscrito['id'],
+                    $inscrito['email'],
+                    $inscrito['nome'] ?? 'N/A',
+                    $inscrito['data_inscricao'],
+                    $inscrito['status'],
+                    $inscrito['ip_inscricao'] ?? 'N/A'
+                ];
+            }
+            
+            // Exportar conforme formato selecionado
             if ($formato === 'csv') {
-                // Configurar cabeçalhos HTTP para download de CSV
+                // Configurar cabeçalhos HTTP
                 header('Content-Type: text/csv; charset=utf-8');
-                header('Content-Disposition: attachment; filename=inscritos_newsletter_' . date('Y-m-d') . '.csv');
+                header('Content-Disposition: attachment; filename="inscritos_newsletter_' . date('Y-m-d') . '.csv"');
                 
                 // Criar arquivo CSV
                 $output = fopen('php://output', 'w');
@@ -398,64 +428,44 @@ switch ($acao) {
                 fputcsv($output, $headers);
                 
                 // Escrever dados
-                foreach ($inscritos as $inscrito) {
-                    $row = [
-                        $inscrito['id'],
-                        $inscrito['email'],
-                        $inscrito['nome'] ?? '',
-                        $inscrito['data_inscricao'],
-                        $inscrito['status'],
-                        $inscrito['ip_inscricao'] ?? ''
-                    ];
-                    fputcsv($output, $row);
+                foreach ($dados as $linha) {
+                    fputcsv($output, $linha);
                 }
                 
                 fclose($output);
                 exit;
             } elseif ($formato === 'excel') {
-                // Verificar se a extensão PhpSpreadsheet está disponível
-                if (!class_exists('PhpOffice\PhpSpreadsheet\Spreadsheet')) {
-                    // Se não estiver disponível, fazer fallback para CSV
-                    setFlashMessage('Extensão PhpSpreadsheet não está disponível. Exportando como CSV.', 'warning');
-                    
-                    // Redirecionar para a mesma ação, mas com formato CSV
-                    $_POST['formato'] = 'csv';
-                    header('Location: ' . $_SERVER['REQUEST_URI']);
-                    exit;
+                // Configurar cabeçalhos HTTP
+                header('Content-Type: application/vnd.ms-excel');
+                header('Content-Disposition: attachment; filename="inscritos_newsletter_' . date('Y-m-d') . '.xls"');
+                
+                // Criar arquivo Excel (HTML)
+                echo '<table border="1">';
+                
+                // Cabeçalhos
+                echo '<tr>';
+                foreach ($headers as $header) {
+                    echo '<th>' . htmlspecialchars($header) . '</th>';
+                }
+                echo '</tr>';
+                
+                // Dados
+                foreach ($dados as $linha) {
+                    echo '<tr>';
+                    foreach ($linha as $celula) {
+                        echo '<td>' . htmlspecialchars($celula) . '</td>';
+                    }
+                    echo '</tr>';
                 }
                 
-                // Configurar cabeçalhos HTTP para download de Excel
-                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-                header('Content-Disposition: attachment; filename=inscritos_newsletter_' . date('Y-m-d') . '.xlsx');
-                
-                // Criar planilha
-                $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-                $sheet = $spreadsheet->getActiveSheet();
-                
-                // Adicionar cabeçalhos
-                for ($i = 0; $i < count($headers); $i++) {
-                    $sheet->setCellValue(chr(65 + $i) . '1', $headers[$i]);
-                }
-                
-                // Adicionar dados
-                $row = 2;
-                foreach ($inscritos as $inscrito) {
-                    $sheet->setCellValue('A' . $row, $inscrito['id']);
-                    $sheet->setCellValue('B' . $row, $inscrito['email']);
-                    $sheet->setCellValue('C' . $row, $inscrito['nome'] ?? '');
-                    $sheet->setCellValue('D' . $row, $inscrito['data_inscricao']);
-                    $sheet->setCellValue('E' . $row, $inscrito['status']);
-                    $sheet->setCellValue('F' . $row, $inscrito['ip_inscricao'] ?? '');
-                    $row++;
-                }
-                
-                // Salvar arquivo
-                $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-                $writer->save('php://output');
+                echo '</table>';
+                exit;
+            } else {
+                setFlashMessage('Formato de exportação inválido', 'danger');
+                header('Location: ' . SITE_URL . '/admin/?page=gerenciar_newsletter');
                 exit;
             }
         } catch (Exception $e) {
-            error_log('Erro ao exportar inscritos: ' . $e->getMessage());
             setFlashMessage('Erro ao exportar inscritos: ' . $e->getMessage(), 'danger');
             header('Location: ' . SITE_URL . '/admin/?page=gerenciar_newsletter');
             exit;
