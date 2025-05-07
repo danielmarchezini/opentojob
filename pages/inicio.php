@@ -639,7 +639,12 @@ try {
                 // Buscar número real de vagas ativas
                 try {
                     $total_vagas = $db->fetchColumn("SELECT COUNT(*) FROM vagas WHERE status = 'ativa'");
-                    echo '<p class="stat-number">' . number_format($total_vagas[0], 0, ',', '.') . '+</p>';
+                    // Verificar se o valor retornado é válido
+                    if (is_numeric($total_vagas)) {
+                        echo '<p class="stat-number">' . number_format($total_vagas, 0, ',', '.') . '+</p>';
+                    } else {
+                        echo '<p class="stat-number">0+</p>';
+                    }
                 } catch (Exception $e) {
                     echo '<p class="stat-number">15.000+</p>';
                 }
@@ -652,7 +657,12 @@ try {
                 // Buscar número real de empresas cadastradas
                 try {
                     $total_empresas = $db->fetchColumn("SELECT COUNT(*) FROM empresas");
-                    echo '<p class="stat-number">' . number_format($total_empresas[0], 0, ',', '.') . '+</p>';
+                    // Verificar se o valor retornado é válido
+                    if (is_numeric($total_empresas)) {
+                        echo '<p class="stat-number">' . number_format($total_empresas, 0, ',', '.') . '+</p>';
+                    } else {
+                        echo '<p class="stat-number">0+</p>';
+                    }
                 } catch (Exception $e) {
                     echo '<p class="stat-number">8.500+</p>';
                 }
@@ -665,7 +675,12 @@ try {
                 // Buscar número real de talentos cadastrados
                 try {
                     $total_talentos = $db->fetchColumn("SELECT COUNT(*) FROM talentos");
-                    echo '<p class="stat-number">' . number_format($total_talentos[0], 0, ',', '.') . '+</p>';
+                    // Verificar se o valor retornado é válido
+                    if (is_numeric($total_talentos)) {
+                        echo '<p class="stat-number">' . number_format($total_talentos, 0, ',', '.') . '+</p>';
+                    } else {
+                        echo '<p class="stat-number">0+</p>';
+                    }
                 } catch (Exception $e) {
                     echo '<p class="stat-number">120.000+</p>';
                 }
@@ -677,8 +692,24 @@ try {
                 <?php
                 // Buscar número real de demandas cadastradas
                 try {
-                    $total_demandas = $db->fetchColumn("SELECT COUNT(*) FROM demandas_talentos_talentos_talentos_talentos");
-                    echo '<p class="stat-number">' . number_format($total_demandas[0], 0, ',', '.') . '+</p>';
+                    // Verificar se a tabela existe antes de consultar
+                    $tabela_existe = $db->fetchColumn("SELECT COUNT(*) 
+                        FROM information_schema.tables 
+                        WHERE table_schema = '" . DB_NAME . "' 
+                        AND table_name = 'demandas_talentos'");
+                    
+                    if ($tabela_existe > 0) {
+                        $total_demandas = $db->fetchColumn("SELECT COUNT(*) FROM demandas_talentos");
+                    } else {
+                        $total_demandas = 0;
+                    }
+                    
+                    // Verificar se o valor retornado é válido
+                    if (is_numeric($total_demandas)) {
+                        echo '<p class="stat-number">' . number_format($total_demandas, 0, ',', '.') . '+</p>';
+                    } else {
+                        echo '<p class="stat-number">0+</p>';
+                    }
                 } catch (Exception $e) {
                     echo '<p class="stat-number">45.000+</p>';
                 }
