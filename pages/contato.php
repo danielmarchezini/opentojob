@@ -232,11 +232,11 @@ foreach ($defaults as $chave => $valor) {
     <div class="faq-container">
         <div class="faq-item">
             <div class="faq-question">
-                <h3>Como funciona o status #opentowork?</h3>
+                <h3>Quem é a OpenToJob?</h3>
                 <span class="toggle-icon"><i class="fas fa-plus"></i></span>
             </div>
             <div class="faq-answer">
-                <p>O status #opentowork é uma funcionalidade que permite que profissionais sinalizem sua disponibilidade para novas oportunidades. Ao ativar este status, você se torna mais visível para recrutadores e empresas que estão buscando talentos disponíveis. Você pode configurar a visibilidade deste status como pública (visível para todos) ou privada (visível apenas para recrutadores).</p>
+                <p>A OpenToJob é uma plataforma inovadora especializada em conectar talentos prontos para novas oportunidades com empresas em busca de profissionais qualificados e disponíveis. Nascemos com a missão de revolucionar o processo de recrutamento, tornando-o mais eficiente e focado em profissionais que estão realmente disponíveis para novas posições. Nossa plataforma utiliza tecnologia avançada para criar conexões relevantes entre candidatos e empregadores, reduzindo o tempo de contratação e aumentando a assertividade nos processos seletivos.</p>
             </div>
         </div>
         
@@ -256,7 +256,7 @@ foreach ($defaults as $chave => $valor) {
                 <span class="toggle-icon"><i class="fas fa-plus"></i></span>
             </div>
             <div class="faq-answer">
-                <p>Sim, o cadastro básico na plataforma é gratuito tanto para talentos quanto para empresas. Oferecemos também planos premium com recursos adicionais para empresas que desejam ter mais ferramentas de recrutamento e seleção.</p>
+                <p>Sim, o cadastro básico na plataforma é gratuito tanto para talentos quanto para empresas.</p>
             </div>
         </div>
         
