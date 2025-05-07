@@ -18,7 +18,7 @@ if (empty($token)) {
         $db = Database::getInstance();
         
         // Verificar se o token existe
-        $inscrito = $db->fetchOne("SELECT id, email, status FROM newsletter_inscritos WHERE token = ?", [$token]);
+        $inscrito = $db->fetch("SELECT id, email, status FROM newsletter_inscritos WHERE token = ?", [$token]);
         
         if (!$inscrito) {
             $mensagem = [
