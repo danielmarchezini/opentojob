@@ -75,7 +75,7 @@ switch ($acao) {
     case 'alterar_status':
         // Alterar status do inscrito
         $inscrito_id = isset($_POST['inscrito_id']) ? (int)$_POST['inscrito_id'] : 0;
-        $novo_status = isset($_POST['status']) ? $_POST['status'] : '';
+        $novo_status = isset($_POST['novo_status']) ? $_POST['novo_status'] : '';
         
         if ($inscrito_id <= 0) {
             setFlashMessage('ID do inscrito inválido', 'danger');
