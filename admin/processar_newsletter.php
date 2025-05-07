@@ -54,8 +54,8 @@ switch ($acao) {
             $db->execute("DELETE FROM newsletter_inscritos WHERE id = ?", [$inscrito_id]);
             
             // Registrar ação no log
-            $admin_id = $_SESSION['user_id'];
-            $admin_nome = $_SESSION['user_nome'];
+            $admin_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
+            $admin_nome = isset($_SESSION['user_nome']) ? $_SESSION['user_nome'] : 'Administrador';
             $ip = $_SERVER['REMOTE_ADDR'];
             $acao_log = "Exclusão de inscrito da newsletter: " . $inscrito['email'];
             
@@ -103,8 +103,8 @@ switch ($acao) {
             $db->execute("UPDATE newsletter_inscritos SET status = ? WHERE id = ?", [$novo_status, $inscrito_id]);
             
             // Registrar ação no log
-            $admin_id = $_SESSION['user_id'];
-            $admin_nome = $_SESSION['user_nome'];
+            $admin_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
+            $admin_nome = isset($_SESSION['user_nome']) ? $_SESSION['user_nome'] : 'Administrador';
             $ip = $_SERVER['REMOTE_ADDR'];
             $acao_log = "Alteração de status de inscrito da newsletter: " . $inscrito['email'] . " para " . $novo_status;
             
@@ -268,8 +268,8 @@ switch ($acao) {
         $mailer = Mailer::getInstance();
         
         // Registrar início do envio
-        $admin_id = $_SESSION['user_id'];
-        $admin_nome = $_SESSION['user_nome'];
+        $admin_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
+        $admin_nome = isset($_SESSION['user_nome']) ? $_SESSION['user_nome'] : 'Administrador';
         $ip = $_SERVER['REMOTE_ADDR'];
         $acao_log = "Início do envio de newsletter para " . count($lista_destinatarios) . " destinatários";
         
