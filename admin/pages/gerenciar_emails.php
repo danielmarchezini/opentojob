@@ -212,6 +212,21 @@ try {
                     </div>
                     
                     <div class="form-group">
+                        <label for="adicionar_tipo">Tipo de Email</label>
+                        <select class="form-control" id="adicionar_tipo" name="tipo" required>
+                            <option value="">Selecione um tipo</option>
+                            <option value="boas_vindas">Boas-vindas</option>
+                            <option value="recuperacao_senha">Recuperação de Senha</option>
+                            <option value="confirmacao">Confirmação</option>
+                            <option value="notificacao">Notificação</option>
+                            <option value="newsletter">Newsletter</option>
+                            <option value="alerta">Alerta</option>
+                            <option value="outro">Outro</option>
+                        </select>
+                        <small class="form-text text-muted">O tipo determina em quais partes do sistema este modelo estará disponível.</small>
+                    </div>
+                    
+                    <div class="form-group">
                         <label for="adicionar_corpo">Corpo do E-mail (HTML)</label>
                         <textarea class="form-control" id="adicionar_corpo" name="corpo" rows="10" required></textarea>
                         <small class="form-text text-muted">Use HTML para formatar o conteúdo. Variáveis podem ser incluídas no formato {{nome_variavel}}.</small>

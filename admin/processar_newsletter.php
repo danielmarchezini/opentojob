@@ -219,6 +219,10 @@ switch ($acao) {
         // Se for apenas um teste, enviar apenas para o admin
         if ($enviar_teste) {
             try {
+                // Incluir classe Mailer
+                require_once __DIR__ . '/../includes/Mailer.php';
+                $mailer = Mailer::getInstance();
+                
                 $admin = $db->fetch("SELECT email, nome FROM usuarios WHERE id = ?", [$_SESSION['user_id']]);
                 
                 if (!$admin) {
@@ -227,26 +231,49 @@ switch ($acao) {
                     exit;
                 }
                 
-                // Substituir variáveis no conteúdo
-                $conteudo_personalizado = str_replace(
-                    ['{nome}', '{email}', '{data_inscricao}', '{link_cancelar}'],
-                    [$admin['nome'], $admin['email'], date('d/m/Y'), SITE_URL . '/?route=cancelar_newsletter&token=TESTE'],
-                    $conteudo
-                );
+                // Verificar se existe um modelo de newsletter
+                $modelo = $db->fetch("SELECT id FROM modelos_email WHERE tipo = 'newsletter' ORDER BY id DESC LIMIT 1");
                 
-                // Enviar email de teste
-                $assunto_teste = "[TESTE] " . $assunto;
-                
-                // Configurar cabeçalhos
-                $headers = "MIME-Version: 1.0\r\n";
-                $headers .= "Content-type: text/html; charset=UTF-8\r\n";
-                $headers .= "From: " . SITE_NAME . " <" . EMAIL_FROM . ">\r\n";
-                
-                // Enviar email
-                if (mail($admin['email'], $assunto_teste, $conteudo_personalizado, $headers)) {
-                    setFlashMessage('Email de teste enviado com sucesso para ' . $admin['email'], 'success');
+                if ($modelo) {
+                    // Usar o modelo existente
+                    $dados = [
+                        'nome' => $admin['nome'],
+                        'email' => $admin['email'],
+                        'data_inscricao' => date('d/m/Y'),
+                        'link_cancelar' => SITE_URL . '/?route=cancelar_newsletter&token=TESTE',
+                        'assunto_personalizado' => $assunto,
+                        'conteudo_personalizado' => $conteudo
+                    ];
+                    
+                    // Enviar usando o Mailer
+                    if ($mailer->enviarNewsletter($modelo['id'], $admin['email'], $dados, true)) {
+                        setFlashMessage('Email de teste enviado com sucesso para ' . $admin['email'], 'success');
+                    } else {
+                        setFlashMessage('Erro ao enviar email de teste. Verifique as configurações de email do servidor.', 'danger');
+                    }
                 } else {
-                    setFlashMessage('Erro ao enviar email de teste', 'danger');
+                    // Se não houver modelo, usar o método tradicional
+                    // Substituir variáveis no conteúdo
+                    $conteudo_personalizado = str_replace(
+                        ['{nome}', '{email}', '{data_inscricao}', '{link_cancelar}'],
+                        [$admin['nome'], $admin['email'], date('d/m/Y'), SITE_URL . '/?route=cancelar_newsletter&token=TESTE'],
+                        $conteudo
+                    );
+                    
+                    // Enviar email de teste
+                    $assunto_teste = "[TESTE] " . $assunto;
+                    
+                    // Configurar cabeçalhos
+                    $headers = "MIME-Version: 1.0\r\n";
+                    $headers .= "Content-type: text/html; charset=UTF-8\r\n";
+                    $headers .= "From: " . SITE_NAME . " <" . EMAIL_FROM . ">\r\n";
+                    
+                    // Enviar email
+                    if (mail($admin['email'], $assunto_teste, $conteudo_personalizado, $headers)) {
+                        setFlashMessage('Email de teste enviado com sucesso para ' . $admin['email'] . ' (usando método direto)', 'success');
+                    } else {
+                        setFlashMessage('Erro ao enviar email de teste. Verifique as configurações de email do servidor.', 'danger');
+                    }
                 }
                 
                 header('Location: ' . SITE_URL . '/?route=enviar_newsletter');

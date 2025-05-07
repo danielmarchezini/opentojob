@@ -97,6 +97,65 @@ class Mailer {
     }
     
     /**
+     * Envia uma newsletter usando um modelo específico
+     * 
+     * @param string $modelo_id ID ou código do modelo a ser usado
+     * @param string $destinatario E-mail do destinatário
+     * @param array $dados Dados para substituir as variáveis do modelo
+     * @param bool $teste Indica se é um envio de teste
+     * @return bool Sucesso ou falha no envio
+     */
+    public function enviarNewsletter($modelo_id, $destinatario, $dados = [], $teste = false) {
+        try {
+            // Verificar se modelo_id é numérico (ID) ou string (código)
+            if (is_numeric($modelo_id)) {
+                $modelo = $this->db->fetch("SELECT * FROM modelos_email WHERE id = :id AND tipo = 'newsletter'", ['id' => $modelo_id]);
+            } else {
+                $modelo = $this->db->fetch("SELECT * FROM modelos_email WHERE codigo = :codigo AND tipo = 'newsletter'", ['codigo' => $modelo_id]);
+            }
+            
+            if (!$modelo) {
+                error_log("Modelo de newsletter não encontrado: $modelo_id");
+                return false;
+            }
+            
+            // Processar o assunto e corpo do e-mail substituindo as variáveis
+            $assunto = $this->processarTemplate($modelo['assunto'], $dados);
+            $corpo = $this->processarTemplate($modelo['corpo'], $dados);
+            
+            // Se for um teste, adicionar prefixo ao assunto
+            if ($teste) {
+                $assunto = "[TESTE] " . $assunto;
+            }
+            
+            // Configurar cabeçalhos do e-mail
+            $headers = [
+                'MIME-Version: 1.0',
+                'Content-type: text/html; charset=UTF-8',
+                'From: ' . EMAIL_FROM_NAME . ' <' . EMAIL_FROM . '>',
+                'Reply-To: ' . EMAIL_FROM,
+                'List-Unsubscribe: <' . SITE_URL . '/?route=cancelar_newsletter&email=' . urlencode($destinatario) . '>'
+            ];
+            
+            // Enviar e-mail
+            $resultado = mail($destinatario, $assunto, $corpo, implode("\r\n", $headers));
+            
+            // Registrar envio no log
+            if ($resultado) {
+                $log_mensagem = "Newsletter enviada com sucesso para $destinatario" . ($teste ? " (TESTE)" : "");
+            } else {
+                $log_mensagem = "Falha ao enviar newsletter para $destinatario" . ($teste ? " (TESTE)" : "");
+            }
+            error_log($log_mensagem);
+            
+            return $resultado;
+        } catch (Exception $e) {
+            error_log("Erro ao enviar newsletter: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
      * Envia um e-mail de boas-vindas para um novo usuário
      * 
      * @param array $usuario Dados do usuário
