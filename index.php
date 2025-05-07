@@ -34,8 +34,12 @@ try {
     $manutencao = $db->fetch("SELECT valor FROM configuracoes WHERE chave = 'manutencao_ativo'");
     $modo_manutencao = ($manutencao && $manutencao['valor'] == 1);
     
-    // Se o modo de manutenção estiver ativo e o usuário não for admin, exibir página de manutenção
-    if ($modo_manutencao && !Auth::checkUserType('admin')) {
+    // Verificar se é uma rota administrativa ou de login
+    $route = isset($_GET['route']) ? $_GET['route'] : 'inicio';
+    $is_admin_route = (strpos($route, 'admin') !== false || $route === 'entrar' || $route === 'login');
+    
+    // Se o modo de manutenção estiver ativo e o usuário não for admin e não estiver tentando acessar o painel admin
+    if ($modo_manutencao && !Auth::checkUserType('admin') && !$is_admin_route) {
         // Definir cabeçalho HTTP
         header('HTTP/1.1 503 Service Temporarily Unavailable');
         header('Status: 503 Service Temporarily Unavailable');
@@ -47,8 +51,12 @@ try {
                 <div class="maintenance-content">
                     <h1>Site em Manutenção</h1>
                     <p>Estamos realizando melhorias em nosso sistema. Por favor, tente novamente mais tarde.</p>
-                    <p>Agradecemos sua compreensão.</p>
-                </div>
+                    <p>Agradecemos sua compreensão.</p>';
+        
+        // Adicionar link para administradores
+        echo '    <p class="mt-4"><small><a href="' . SITE_URL . '/entrar">Acesso administrativo</a></small></p>';
+        
+        echo '  </div>
               </div>';
         include 'templates/footer.php';
         exit;
