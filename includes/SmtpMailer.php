@@ -94,9 +94,10 @@ class SmtpMailer {
      * @param string $assunto Assunto do e-mail
      * @param string $corpo Corpo do e-mail em HTML
      * @param array $anexos Array de anexos (opcional)
+     * @param array $headers_extras Cabeçalhos adicionais (opcional)
      * @return bool Sucesso ou falha no envio
      */
-    private function enviarSmtp($destinatario, $assunto, $corpo, $anexos = []) {
+    private function enviarSmtp($destinatario, $assunto, $corpo, $anexos = [], $headers_extras = []) {
         // Verificar se as configurações estão completas
         if (empty($this->config['host']) || empty($this->config['usuario']) || empty($this->config['senha'])) {
             error_log("Configurações de SMTP incompletas");
@@ -113,6 +114,13 @@ class SmtpMailer {
             'From: ' . $this->config['nome_remetente'] . ' <' . $this->config['email_remetente'] . '>',
             'Reply-To: ' . $this->config['email_remetente']
         ];
+        
+        // Adicionar cabeçalhos extras, se houver
+        if (!empty($headers_extras)) {
+            foreach ($headers_extras as $name => $value) {
+                $headers[] = "$name: $value";
+            }
+        }
         
         // Construir o corpo do e-mail com o boundary
         $message = "--$boundary\r\n";
@@ -244,6 +252,62 @@ class SmtpMailer {
         
         // Enviar e-mail via SMTP
         return $this->enviarSmtp($destinatario, $assunto, $corpo, $anexos);
+    }
+    
+    /**
+     * Envia uma newsletter usando um modelo específico
+     * 
+     * @param string $modelo_id ID ou código do modelo a ser usado
+     * @param string $destinatario E-mail do destinatário
+     * @param array $dados Dados para substituir as variáveis do modelo
+     * @param bool $teste Indica se é um envio de teste
+     * @return bool Sucesso ou falha no envio
+     */
+    public function enviarNewsletter($modelo_id, $destinatario, $dados = [], $teste = false) {
+        try {
+            // Verificar se modelo_id é numérico (ID) ou string (código)
+            if (is_numeric($modelo_id)) {
+                $modelo = $this->db->fetch("SELECT * FROM modelos_email WHERE id = :id AND tipo = 'newsletter'", ['id' => $modelo_id]);
+            } else {
+                $modelo = $this->db->fetch("SELECT * FROM modelos_email WHERE codigo = :codigo AND tipo = 'newsletter'", ['codigo' => $modelo_id]);
+            }
+            
+            if (!$modelo) {
+                error_log("Modelo de newsletter não encontrado: $modelo_id");
+                return false;
+            }
+            
+            // Processar o assunto e corpo do e-mail substituindo as variáveis
+            $assunto = $this->processarTemplate($modelo['assunto'], $dados);
+            $corpo = $this->processarTemplate($modelo['corpo'], $dados);
+            
+            // Se for um teste, adicionar prefixo ao assunto
+            if ($teste) {
+                $assunto = "[TESTE] " . $assunto;
+            }
+            
+            // Adicionar cabeçalho de cancelamento de inscrição
+            $anexos = [];
+            $headers_extras = [
+                'List-Unsubscribe' => '<' . SITE_URL . '/?route=cancelar_newsletter&email=' . urlencode($destinatario) . '>'
+            ];
+            
+            // Enviar e-mail via SMTP
+            $resultado = $this->enviarSmtp($destinatario, $assunto, $corpo, $anexos, $headers_extras);
+            
+            // Registrar envio no log
+            if ($resultado) {
+                $log_mensagem = "Newsletter enviada com sucesso para $destinatario" . ($teste ? " (TESTE)" : "");
+            } else {
+                $log_mensagem = "Falha ao enviar newsletter para $destinatario" . ($teste ? " (TESTE)" : "");
+            }
+            error_log($log_mensagem);
+            
+            return $resultado;
+        } catch (Exception $e) {
+            error_log("Erro ao enviar newsletter: " . $e->getMessage());
+            return false;
+        }
     }
     
     /**
