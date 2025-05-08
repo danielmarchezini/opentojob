@@ -11,6 +11,10 @@ $usuario_id = $_SESSION['user_id'];
 // Obter instância do banco de dados
 $db = Database::getInstance();
 
+// Inicializar variáveis para controlar o fluxo
+$erro = false;
+$mensagem_erro = '';
+
 // Verificar se o formulário foi enviado
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Verificar se a senha foi fornecida e está correta
@@ -98,18 +102,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['flash_type'] = "danger";
             }
         } else {
-            $_SESSION['flash_message'] = "Senha incorreta. Por favor, tente novamente.";
-            $_SESSION['flash_type'] = "danger";
-            // Redirecionar para a mesma página para evitar que a mensagem apareça em outras páginas
-            header('Location: ' . SITE_URL . '/?route=excluir_conta_empresa');
-            exit;
+            $erro = true;
+            $mensagem_erro = "Senha incorreta. Por favor, tente novamente.";
         }
     } else {
-        $_SESSION['flash_message'] = "Por favor, informe sua senha para confirmar a exclusão.";
-        $_SESSION['flash_type'] = "danger";
-        // Redirecionar para a mesma página para evitar que a mensagem apareça em outras páginas
-        header('Location: ' . SITE_URL . '/?route=excluir_conta_empresa');
-        exit;
+        $erro = true;
+        $mensagem_erro = "Por favor, informe sua senha para confirmar a exclusão.";
     }
 }
 
@@ -135,12 +133,11 @@ $motivos = [
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <?php if (isset($_SESSION['flash_message'])): ?>
-                <div class="alert alert-<?php echo $_SESSION['flash_type'] ?? 'info'; ?> alert-dismissible fade show" role="alert">
-                    <?php echo $_SESSION['flash_message']; ?>
+            <?php if ($erro): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?php echo $mensagem_erro; ?>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
                 </div>
-                <?php unset($_SESSION['flash_message'], $_SESSION['flash_type']); ?>
             <?php endif; ?>
             
             <div class="card border-danger">
