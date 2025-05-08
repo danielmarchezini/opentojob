@@ -36,11 +36,19 @@
                         ['id' => $usuario['id']]
                     );
                     
-                    // Em um sistema real, enviar e-mail com o link de recuperação
-                    // Aqui, apenas simulamos o envio
+                    // Enviar e-mail com o link de recuperação
+                    require_once 'includes/Mailer.php';
+                    $mailer = Mailer::getInstance();
+                    $enviado = $mailer->enviarEmailRecuperacaoSenha($usuario, $token);
                     
-                    $_SESSION['flash_message'] = "Um e-mail com instruções para recuperar sua senha foi enviado para {$email}. Por favor, verifique sua caixa de entrada.";
-                    $_SESSION['flash_type'] = "success";
+                    if ($enviado) {
+                        $_SESSION['flash_message'] = "Um e-mail com instruções para recuperar sua senha foi enviado para {$email}. Por favor, verifique sua caixa de entrada.";
+                        $_SESSION['flash_type'] = "success";
+                    } else {
+                        error_log("Falha ao enviar e-mail de recuperação para {$email}");
+                        $_SESSION['flash_message'] = "Houve um problema ao enviar o e-mail. Por favor, tente novamente mais tarde ou entre em contato com o suporte.";
+                        $_SESSION['flash_type'] = "danger";
+                    }
                     
                     // Redirecionar para a página de login
                     echo "<script>window.location.href = '" . SITE_URL . "/?route=entrar';</script>";

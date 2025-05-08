@@ -244,6 +244,9 @@ switch ($route) {
     case 'recuperar_senha':
         include 'pages/recuperar_senha.php';
         break;
+    case 'redefinir_senha':
+        include 'pages/redefinir_senha.php';
+        break;
     case 'api_alterar_senha':
         require_once 'api/alterar_senha.php';
         break;
