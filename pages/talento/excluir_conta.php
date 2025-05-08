@@ -79,14 +79,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Confirmar transação
                 $db->commit();
                 
-                // Destruir sessão
-                session_destroy();
-                
-                // Redirecionar para a página inicial com mensagem de sucesso
+                // Armazenar mensagem em uma variável para exibir antes do redirecionamento
                 $_SESSION['flash_message'] = "Sua conta foi excluída com sucesso. Agradecemos por ter utilizado nossos serviços.";
                 $_SESSION['flash_type'] = "success";
-                header('Location: ' . SITE_URL);
-                exit;
+                
+                // Destruir sessão
+                session_write_close();
+                
+                // Definir flag para redirecionamento via JavaScript
+                $conta_excluida = true;
                 
             } catch (PDOException $e) {
                 // Reverter transação em caso de erro
@@ -124,6 +125,26 @@ $motivos = [
 ];
 ?>
 
+<?php if (isset($conta_excluida) && $conta_excluida): ?>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="alert alert-success" role="alert">
+                <h4 class="alert-heading">Conta excluída com sucesso!</h4>
+                <p>Sua conta foi excluída com sucesso. Agradecemos por ter utilizado nossos serviços.</p>
+                <p>Você será redirecionado para a página inicial em alguns segundos...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Redirecionar para a página inicial após 3 segundos
+    setTimeout(function() {
+        window.location.href = '<?php echo SITE_URL; ?>';
+    }, 3000);
+</script>
+<?php else: ?>
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -133,7 +154,6 @@ $motivos = [
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
                 </div>
             <?php endif; ?>
-            
             <div class="card border-danger">
                 <div class="card-header bg-danger text-white">
                     <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Excluir Conta</h5>
@@ -204,6 +224,7 @@ $motivos = [
         </div>
     </div>
 </div>
+<?php endif; ?>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
