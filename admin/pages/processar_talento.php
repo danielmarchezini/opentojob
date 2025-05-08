@@ -147,6 +147,7 @@ switch ($acao) {
             // Atualizar dados do usuário
             $dados_usuario = [
                 'nome' => $nome,
+                'email' => $email,
                 'status' => $status
             ];
             
