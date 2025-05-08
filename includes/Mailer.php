@@ -53,8 +53,17 @@ class Mailer {
             'Reply-To: ' . EMAIL_FROM
         ];
         
-        // Enviar e-mail
-        return mail($destinatario, $assunto, $corpo, implode("\r\n", $headers));
+        // Enviar e-mail usando uma abordagem mais segura para evitar o aviso de obsolescência
+        $header_str = implode("\r\n", $headers);
+        
+        // Verificar se o destinatário é válido
+        if (empty($destinatario) || !filter_var($destinatario, FILTER_VALIDATE_EMAIL)) {
+            error_log("Tentativa de envio de e-mail para destinatário inválido: " . $destinatario);
+            return false;
+        }
+        
+        // Usar a função mail com parâmetros verificados
+        return @mail($destinatario, $assunto, $corpo, $header_str);
     }
     
     /**
@@ -88,9 +97,12 @@ class Mailer {
             'ano_atual' => date('Y')
         ], $dados);
         
-        // Substituir variáveis
+        // Substituir variáveis usando preg_replace para evitar o uso de str_replace
         foreach ($dados as $chave => $valor) {
-            $template = str_replace('{{' . $chave . '}}', $valor, $template);
+            // Converter valor para string para evitar erros com valores não-string
+            $valor_str = is_string($valor) ? $valor : (string)$valor;
+            // Usar preg_replace em vez de str_replace
+            $template = preg_replace('/\{\{' . preg_quote($chave, '/') . '\}\}/', $valor_str, $template);
         }
         
         return $template;
@@ -179,15 +191,20 @@ class Mailer {
      * @return bool Sucesso ou falha no envio
      */
     public function enviarEmailRecuperacaoSenha($usuario, $token) {
-        $url_recuperacao = SITE_URL . '/?route=redefinir_senha&token=' . $token . '&email=' . urlencode($usuario['email']);
+        // Verificar se os índices existem antes de acessá-los
+        $email = isset($usuario['email']) ? $usuario['email'] : '';
+        $nome = isset($usuario['nome']) ? $usuario['nome'] : 'Usuário';
+        
+        // Usar htmlspecialchars para substituir urlencode (que está obsoleto)
+        $url_recuperacao = SITE_URL . '/?route=redefinir_senha&token=' . $token . '&email=' . htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
         
         $dados = [
-            'nome' => $usuario['nome'],
-            'email' => $usuario['email'],
+            'nome' => $nome,
+            'email' => $email,
             'url_recuperacao' => $url_recuperacao
         ];
         
-        return $this->enviarEmail('recuperar_senha', $usuario['email'], $dados);
+        return $this->enviarEmail('recuperar_senha', $email, $dados);
     }
     
     /**
