@@ -80,11 +80,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $db->commit();
                 
                 // Armazenar mensagem em uma variável para exibir antes do redirecionamento
-                $_SESSION['flash_message'] = "Sua conta foi excluída com sucesso. Agradecemos por ter utilizado nossos serviços.";
-                $_SESSION['flash_type'] = "success";
+                $mensagem_sucesso = "Sua conta foi excluída com sucesso. Agradecemos por ter utilizado nossos serviços.";
                 
-                // Destruir sessão
-                session_write_close();
+                // Destruir completamente a sessão
+                $_SESSION = array();
+                
+                // Se houver cookies de sessão, invalíde-os
+                if (isset($_COOKIE[session_name()])) {
+                    setcookie(session_name(), '', time() - 3600, '/');
+                }
+                
+                // Destruir a sessão
+                session_destroy();
                 
                 // Definir flag para redirecionamento via JavaScript
                 $conta_excluida = true;
@@ -131,7 +138,7 @@ $motivos = [
         <div class="col-md-8">
             <div class="alert alert-success" role="alert">
                 <h4 class="alert-heading">Conta excluída com sucesso!</h4>
-                <p>Sua conta foi excluída com sucesso. Agradecemos por ter utilizado nossos serviços.</p>
+                <p><?php echo $mensagem_sucesso; ?></p>
                 <p>Você será redirecionado para a página inicial em alguns segundos...</p>
             </div>
         </div>
