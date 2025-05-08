@@ -343,9 +343,23 @@ $is_logged_in = isset($_SESSION['user_id']);
                 // Verificar se a tabela existe antes de consultar
                 try {
                     // Tentar obter avaliações aprovadas e públicas para este talento
-                    $avaliacoes = $db->fetchAll("SELECT * FROM avaliacoes_talentos WHERE talento_id = :talento_id AND aprovada = 1 AND publica = 1 ORDER BY data_avaliacao DESC", [
-                        'talento_id' => $talento_id
-                    ]);
+                    // Verificar a estrutura da tabela para usar o nome correto da coluna
+                    try {
+                        $avaliacoes = $db->fetchAll("SELECT * FROM avaliacoes_talentos WHERE talento_id = :talento_id AND status = 'aprovada' AND publica = 1 ORDER BY data_avaliacao DESC", [
+                            'talento_id' => $talento_id
+                        ]);
+                    } catch (Exception $e) {
+                        // Se falhar, tente uma consulta alternativa
+                        try {
+                            $avaliacoes = $db->fetchAll("SELECT * FROM avaliacoes_talentos WHERE talento_id = :talento_id AND publica = 1 ORDER BY data_avaliacao DESC", [
+                                'talento_id' => $talento_id
+                            ]);
+                        } catch (Exception $e2) {
+                            // Se ainda falhar, defina como array vazio
+                            $avaliacoes = [];
+                            error_log("Erro ao buscar avaliações: " . $e2->getMessage());
+                        }
+                    }
                     
                     // Calcular a média das pontuações
                     $total_avaliacoes = count($avaliacoes);

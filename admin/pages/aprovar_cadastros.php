@@ -88,8 +88,27 @@ function visualizarCadastro(id) {
 
 function aprovarCadastro(id) {
     if (confirm('Tem certeza que deseja aprovar este cadastro?')) {
-        // Implementar aprovação de cadastro
-        alert('Cadastro ' + id + ' aprovado com sucesso!');
+        // Enviar requisição AJAX para aprovar o cadastro
+        $.ajax({
+            url: '<?php echo SITE_URL; ?>/admin/processar_aprovacao_cadastro.php',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id: id
+            },
+            success: function(response) {
+                if (response.success) {
+                    alert(response.message);
+                    // Recarregar a página para atualizar a lista
+                    location.reload();
+                } else {
+                    alert('Erro: ' + response.message);
+                }
+            },
+            error: function() {
+                alert('Erro ao processar a requisição. Tente novamente.');
+            }
+        });
     }
 }
 
