@@ -221,9 +221,9 @@ switch ($acao) {
         // Se for apenas um teste, enviar apenas para o email de teste
         if ($enviar_teste) {
             try {
-                // Incluir classe Mailer
-                require_once __DIR__ . '/../includes/Mailer.php';
-                $mailer = Mailer::getInstance();
+                // Incluir classe SmtpMailer
+                require_once __DIR__ . '/../includes/SmtpMailer.php';
+                $mailer = SmtpMailer::getInstance();
                 
                 $email_teste = isset($_POST['email_teste']) ? trim($_POST['email_teste']) : '';
                 
@@ -263,9 +263,9 @@ switch ($acao) {
         $enviados = 0;
         $falhas = 0;
         
-        // Incluir classe Mailer
-        require_once __DIR__ . '/../includes/Mailer.php';
-        $mailer = Mailer::getInstance();
+        // Incluir classe SmtpMailer
+        require_once __DIR__ . '/../includes/SmtpMailer.php';
+        $mailer = SmtpMailer::getInstance();
         
         // Registrar início do envio
         $admin_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;

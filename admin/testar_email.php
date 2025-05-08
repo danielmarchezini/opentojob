@@ -9,7 +9,7 @@ if (session_status() == PHP_SESSION_NONE) {
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../includes/Database.php';
 require_once __DIR__ . '/../includes/Auth.php';
-require_once __DIR__ . '/../includes/Mailer.php';
+require_once __DIR__ . '/../includes/SmtpMailer.php';
 
 // Verificar se o usuário está logado e é um administrador
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'admin') {
@@ -35,8 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (empty($email)) {
         showMessage('Por favor, informe um e-mail de destino.', 'error');
     } else {
-        // Obter instância do Mailer
-        $mailer = Mailer::getInstance();
+        // Obter instância do SmtpMailer
+        $mailer = SmtpMailer::getInstance();
         
         // Preparar dados de teste
         $dados = [
