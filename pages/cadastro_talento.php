@@ -100,8 +100,8 @@
                         ];
                         
                         // Enviar e-mail de instruções para o usuário
-                        require_once 'includes/Mailer.php';
-                        $mailer = Mailer::getInstance();
+                        require_once 'includes/SmtpMailer.php';
+                        $mailer = SmtpMailer::getInstance();
                         $mailer->enviarEmailInstrucoesAprovacao($dadosUsuarioCompleto);
                         
                         // Enviar e-mail de notificação para o administrador

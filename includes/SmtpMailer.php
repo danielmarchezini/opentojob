@@ -311,6 +311,27 @@ class SmtpMailer {
     }
     
     /**
+     * Envia um e-mail de boas-vindas para um novo usuário
+     * 
+     * @param array $usuario Dados do usuário
+     * @return bool Sucesso ou falha no envio
+     */
+    public function enviarEmailBoasVindas($usuario) {
+        // Verificar se os índices existem antes de acessá-los
+        $email = isset($usuario['email']) ? $usuario['email'] : '';
+        $nome = isset($usuario['nome']) ? $usuario['nome'] : 'Usuário';
+        $tipo = isset($usuario['tipo']) ? $usuario['tipo'] : 'talento';
+        
+        $dados = [
+            'nome' => $nome,
+            'email' => $email,
+            'tipo_usuario' => ucfirst($tipo)
+        ];
+        
+        return $this->enviarEmail('boas_vindas', $email, $dados);
+    }
+    
+    /**
      * Envia um e-mail de recuperação de senha
      * 
      * @param array $usuario Dados do usuário
@@ -332,6 +353,128 @@ class SmtpMailer {
         ];
         
         return $this->enviarEmail('recuperar_senha', $email, $dados);
+    }
+    
+    /**
+     * Envia um e-mail de aprovação de cadastro
+     * 
+     * @param array $usuario Dados do usuário
+     * @return bool Sucesso ou falha no envio
+     */
+    public function enviarEmailAprovacaoCadastro($usuario) {
+        // Verificar se os índices existem antes de acessá-los
+        $email = isset($usuario['email']) ? $usuario['email'] : '';
+        $nome = isset($usuario['nome']) ? $usuario['nome'] : 'Usuário';
+        $tipo = isset($usuario['tipo']) ? $usuario['tipo'] : 'talento';
+        
+        $dados = [
+            'nome' => $nome,
+            'email' => $email,
+            'tipo_usuario' => ucfirst($tipo)
+        ];
+        
+        return $this->enviarEmail('aprovacao_cadastro', $email, $dados);
+    }
+    
+    /**
+     * Envia um e-mail de nova vaga para um talento
+     * 
+     * @param array $talento Dados do talento
+     * @param array $vaga Dados da vaga
+     * @return bool Sucesso ou falha no envio
+     */
+    public function enviarEmailNovaVaga($talento, $vaga) {
+        // Verificar se os índices existem antes de acessá-los
+        $email = isset($talento['email']) ? $talento['email'] : '';
+        $nome = isset($talento['nome']) ? $talento['nome'] : 'Usuário';
+        
+        $url_vaga = SITE_URL . '/?route=visualizar_vaga&id=' . (isset($vaga['id']) ? $vaga['id'] : 0);
+        
+        $dados = [
+            'nome' => $nome,
+            'email' => $email,
+            'titulo_vaga' => isset($vaga['titulo']) ? $vaga['titulo'] : 'Vaga',
+            'empresa_vaga' => isset($vaga['empresa_nome']) ? $vaga['empresa_nome'] : 'Empresa',
+            'localizacao_vaga' => (isset($vaga['cidade']) ? $vaga['cidade'] : 'Cidade') . '/' . (isset($vaga['estado']) ? $vaga['estado'] : 'Estado'),
+            'url_vaga' => $url_vaga
+        ];
+        
+        return $this->enviarEmail('nova_vaga', $email, $dados);
+    }
+    
+    /**
+     * Envia um e-mail de candidatura recebida para uma empresa
+     * 
+     * @param array $empresa Dados da empresa
+     * @param array $vaga Dados da vaga
+     * @param array $candidato Dados do candidato
+     * @return bool Sucesso ou falha no envio
+     */
+    public function enviarEmailCandidaturaRecebida($empresa, $vaga, $candidato) {
+        // Verificar se os índices existem antes de acessá-los
+        $email_empresa = isset($empresa['email']) ? $empresa['email'] : '';
+        $nome_empresa = isset($empresa['nome']) ? $empresa['nome'] : 'Empresa';
+        
+        $url_perfil_candidato = SITE_URL . '/?route=perfil_talento&id=' . (isset($candidato['id']) ? $candidato['id'] : 0);
+        
+        $dados = [
+            'nome_empresa' => $nome_empresa,
+            'email_empresa' => $email_empresa,
+            'titulo_vaga' => isset($vaga['titulo']) ? $vaga['titulo'] : 'Vaga',
+            'nome_candidato' => isset($candidato['nome']) ? $candidato['nome'] : 'Candidato',
+            'email_candidato' => isset($candidato['email']) ? $candidato['email'] : '',
+            'url_perfil_candidato' => $url_perfil_candidato
+        ];
+        
+        return $this->enviarEmail('candidatura_recebida', $email_empresa, $dados);
+    }
+    
+    /**
+     * Envia um e-mail para o administrador sobre um novo cadastro
+     * 
+     * @param array $usuario Dados do usuário recém-cadastrado
+     * @return bool Sucesso ou falha no envio
+     */
+    public function enviarEmailNovoUsuarioAdmin($usuario) {
+        // Verificar se os índices existem antes de acessá-los
+        $email = isset($usuario['email']) ? $usuario['email'] : '';
+        $nome = isset($usuario['nome']) ? $usuario['nome'] : 'Usuário';
+        $tipo = isset($usuario['tipo']) ? $usuario['tipo'] : 'talento';
+        $data_cadastro = isset($usuario['data_cadastro']) ? $usuario['data_cadastro'] : date('Y-m-d H:i:s');
+        
+        $url_admin = SITE_URL . '/?route=painel_admin';
+        
+        $dados = [
+            'nome' => $nome,
+            'email' => $email,
+            'tipo_usuario' => ucfirst($tipo),
+            'data_cadastro' => date('d/m/Y H:i', strtotime($data_cadastro)),
+            'url_admin' => $url_admin
+        ];
+        
+        // Enviar para o e-mail do administrador definido nas configurações
+        return $this->enviarEmail('novo_cadastro_admin', ADMIN_EMAIL, $dados);
+    }
+    
+    /**
+     * Envia um e-mail com instruções para aprovação de cadastro
+     * 
+     * @param array $usuario Dados do usuário
+     * @return bool Sucesso ou falha no envio
+     */
+    public function enviarEmailInstrucoesAprovacao($usuario) {
+        // Verificar se os índices existem antes de acessá-los
+        $email = isset($usuario['email']) ? $usuario['email'] : '';
+        $nome = isset($usuario['nome']) ? $usuario['nome'] : 'Usuário';
+        
+        $dados = [
+            'nome' => $nome,
+            'email' => $email,
+            'url_linkedin' => 'https://www.linkedin.com/company/opentojob/',
+            'email_suporte' => ADMIN_EMAIL
+        ];
+        
+        return $this->enviarEmail('instrucoes_aprovacao', $email, $dados);
     }
     
     /**
