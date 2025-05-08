@@ -311,6 +311,30 @@ class SmtpMailer {
     }
     
     /**
+     * Envia um e-mail de recuperação de senha
+     * 
+     * @param array $usuario Dados do usuário
+     * @param string $token Token de recuperação
+     * @return bool Sucesso ou falha no envio
+     */
+    public function enviarEmailRecuperacaoSenha($usuario, $token) {
+        // Verificar se os índices existem antes de acessá-los
+        $email = isset($usuario['email']) ? $usuario['email'] : '';
+        $nome = isset($usuario['nome']) ? $usuario['nome'] : 'Usuário';
+        
+        // Usar htmlspecialchars para codificar o e-mail na URL
+        $url_recuperacao = SITE_URL . '/?route=redefinir_senha&token=' . $token . '&email=' . htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
+        
+        $dados = [
+            'nome' => $nome,
+            'email' => $email,
+            'url_recuperacao' => $url_recuperacao
+        ];
+        
+        return $this->enviarEmail('recuperar_senha', $email, $dados);
+    }
+    
+    /**
      * Obtém um modelo de e-mail do banco de dados pelo código
      * 
      * @param string $codigo Código do modelo

@@ -36,9 +36,9 @@
                         ['id' => $usuario['id']]
                     );
                     
-                    // Enviar e-mail com o link de recuperação
-                    require_once 'includes/Mailer.php';
-                    $mailer = Mailer::getInstance();
+                    // Enviar e-mail com o link de recuperação usando SmtpMailer
+                    require_once 'includes/SmtpMailer.php';
+                    $mailer = SmtpMailer::getInstance();
                     $enviado = $mailer->enviarEmailRecuperacaoSenha($usuario, $token);
                     
                     if ($enviado) {
