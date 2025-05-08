@@ -87,16 +87,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Armazenar mensagem em uma variável para exibir antes do redirecionamento
                 $mensagem_sucesso = "Sua conta foi excluída com sucesso. Agradecemos por ter utilizado nossos serviços.";
                 
-                // Destruir completamente a sessão
+                // Apenas limpar os dados da sessão sem tentar modificar cookies
+                // Isso evita o erro "headers already sent"
                 $_SESSION = array();
-                
-                // Se houver cookies de sessão, invalíde-os
-                if (isset($_COOKIE[session_name()])) {
-                    setcookie(session_name(), '', time() - 3600, '/');
-                }
-                
-                // Destruir a sessão
                 session_destroy();
+                
+                // Definir uma variável para indicar que a sessão foi destruída
+                // O JavaScript irá lidar com a remoção do cookie no cliente
                 
                 // Definir flag para redirecionamento via JavaScript
                 $conta_excluida = true;
@@ -152,9 +149,22 @@ $motivos = [
 </div>
 
 <script>
-    // Redirecionar para a página inicial após 3 segundos
+    // Função para remover todos os cookies
+    function deleteAllCookies() {
+        const cookies = document.cookie.split(";");
+        
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i];
+            const eqPos = cookie.indexOf("=");
+            const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+        }
+    }
+    
+    // Remover todos os cookies e redirecionar para a página inicial após 3 segundos
+    deleteAllCookies();
     setTimeout(function() {
-        window.location.href = '<?php echo SITE_URL; ?>';
+        window.location.href = "<?php echo SITE_URL; ?>/";
     }, 3000);
 </script>
 <?php else: ?>
