@@ -43,10 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'feedback' => $feedback
                 ]);
                 
-                // Marcar usuário como excluído (soft delete)
+                // Marcar usuário como inativo (soft delete)
                 $db->execute("
                     UPDATE usuarios 
-                    SET status = 'excluido', data_exclusao = NOW() 
+                    SET status = 'inativo', data_exclusao = NOW() 
                     WHERE id = :id
                 ", ['id' => $usuario_id]);
                 
