@@ -328,31 +328,80 @@ foreach ($popular_terms as $term) {
 
 // Se não houver resultados suficientes, buscar termos de outras tabelas
 if (count($popularSearches) < 5) {
-    // Buscar habilidades populares dos talentos
-    $skills_query = "SELECT habilidade as termo, COUNT(*) as count FROM talentos_habilidades GROUP BY habilidade ORDER BY count DESC LIMIT 5";
+    // Verificar se a tabela talentos_habilidades existe antes de consultá-la
     try {
-        $skills = $db->fetchAll($skills_query);
-        foreach ($skills as $skill) {
-            if (count($popularSearches) >= 5) break;
-            
-            // Verificar se o termo já existe
-            $exists = false;
-            foreach ($popularSearches as $search) {
-                if (strtolower($search['term']) == strtolower($skill['termo'])) {
-                    $exists = true;
-                    break;
+        // Verificar se a tabela existe
+        $table_exists = $db->fetch("SELECT COUNT(*) as count FROM information_schema.tables 
+                                   WHERE table_schema = DATABASE() 
+                                   AND table_name = 'talentos_habilidades'");
+        
+        if ($table_exists && $table_exists['count'] > 0) {
+            // Buscar habilidades populares dos talentos
+            $skills_query = "SELECT habilidade as termo, COUNT(*) as count FROM talentos_habilidades GROUP BY habilidade ORDER BY count DESC LIMIT 5";
+            try {
+                $skills = $db->fetchAll($skills_query);
+                foreach ($skills as $skill) {
+                    if (count($popularSearches) >= 5) break;
+                    
+                    // Verificar se o termo já existe
+                    $exists = false;
+                    foreach ($popularSearches as $search) {
+                        if (strtolower($search['term']) == strtolower($skill['termo'])) {
+                            $exists = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!$exists) {
+                        $popularSearches[] = [
+                            'term' => $skill['termo'],
+                            'count' => $skill['count']
+                        ];
+                    }
                 }
+            } catch (Exception $e) {
+                // Silenciar erro para não afetar a exibição da página
+                error_log("Erro ao buscar habilidades populares: " . $e->getMessage());
             }
-            
-            if (!$exists) {
-                $popularSearches[] = [
-                    'term' => $skill['termo'],
-                    'count' => $skill['count']
-                ];
+        } else {
+            // Tabela não existe, buscar alternativas
+            // Buscar habilidades das descrições de vagas
+            try {
+                $alt_skills_query = "SELECT SUBSTRING_INDEX(habilidades_requeridas, ',', 1) as termo, COUNT(*) as count 
+                                     FROM vagas 
+                                     WHERE habilidades_requeridas IS NOT NULL AND habilidades_requeridas != '' 
+                                     GROUP BY termo 
+                                     ORDER BY count DESC LIMIT 5";
+                $alt_skills = $db->fetchAll($alt_skills_query);
+                
+                foreach ($alt_skills as $skill) {
+                    if (count($popularSearches) >= 5) break;
+                    if (empty(trim($skill['termo']))) continue;
+                    
+                    // Verificar se o termo já existe
+                    $exists = false;
+                    foreach ($popularSearches as $search) {
+                        if (strtolower($search['term']) == strtolower($skill['termo'])) {
+                            $exists = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!$exists) {
+                        $popularSearches[] = [
+                            'term' => $skill['termo'],
+                            'count' => $skill['count']
+                        ];
+                    }
+                }
+            } catch (Exception $e) {
+                // Silenciar erro para não afetar a exibição da página
+                error_log("Erro ao buscar habilidades alternativas: " . $e->getMessage());
             }
         }
     } catch (Exception $e) {
-        // Ignorar erros e usar termos padrão se necessário
+        // Silenciar erro para não afetar a exibição da página
+        error_log("Erro ao verificar existência da tabela: " . $e->getMessage());
     }
     
     // Se ainda não tiver 5 termos, adicionar alguns padrão

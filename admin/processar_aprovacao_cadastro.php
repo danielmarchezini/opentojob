@@ -12,6 +12,9 @@ if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQ
     exit;
 }
 
+// Incluir configurações
+require_once __DIR__ . '/../config/config.php';
+
 // Verificar se o usuário está logado e é administrador
 session_start();
 require_once __DIR__ . '/../includes/Auth.php';
