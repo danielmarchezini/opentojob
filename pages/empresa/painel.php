@@ -112,6 +112,16 @@ function getBadgeStatus($status) {
                             </a>
                         </div>
                     </div>
+                    <hr class="my-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-0">Configurações da Conta</h6>
+                            <small class="text-muted">Gerencie suas configurações de privacidade e conta</small>
+                        </div>
+                        <a href="<?php echo SITE_URL; ?>/?route=excluir_conta_empresa" class="btn btn-sm btn-outline-danger">
+                            <i class="fas fa-building-shield me-2"></i>Excluir conta da empresa
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

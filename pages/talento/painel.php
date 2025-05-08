@@ -203,6 +203,16 @@ function getBadgeStatus($status) {
                                     <i class="fas fa-envelope me-2"></i>Mensagens
                                 </a>
                             </div>
+                            <hr class="my-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-0">Configurações da Conta</h6>
+                                    <small class="text-muted">Gerencie suas configurações de privacidade e conta</small>
+                                </div>
+                                <a href="<?php echo SITE_URL; ?>/?route=excluir_conta_talento" class="btn btn-sm btn-outline-danger">
+                                    <i class="fas fa-user-times me-2"></i>Excluir minha conta
+                                </a>
+                            </div>
                         </div>
                         <div class="col-md-4">
                             <div class="card bg-light">

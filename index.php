@@ -338,9 +338,18 @@ switch ($route) {
         break;
         
     // Área da Empresa
-    case 'painel_empresa':
+    case 'mensagens_empresa':
+        if (Auth::checkUserType('empresa') || Auth::checkUserType('admin')) {
+            include 'pages/mensagens_empresa.php';
+        } else {
+            include 'pages/acesso_negado.php';
+        }
+        break;
+        
+    // Rota para exclusão de conta de empresa
+    case 'excluir_conta_empresa':
         if (Auth::checkUserType('empresa')) {
-            include 'pages/empresa/painel.php';
+            include 'pages/empresa/excluir_conta.php';
         } else {
             include 'pages/acesso_negado.php';
         }
@@ -448,6 +457,15 @@ switch ($route) {
     case 'mensagens_talento':
         if (Auth::checkUserType('talento')) {
             include 'pages/mensagens_talento.php';
+        } else {
+            include 'pages/acesso_negado.php';
+        }
+        break;
+        
+    // Rota para exclusão de conta de talento
+    case 'excluir_conta_talento':
+        if (Auth::checkUserType('talento')) {
+            include 'pages/talento/excluir_conta.php';
         } else {
             include 'pages/acesso_negado.php';
         }
