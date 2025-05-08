@@ -1,4 +1,7 @@
 <?php
+// Iniciar buffer de saída para evitar erros de 'headers already sent'
+ob_start();
+
 // Iniciar sessão
 session_start();
 
@@ -1318,4 +1321,7 @@ switch ($route) {
 if (!isset($is_api_route) || !$is_api_route) {
     include 'templates/footer.php';
 }
+
+// Liberar o buffer de saída
+ob_end_flush();
 ?>
