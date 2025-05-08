@@ -227,6 +227,26 @@ class SmtpMailer {
     }
     
     /**
+     * Envia um e-mail diretamente sem usar um modelo do banco de dados
+     * 
+     * @param string $destinatario E-mail do destinatário
+     * @param string $assunto Assunto do e-mail
+     * @param string $corpo Corpo do e-mail em HTML
+     * @param array $anexos Array de anexos (opcional)
+     * @return bool Sucesso ou falha no envio
+     */
+    public function enviarEmailDireto($destinatario, $assunto, $corpo, $anexos = []) {
+        // Verificar se o destinatário é válido
+        if (empty($destinatario) || !filter_var($destinatario, FILTER_VALIDATE_EMAIL)) {
+            error_log("Destinatário inválido: $destinatario");
+            return false;
+        }
+        
+        // Enviar e-mail via SMTP
+        return $this->enviarSmtp($destinatario, $assunto, $corpo, $anexos);
+    }
+    
+    /**
      * Obtém um modelo de e-mail do banco de dados pelo código
      * 
      * @param string $codigo Código do modelo
