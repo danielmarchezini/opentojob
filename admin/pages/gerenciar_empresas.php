@@ -89,7 +89,7 @@ $empresas = $db->fetchAll("
 </div>
 
 <!-- Modal Alterar Senha -->
-<div class="modal fade" id="modalAlterarSenha" tabindex="-1" role="dialog" aria-labelledby="modalAlterarSenhaLabel" aria-hidden="true">
+<div class="modal fade" id="modalAlterarSenha" tabindex="-1" aria-labelledby="modalAlterarSenhaLabel" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -632,7 +632,52 @@ document.getElementById('btnSalvarSenha').addEventListener('click', function() {
     btnSalvar.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Salvando...';
     btnSalvar.disabled = true;
     
-    // Enviar o formulário diretamente
-    document.getElementById('formAlterarSenha').submit();
+    console.log('Enviando requisição para alterar senha do usuário ID:', usuarioId);
+    
+    // Obter dados do formulário
+    const formData = new FormData();
+    formData.append('acao', 'alterar_senha');
+    formData.append('usuario_id', usuarioId);
+    formData.append('nova_senha', novaSenha);
+    
+    // URL da API
+    const apiUrl = '<?php echo SITE_URL; ?>/admin/processar_senha.php';
+    
+    // Enviar requisição para alterar senha
+    fetch(apiUrl, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        console.log('Status da resposta:', response.status, response.statusText);
+        if (!response.ok) {
+            throw new Error(`Erro HTTP: ${response.status} ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Dados recebidos:', data);
+        
+        // Restaurar botão
+        btnSalvar.innerHTML = textoOriginal;
+        btnSalvar.disabled = false;
+        
+        if (data.success) {
+            alert('Senha alterada com sucesso!');
+            const modalAlterarSenha = bootstrap.Modal.getInstance(document.getElementById('modalAlterarSenha'));
+            modalAlterarSenha.hide();
+        } else {
+            alert('Erro ao alterar senha: ' + (data.message || 'Erro desconhecido'));
+        }
+    })
+    .catch(error => {
+        console.error('Erro na requisição:', error);
+        
+        // Restaurar botão
+        btnSalvar.innerHTML = textoOriginal;
+        btnSalvar.disabled = false;
+        
+        alert('Erro ao alterar senha: ' + error.message);
+    });
 });
 </script>

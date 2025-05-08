@@ -179,7 +179,7 @@ try {
 </div>
 
 <!-- Modal Alterar Senha -->
-<div class="modal fade" id="modalAlterarSenha" tabindex="-1" role="dialog" aria-labelledby="modalAlterarSenhaLabel" aria-hidden="true">
+<div class="modal fade" id="modalAlterarSenha" tabindex="-1" aria-labelledby="modalAlterarSenhaLabel" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -975,7 +975,7 @@ document.getElementById('btnSalvarSenha').addEventListener('click', function() {
     .catch(error => {
         alert('Erro ao alterar senha: ' + error.message);
     });
-}
+});
 
 // Função para visualizar detalhes da vaga
 function visualizarVaga(id, titulo) {
