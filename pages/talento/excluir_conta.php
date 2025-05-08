@@ -95,10 +95,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $_SESSION['flash_message'] = "Senha incorreta. Por favor, tente novamente.";
             $_SESSION['flash_type'] = "danger";
+            // Redirecionar para a mesma página para evitar que a mensagem apareça em outras páginas
+            header('Location: ' . SITE_URL . '/?route=excluir_conta_talento');
+            exit;
         }
     } else {
         $_SESSION['flash_message'] = "Por favor, informe sua senha para confirmar a exclusão.";
         $_SESSION['flash_type'] = "danger";
+        // Redirecionar para a mesma página para evitar que a mensagem apareça em outras páginas
+        header('Location: ' . SITE_URL . '/?route=excluir_conta_talento');
+        exit;
     }
 }
 
@@ -123,6 +129,14 @@ $motivos = [
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-8">
+            <?php if (isset($_SESSION['flash_message'])): ?>
+                <div class="alert alert-<?php echo $_SESSION['flash_type'] ?? 'info'; ?> alert-dismissible fade show" role="alert">
+                    <?php echo $_SESSION['flash_message']; ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+                </div>
+                <?php unset($_SESSION['flash_message'], $_SESSION['flash_type']); ?>
+            <?php endif; ?>
+            
             <div class="card border-danger">
                 <div class="card-header bg-danger text-white">
                     <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Excluir Conta</h5>
@@ -200,8 +214,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const checkboxConfirmar = document.getElementById('confirmar');
     const btnExcluir = document.getElementById('btnExcluir');
     
+    // Verificar estado inicial do checkbox
+    btnExcluir.disabled = !checkboxConfirmar.checked;
+    
     checkboxConfirmar.addEventListener('change', function() {
         btnExcluir.disabled = !this.checked;
+        console.log('Checkbox alterado. Botão desabilitado: ' + btnExcluir.disabled);
     });
     
     // Confirmar exclusão antes de enviar o formulário
