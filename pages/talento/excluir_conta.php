@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Verificar se a senha está correta
         $usuario = $db->fetch("SELECT senha FROM usuarios WHERE id = :id", ['id' => $usuario_id]);
         
-        if ($usuario && password_verify($senha, $usuario['senha'])) {
+        if ($usuario && md5($senha) === $usuario['senha']) {
             // Senha correta, processar a exclusão
             $motivo = isset($_POST['motivo']) ? trim($_POST['motivo']) : '';
             $feedback = isset($_POST['feedback']) ? trim($_POST['feedback']) : '';
