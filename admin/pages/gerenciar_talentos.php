@@ -96,7 +96,7 @@ $talentos = $db->fetchAll("
 </div>
 
 <!-- Modal Alterar Senha -->
-<div class="modal fade" id="modalAlterarSenha" tabindex="-1" aria-labelledby="modalAlterarSenhaLabel" aria-hidden="true">
+<div class="modal fade" id="modalAlterarSenha" tabindex="-1" aria-labelledby="modalAlterarSenhaLabel" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -161,7 +161,7 @@ $talentos = $db->fetchAll("
 </div>
 
 <!-- Modal Editar Talento -->
-<div class="modal fade" id="modalEditarTalento" tabindex="-1" aria-labelledby="modalEditarTalentoLabel" aria-hidden="true">
+<div class="modal fade" id="modalEditarTalento" tabindex="-1" aria-labelledby="modalEditarTalentoLabel" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
@@ -269,10 +269,7 @@ $talentos = $db->fetchAll("
                         </div>
                     </div>
                     
-                    <div class="mb-3">
-                        <label for="editar_senha">Nova Senha (deixe em branco para manter a atual)</label>
-                        <input type="password" class="form-control" id="editar_senha" name="senha">
-                    </div>
+                    <!-- Removido campo duplicado de senha -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -702,6 +699,7 @@ document.getElementById('btnSalvarSenha').addEventListener('click', function() {
     
     // Obter dados do formulário
     const formData = new FormData();
+    formData.append('acao', 'alterar_senha');
     formData.append('usuario_id', usuarioId);
     formData.append('nova_senha', novaSenha);
     
