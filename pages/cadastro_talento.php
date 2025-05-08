@@ -1,3 +1,8 @@
+<?php
+// Incluir o mailer no início do arquivo para evitar erros de 'headers already sent'
+require_once 'includes/SmtpMailer.php';
+
+?>
 <div class="auth-container">
     <div class="auth-box">
         <h2 class="auth-title">Cadastro de Talento</h2>
@@ -100,7 +105,6 @@
                         ];
                         
                         // Enviar e-mail de instruções para o usuário
-                        require_once 'includes/SmtpMailer.php';
                         $mailer = SmtpMailer::getInstance();
                         $mailer->enviarEmailInstrucoesAprovacao($dadosUsuarioCompleto);
                         
