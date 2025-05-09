@@ -58,13 +58,11 @@ try {
     $db->query("UPDATE usuarios SET status = 'ativo' WHERE id = :id", ['id' => $usuario_id]);
     
     // Registrar log de aprovação
-    $db->query("INSERT INTO logs (usuario_id, acao, detalhes, data_hora) VALUES (:usuario_id, 'aprovacao_cadastro', :detalhes, NOW())", [
+    $db->query("INSERT INTO logs (usuario_id, usuario_nome, acao, ip, data_hora) VALUES (:usuario_id, :usuario_nome, :acao, :ip, NOW())", [
         'usuario_id' => $_SESSION['user_id'],
-        'detalhes' => json_encode([
-            'usuario_aprovado_id' => $usuario_id,
-            'usuario_aprovado_email' => $usuario['email'],
-            'usuario_aprovado_tipo' => $usuario['tipo']
-        ])
+        'usuario_nome' => $_SESSION['user_name'] ?? 'Admin',
+        'acao' => 'Aprovação de cadastro: ID ' . $usuario_id . ' - ' . $usuario['email'],
+        'ip' => $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0'
     ]);
     
     // Enviar e-mail de aprovação

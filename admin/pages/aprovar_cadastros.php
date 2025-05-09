@@ -82,8 +82,55 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function visualizarCadastro(id) {
-    // Implementar visualização de cadastro
-    alert('Visualizar cadastro ' + id);
+    // Buscar detalhes do cadastro via AJAX
+    $.ajax({
+        url: '<?php echo SITE_URL; ?>/admin/get_usuario_detalhes.php',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            id: id
+        },
+        success: function(response) {
+            if (response.success) {
+                // Preencher o modal com os dados do usuário
+                $('#modalUsuarioId').text(response.usuario.id);
+                $('#modalUsuarioNome').text(response.usuario.nome);
+                $('#modalUsuarioEmail').text(response.usuario.email);
+                $('#modalUsuarioTipo').text(response.usuario.tipo.charAt(0).toUpperCase() + response.usuario.tipo.slice(1));
+                $('#modalUsuarioDataCadastro').text(response.usuario.data_cadastro);
+                
+                // Informações adicionais baseadas no tipo de usuário
+                let infoAdicional = '';
+                
+                if (response.usuario.tipo === 'talento') {
+                    if (response.perfil_talento) {
+                        infoAdicional += '<h5>Perfil do Talento</h5>';
+                        infoAdicional += '<p><strong>Profissão:</strong> ' + (response.perfil_talento.profissao || 'Não informado') + '</p>';
+                        infoAdicional += '<p><strong>Experiência:</strong> ' + (response.perfil_talento.anos_experiencia || 'Não informado') + ' anos</p>';
+                        infoAdicional += '<p><strong>Localização:</strong> ' + (response.perfil_talento.cidade || 'Não informado') + '/' + (response.perfil_talento.estado || 'Não informado') + '</p>';
+                    }
+                } else if (response.usuario.tipo === 'empresa') {
+                    if (response.perfil_empresa) {
+                        infoAdicional += '<h5>Perfil da Empresa</h5>';
+                        infoAdicional += '<p><strong>Nome Fantasia:</strong> ' + (response.perfil_empresa.nome_fantasia || 'Não informado') + '</p>';
+                        infoAdicional += '<p><strong>CNPJ:</strong> ' + (response.perfil_empresa.cnpj || 'Não informado') + '</p>';
+                        infoAdicional += '<p><strong>Segmento:</strong> ' + (response.perfil_empresa.segmento || 'Não informado') + '</p>';
+                        infoAdicional += '<p><strong>Localização:</strong> ' + (response.perfil_empresa.cidade || 'Não informado') + '/' + (response.perfil_empresa.estado || 'Não informado') + '</p>';
+                    }
+                }
+                
+                $('#modalUsuarioInfoAdicional').html(infoAdicional);
+                
+                // Exibir o modal
+                $('#visualizarUsuarioModal').modal('show');
+            } else {
+                alert('Erro: ' + response.message);
+            }
+        },
+        error: function() {
+            alert('Erro ao processar a requisição. Tente novamente.');
+        }
+    });
 }
 
 function aprovarCadastro(id) {
@@ -119,3 +166,32 @@ function rejeitarCadastro(id) {
     }
 }
 </script>
+
+<!-- Modal para visualizar detalhes do usuário -->
+<div class="modal fade" id="visualizarUsuarioModal" tabindex="-1" aria-labelledby="visualizarUsuarioModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="visualizarUsuarioModalLabel">Detalhes do Cadastro</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong>ID:</strong> <span id="modalUsuarioId"></span></p>
+                        <p><strong>Nome:</strong> <span id="modalUsuarioNome"></span></p>
+                        <p><strong>Email:</strong> <span id="modalUsuarioEmail"></span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Tipo:</strong> <span id="modalUsuarioTipo"></span></p>
+                        <p><strong>Data de Cadastro:</strong> <span id="modalUsuarioDataCadastro"></span></p>
+                    </div>
+                </div>
+                <div id="modalUsuarioInfoAdicional"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
