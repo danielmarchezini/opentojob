@@ -100,16 +100,16 @@ $membros = $db->fetchAll("SELECT * FROM equipe ORDER BY ordem ASC, nome ASC");
                             <tr>
                                 <td class="text-center">
                                     <?php if (!empty($membro['foto']) && file_exists($_SERVER['DOCUMENT_ROOT'] . '/' . $membro['foto'])): ?>
-                                        <img src="<?php echo SITE_URL . '/' . $membro['foto']; ?>" alt="Foto de <?php echo htmlspecialchars($membro['nome']); ?>" class="img-thumbnail" style="max-width: 50px; max-height: 50px;">
+                                        <img src="<?php echo SITE_URL . '/' . $membro['foto']; ?>" alt="Foto de <?php echo htmlspecialchars((string)$membro['nome']); ?>" class="img-thumbnail" style="max-width: 50px; max-height: 50px;">
                                     <?php else: ?>
                                         <i class="fas fa-user fa-2x text-secondary"></i>
                                     <?php endif; ?>
                                 </td>
-                                <td><?php echo htmlspecialchars($membro['nome']); ?></td>
-                                <td><?php echo htmlspecialchars($membro['profissao']); ?></td>
+                                <td><?php echo htmlspecialchars((string)$membro['nome']); ?></td>
+                                <td><?php echo htmlspecialchars((string)$membro['profissao']); ?></td>
                                 <td>
                                     <?php if (!empty($membro['linkedin'])): ?>
-                                        <a href="<?php echo htmlspecialchars($membro['linkedin']); ?>" target="_blank">
+                                        <a href="<?php echo htmlspecialchars((string)$membro['linkedin']); ?>" target="_blank">
                                             <i class="fab fa-linkedin"></i> Ver Perfil
                                         </a>
                                     <?php else: ?>
@@ -131,16 +131,16 @@ $membros = $db->fetchAll("SELECT * FROM equipe ORDER BY ordem ASC, nome ASC");
                                         </a>
                                         
                                         <?php if ($membro['ativo']): ?>
-                                            <a href="<?php echo SITE_URL; ?>/admin/?page=gerenciar_equipe&id=<?php echo $membro['id']; ?>&status=desativar" class="btn btn-warning btn-sm" title="Desativar" onclick="return confirm('Tem certeza que deseja desativar este membro da equipe?');">
+                                            <a href="javascript:void(0)" class="btn btn-warning btn-sm" title="Desativar" onclick="if(confirm('Tem certeza que deseja desativar este membro da equipe?')) { window.location.href='<?php echo SITE_URL; ?>/admin/?page=gerenciar_equipe&id=<?php echo $membro['id']; ?>&status=desativar'; }">
                                                 <i class="fas fa-eye-slash"></i>
                                             </a>
                                         <?php else: ?>
-                                            <a href="<?php echo SITE_URL; ?>/admin/?page=gerenciar_equipe&id=<?php echo $membro['id']; ?>&status=ativar" class="btn btn-success btn-sm" title="Ativar">
+                                            <a href="javascript:void(0)" class="btn btn-success btn-sm" title="Ativar" onclick="if(confirm('Tem certeza que deseja ativar este membro da equipe?')) { window.location.href='<?php echo SITE_URL; ?>/admin/?page=gerenciar_equipe&id=<?php echo $membro['id']; ?>&status=ativar'; }">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                         <?php endif; ?>
                                         
-                                        <a href="<?php echo SITE_URL; ?>/admin/?page=gerenciar_equipe&excluir=<?php echo $membro['id']; ?>" class="btn btn-danger btn-sm" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este membro da equipe? Esta ação não pode ser desfeita.');">
+                                        <a href="javascript:void(0)" class="btn btn-danger btn-sm" title="Excluir" onclick="if(confirm('Tem certeza que deseja excluir este membro da equipe? Esta ação não pode ser desfeita.')) { window.location.href='<?php echo SITE_URL; ?>/admin/?page=gerenciar_equipe&excluir=<?php echo $membro['id']; ?>'; }">
                                             <i class="fas fa-trash"></i>
                                         </a>
                                     </div>
@@ -156,12 +156,16 @@ $membros = $db->fetchAll("SELECT * FROM equipe ORDER BY ordem ASC, nome ASC");
 </div>
 
 <script>
-$(document).ready(function() {
-    $('#tabelaEquipe').DataTable({
-        language: {
-            url: '//cdn.datatables.net/plug-ins/1.10.25/i18n/Portuguese-Brasil.json'
-        },
-        responsive: true
-    });
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof jQuery !== 'undefined' && typeof $.fn.DataTable !== 'undefined') {
+        $('#tabelaEquipe').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.10.25/i18n/Portuguese-Brasil.json'
+            },
+            responsive: true
+        });
+    } else {
+        console.error('jQuery ou DataTables não estão disponíveis');
+    }
 });
 </script>

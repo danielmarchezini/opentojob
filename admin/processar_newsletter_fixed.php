@@ -445,7 +445,7 @@ switch ($acao) {
                 // Cabeçalhos
                 echo '<tr>';
                 foreach ($headers as $header) {
-                    echo '<th>' . htmlspecialchars($header) . '</th>';
+                    echo '<th>' . htmlspecialchars((string)$header) . '</th>';
                 }
                 echo '</tr>';
                 
@@ -453,7 +453,7 @@ switch ($acao) {
                 foreach ($dados as $linha) {
                     echo '<tr>';
                     foreach ($linha as $celula) {
-                        echo '<td>' . htmlspecialchars($celula) . '</td>';
+                        echo '<td>' . htmlspecialchars((string)$celula) . '</td>';
                     }
                     echo '</tr>';
                 }

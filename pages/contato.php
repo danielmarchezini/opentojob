@@ -53,7 +53,7 @@ foreach ($defaults as $chave => $valor) {
             </div>
             <div class="info-content">
                 <h3>Endereço</h3>
-                <p><?php echo nl2br(htmlspecialchars($configuracoes['endereco'])); ?></p>
+                <p><?php echo nl2br(htmlspecialchars((string)$configuracoes['endereco'])); ?></p>
             </div>
         </div>
         
@@ -63,7 +63,7 @@ foreach ($defaults as $chave => $valor) {
             </div>
             <div class="info-content">
                 <h3>Telefone</h3>
-                <p><?php echo htmlspecialchars($configuracoes['telefone_contato']); ?></p>
+                <p><?php echo htmlspecialchars((string)$configuracoes['telefone_contato']); ?></p>
             </div>
         </div>
         
@@ -73,7 +73,7 @@ foreach ($defaults as $chave => $valor) {
             </div>
             <div class="info-content">
                 <h3>E-mail</h3>
-                <p><?php echo htmlspecialchars($configuracoes['email_contato']); ?></p>
+                <p><?php echo htmlspecialchars((string)$configuracoes['email_contato']); ?></p>
             </div>
         </div>
         
@@ -89,16 +89,16 @@ foreach ($defaults as $chave => $valor) {
         
         <div class="social-links">
             <?php if (!empty($configuracoes['redes_sociais_facebook'])): ?>
-                <a href="<?php echo htmlspecialchars($configuracoes['redes_sociais_facebook']); ?>" class="social-link" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                <a href="<?php echo htmlspecialchars((string)$configuracoes['redes_sociais_facebook']); ?>" class="social-link" target="_blank"><i class="fab fa-facebook-f"></i></a>
             <?php endif; ?>
             <?php if (!empty($configuracoes['redes_sociais_twitter'])): ?>
-                <a href="<?php echo htmlspecialchars($configuracoes['redes_sociais_twitter']); ?>" class="social-link" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="<?php echo htmlspecialchars((string)$configuracoes['redes_sociais_twitter']); ?>" class="social-link" target="_blank"><i class="fab fa-twitter"></i></a>
             <?php endif; ?>
             <?php if (!empty($configuracoes['redes_sociais_linkedin'])): ?>
-                <a href="<?php echo htmlspecialchars($configuracoes['redes_sociais_linkedin']); ?>" class="social-link" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                <a href="<?php echo htmlspecialchars((string)$configuracoes['redes_sociais_linkedin']); ?>" class="social-link" target="_blank"><i class="fab fa-linkedin-in"></i></a>
             <?php endif; ?>
             <?php if (!empty($configuracoes['redes_sociais_instagram'])): ?>
-                <a href="<?php echo htmlspecialchars($configuracoes['redes_sociais_instagram']); ?>" class="social-link" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="<?php echo htmlspecialchars((string)$configuracoes['redes_sociais_instagram']); ?>" class="social-link" target="_blank"><i class="fab fa-instagram"></i></a>
             <?php endif; ?>
         </div>
     </div>
@@ -143,11 +143,11 @@ foreach ($defaults as $chave => $valor) {
                 // Montar o corpo do email
                 $corpo_email = "<html><body>";
                 $corpo_email .= "<h2>Nova mensagem de contato</h2>";
-                $corpo_email .= "<p><strong>Nome:</strong> " . htmlspecialchars($nome) . "</p>";
-                $corpo_email .= "<p><strong>E-mail:</strong> " . htmlspecialchars($email) . "</p>";
-                $corpo_email .= "<p><strong>Assunto:</strong> " . htmlspecialchars($assunto) . "</p>";
+                $corpo_email .= "<p><strong>Nome:</strong> " . htmlspecialchars((string)$nome) . "</p>";
+                $corpo_email .= "<p><strong>E-mail:</strong> " . htmlspecialchars((string)$email) . "</p>";
+                $corpo_email .= "<p><strong>Assunto:</strong> " . htmlspecialchars((string)$assunto) . "</p>";
                 $corpo_email .= "<p><strong>Mensagem:</strong></p>";
-                $corpo_email .= "<p>" . nl2br(htmlspecialchars($mensagem)) . "</p>";
+                $corpo_email .= "<p>" . nl2br(htmlspecialchars((string)$mensagem)) . "</p>";
                 $corpo_email .= "<p><small>Esta mensagem foi enviada através do formulário de contato do site " . htmlspecialchars(SITE_NAME) . ".</small></p>";
                 $corpo_email .= "</body></html>";
                 
@@ -174,7 +174,7 @@ foreach ($defaults as $chave => $valor) {
                     // Registrar erro no log
                     error_log("Falha ao enviar mensagem de contato de {$email} para {$email_destino}");
                     
-                    $_SESSION['flash_message'] = "Houve um problema ao enviar sua mensagem. Por favor, tente novamente mais tarde ou entre em contato pelo e-mail " . htmlspecialchars($configuracoes['email_contato']) . ".";
+                    $_SESSION['flash_message'] = "Houve um problema ao enviar sua mensagem. Por favor, tente novamente mais tarde ou entre em contato pelo e-mail " . htmlspecialchars((string)$configuracoes['email_contato']) . ".";
                     $_SESSION['flash_type'] = "danger";
                 }
                 
@@ -196,23 +196,23 @@ foreach ($defaults as $chave => $valor) {
             <div class="form-row">
                 <div class="form-group">
                     <label for="nome">Nome completo *</label>
-                    <input type="text" id="nome" name="nome" class="form-control" value="<?php echo isset($nome) ? htmlspecialchars($nome) : ''; ?>" required>
+                    <input type="text" id="nome" name="nome" class="form-control" value="<?php echo isset($nome) ? htmlspecialchars((string)$nome) : ''; ?>" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="email">E-mail *</label>
-                    <input type="email" id="email" name="email" class="form-control" value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>" required>
+                    <input type="email" id="email" name="email" class="form-control" value="<?php echo isset($email) ? htmlspecialchars((string)$email) : ''; ?>" required>
                 </div>
             </div>
             
             <div class="form-group">
                 <label for="assunto">Assunto *</label>
-                <input type="text" id="assunto" name="assunto" class="form-control" value="<?php echo isset($assunto) ? htmlspecialchars($assunto) : ''; ?>" required>
+                <input type="text" id="assunto" name="assunto" class="form-control" value="<?php echo isset($assunto) ? htmlspecialchars((string)$assunto) : ''; ?>" required>
             </div>
             
             <div class="form-group">
                 <label for="mensagem">Mensagem *</label>
-                <textarea id="mensagem" name="mensagem" class="form-control" rows="6" required><?php echo isset($mensagem) ? htmlspecialchars($mensagem) : ''; ?></textarea>
+                <textarea id="mensagem" name="mensagem" class="form-control" rows="6" required><?php echo isset($mensagem) ? htmlspecialchars((string)$mensagem) : ''; ?></textarea>
             </div>
             
             <div class="form-group">

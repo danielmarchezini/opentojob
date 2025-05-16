@@ -76,7 +76,7 @@
         <form method="post" action="<?php echo SITE_URL; ?>/?route=recuperar_senha" class="auth-form">
             <div class="form-group">
                 <label for="email" class="form-label">E-mail</label>
-                <input type="email" id="email" name="email" class="form-control" value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>" required>
+                <input type="email" id="email" name="email" class="form-control" value="<?php echo isset($email) ? htmlspecialchars((string)$email) : ''; ?>" required>
             </div>
             
             <div class="form-group">

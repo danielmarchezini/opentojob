@@ -92,9 +92,9 @@ function ativarRegistros($db, $tabela) {
             
             foreach ($registros as $registro) {
                 echo "<tr>";
-                echo "<td>" . htmlspecialchars($registro['id']) . "</td>";
-                echo "<td>" . htmlspecialchars($registro['nome']) . "</td>";
-                echo "<td>" . htmlspecialchars($registro['ativo']) . "</td>";
+                echo "<td>" . htmlspecialchars((string)$registro['id']) . "</td>";
+                echo "<td>" . htmlspecialchars((string)$registro['nome']) . "</td>";
+                echo "<td>" . htmlspecialchars((string)$registro['ativo']) . "</td>";
                 echo "</tr>";
             }
             
@@ -119,9 +119,9 @@ function ativarRegistros($db, $tabela) {
             
             foreach ($registros as $registro) {
                 echo "<tr>";
-                echo "<td>" . htmlspecialchars($registro['id']) . "</td>";
-                echo "<td>" . htmlspecialchars($registro['nome']) . "</td>";
-                echo "<td>" . htmlspecialchars($registro['ativo']) . "</td>";
+                echo "<td>" . htmlspecialchars((string)$registro['id']) . "</td>";
+                echo "<td>" . htmlspecialchars((string)$registro['nome']) . "</td>";
+                echo "<td>" . htmlspecialchars((string)$registro['ativo']) . "</td>";
                 echo "</tr>";
             }
             

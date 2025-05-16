@@ -66,8 +66,8 @@ $profissoes = $db->fetchAll("
         <div class="row">
             <div class="col-lg-8">
                 <?php if (!empty($filtro_profissao)): ?>
-                    <h1>Talentos: <?php echo htmlspecialchars($filtro_profissao); ?></h1>
-                    <p class="lead">Profissionais de <?php echo htmlspecialchars($filtro_profissao); ?> prontos para oportunidades imediatas</p>
+                    <h1>Talentos: <?php echo htmlspecialchars((string)$filtro_profissao); ?></h1>
+                    <p class="lead">Profissionais de <?php echo htmlspecialchars((string)$filtro_profissao); ?> prontos para oportunidades imediatas</p>
                     <div class="mt-3">
                         <a href="<?php echo SITE_URL; ?>/?route=talentos" class="btn btn-sm btn-outline-light">
                             <i class="fas fa-times"></i> Remover filtro
@@ -112,7 +112,7 @@ $profissoes = $db->fetchAll("
                         <div class="col-lg-5 mb-3">
                             <div class="input-group">
                                 <span class="input-group-text bg-white"><i class="fas fa-search"></i></span>
-                                <input type="text" class="form-control form-control-lg" id="busca" name="busca" placeholder="Buscar por nome ou profissão..." value="<?php echo htmlspecialchars($busca); ?>">
+                                <input type="text" class="form-control form-control-lg" id="busca" name="busca" placeholder="Buscar por nome ou profissão..." value="<?php echo htmlspecialchars((string)$busca); ?>">
                             </div>
                         </div>
                         
@@ -120,8 +120,8 @@ $profissoes = $db->fetchAll("
                             <select class="form-control form-control-lg" id="profissao" name="profissao">
                                 <option value="">Todas as profissões</option>
                                 <?php foreach ($profissoes as $prof): ?>
-                                    <option value="<?php echo htmlspecialchars($prof['profissao']); ?>" <?php echo ($filtro_profissao == $prof['profissao']) ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($prof['profissao']); ?>
+                                    <option value="<?php echo htmlspecialchars((string)$prof['profissao']); ?>" <?php echo ($filtro_profissao == $prof['profissao']) ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars((string)$prof['profissao']); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -185,7 +185,7 @@ $profissoes = $db->fetchAll("
                                         
                                         if ($tem_foto): 
                                         ?>
-                                            <img src="<?php echo SITE_URL; ?>/uploads/perfil/<?php echo $talento['foto_perfil']; ?>" alt="<?php echo htmlspecialchars($talento['nome']); ?>" class="rounded-circle">
+                                            <img src="<?php echo SITE_URL; ?>/uploads/perfil/<?php echo $talento['foto_perfil']; ?>" alt="<?php echo htmlspecialchars((string)$talento['nome']); ?>" class="rounded-circle">
                                         <?php else: 
                                             // Gerar iniciais do nome
                                             $nome_partes = explode(' ', $talento['nome']);
@@ -219,10 +219,10 @@ $profissoes = $db->fetchAll("
                                         <?php endif; ?>
                                     </div>
                                     <div>
-                                        <h5 class="card-title mb-0"><?php echo htmlspecialchars($talento['nome']); ?></h5>
-                                        <p class="profissao-tag mb-0"><?php echo htmlspecialchars($talento['profissao'] ?? 'Profissional'); ?></p>
+                                        <h5 class="card-title mb-0"><?php echo htmlspecialchars((string)$talento['nome']); ?></h5>
+                                        <p class="profissao-tag mb-0"><?php echo htmlspecialchars((string)$talento['profissao'] ?? 'Profissional'); ?></p>
                                         <?php if (!empty($talento['nivel'])): ?>
-                                        <span class="badge bg-info text-dark nivel-badge"><?php echo htmlspecialchars($talento['nivel']); ?></span>
+                                        <span class="badge bg-info text-dark nivel-badge"><?php echo htmlspecialchars((string)$talento['nivel']); ?></span>
                                         <?php endif; ?>
                                     </div>
                                 </div>

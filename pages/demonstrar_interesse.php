@@ -124,7 +124,7 @@ $profissoes = $db->fetchAll("
         <div class="row">
             <div class="col-lg-8">
                 <h1>Demonstrar Interesse</h1>
-                <p class="lead">Demonstre seu interesse na demanda "<?php echo htmlspecialchars($demanda['titulo']); ?>"</p>
+                <p class="lead">Demonstre seu interesse na demanda "<?php echo htmlspecialchars((string)$demanda['titulo']); ?>"</p>
             </div>
             <div class="col-lg-4">
                 <nav aria-label="breadcrumb">
@@ -153,12 +153,12 @@ $profissoes = $db->fetchAll("
                             <h5>Resumo da demanda</h5>
                             <div class="d-flex align-items-center mb-3">
                                 <div>
-                                    <p class="mb-1"><strong>Título:</strong> <?php echo htmlspecialchars($demanda['titulo']); ?></p>
-                                    <p class="mb-1"><strong>Empresa:</strong> <?php echo htmlspecialchars($demanda['empresa_nome']); ?></p>
+                                    <p class="mb-1"><strong>Título:</strong> <?php echo htmlspecialchars((string)$demanda['titulo']); ?></p>
+                                    <p class="mb-1"><strong>Empresa:</strong> <?php echo htmlspecialchars((string)$demanda['empresa_nome']); ?></p>
                                     <p class="mb-0"><strong>Profissões desejadas:</strong> 
                                         <?php 
                                         $prof_list = array_map(function($p) { 
-                                            return htmlspecialchars($p['profissao']); 
+                                            return htmlspecialchars((string)$p['profissao']); 
                                         }, $profissoes);
                                         echo implode(', ', $prof_list);
                                         ?>
@@ -179,10 +179,10 @@ $profissoes = $db->fetchAll("
                             <h5>Seu perfil</h5>
                             <div class="card bg-light">
                                 <div class="card-body">
-                                    <p class="mb-1"><strong>Nome:</strong> <?php echo htmlspecialchars($talento['nome']); ?></p>
-                                    <p class="mb-1"><strong>Email:</strong> <?php echo htmlspecialchars($talento['email']); ?></p>
-                                    <p class="mb-1"><strong>Profissão:</strong> <?php echo htmlspecialchars($talento['profissao'] ?? 'Não informada'); ?></p>
-                                    <p class="mb-0"><strong>Experiência:</strong> <?php echo htmlspecialchars($talento['experiencia'] ?? 'Não informada'); ?> anos</p>
+                                    <p class="mb-1"><strong>Nome:</strong> <?php echo htmlspecialchars((string)$talento['nome']); ?></p>
+                                    <p class="mb-1"><strong>Email:</strong> <?php echo htmlspecialchars((string)$talento['email']); ?></p>
+                                    <p class="mb-1"><strong>Profissão:</strong> <?php echo htmlspecialchars((string)$talento['profissao'] ?? 'Não informada'); ?></p>
+                                    <p class="mb-0"><strong>Experiência:</strong> <?php echo htmlspecialchars((string)$talento['experiencia'] ?? 'Não informada'); ?> anos</p>
                                 </div>
                             </div>
                         </div>

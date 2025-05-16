@@ -106,7 +106,7 @@ $is_logged_in = isset($_SESSION['user_id']);
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>">Home</a></li>
                         <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>/?route=talentos">Talentos</a></li>
-                        <li class="breadcrumb-item active" aria-current="page"><?php echo htmlspecialchars($talento['nome']); ?></li>
+                        <li class="breadcrumb-item active" aria-current="page"><?php echo htmlspecialchars((string)$talento['nome']); ?></li>
                     </ol>
                 </nav>
             </div>
@@ -136,7 +136,7 @@ $is_logged_in = isset($_SESSION['user_id']);
                                     'uploads/perfil/' . $talento['foto_perfil'] : 
                                     'assets/img/default-avatar.jpg'; 
                                 ?>
-                                <img src="<?php echo $foto_url; ?>" alt="<?php echo htmlspecialchars($talento['nome']); ?>" class="rounded-circle img-fluid" style="width: 180px; height: 180px; object-fit: cover;">
+                                <img src="<?php echo $foto_url; ?>" alt="<?php echo htmlspecialchars((string)$talento['nome']); ?>" class="rounded-circle img-fluid" style="width: 180px; height: 180px; object-fit: cover;">
                             <?php else: ?>
                                 <div class="avatar-placeholder rounded-circle bg-primary text-white" style="width: 180px; height: 180px; display: flex; align-items: center; justify-content: center; font-size: 72px;">
                                     <?php echo strtoupper(substr($talento['nome'], 0, 1)); ?>
@@ -145,14 +145,14 @@ $is_logged_in = isset($_SESSION['user_id']);
                         </div>
                         
                         <div class="d-flex justify-content-center align-items-center">
-                            <h3 class="card-title mb-0"><?php echo htmlspecialchars($talento['nome']); ?></h3>
+                            <h3 class="card-title mb-0"><?php echo htmlspecialchars((string)$talento['nome']); ?></h3>
                             <button type="button" class="btn btn-link text-muted ms-2" style="font-size: 0.8rem; padding: 0;" data-bs-toggle="modal" data-bs-target="#reportarModal" title="Reportar perfil">
                                 <i class="fas fa-flag"></i>
                             </button>
                         </div>
-                        <h5 class="text-muted mb-1"><?php echo htmlspecialchars($talento['profissao'] ?? 'Profissional'); ?></h5>
+                        <h5 class="text-muted mb-1"><?php echo htmlspecialchars((string)$talento['profissao'] ?? 'Profissional'); ?></h5>
                         <?php if (!empty($talento['nivel'])): ?>
-                        <span class="badge bg-info text-dark mb-3"><?php echo htmlspecialchars($talento['nivel']); ?></span>
+                        <span class="badge bg-info text-dark mb-3"><?php echo htmlspecialchars((string)$talento['nivel']); ?></span>
                         <?php endif; ?>
                         
                         <div class="perfil-info mb-4">
@@ -218,7 +218,7 @@ $is_logged_in = isset($_SESSION['user_id']);
                         <div class="d-flex flex-wrap">
                             <?php foreach ($habilidades_array as $habilidade): ?>
                                 <span class="badge bg-primary me-2 mb-2 p-2">
-                                    <?php echo htmlspecialchars($habilidade['nome']); ?>
+                                    <?php echo htmlspecialchars((string)$habilidade['nome']); ?>
                                 </span>
                             <?php endforeach; ?>
                         </div>
@@ -233,7 +233,7 @@ $is_logged_in = isset($_SESSION['user_id']);
                     <div class="card-body">
                         <?php if (!empty($talento['carta_apresentacao'])): ?>
                             <div class="apresentacao">
-                                <?php echo nl2br(htmlspecialchars($talento['carta_apresentacao'])); ?>
+                                <?php echo nl2br(htmlspecialchars((string)$talento['carta_apresentacao'])); ?>
                             </div>
                         <?php else: ?>
                             <p class="text-muted">Este talento ainda não adicionou uma carta de apresentação ao seu perfil.</p>
@@ -249,7 +249,7 @@ $is_logged_in = isset($_SESSION['user_id']);
                     <div class="card-body">
                         <?php if (!empty($talento['formacao'])): ?>
                             <div class="formacao-academica">
-                                <?php echo nl2br(htmlspecialchars($talento['formacao'])); ?>
+                                <?php echo nl2br(htmlspecialchars((string)$talento['formacao'])); ?>
                             </div>
                         <?php else: ?>
                             <div class="alert alert-info">
@@ -267,7 +267,7 @@ $is_logged_in = isset($_SESSION['user_id']);
                         <?php if (!empty($talento['resumo'])): ?>
                             <div class="apresentacao">
                                 <?php 
-                                $resumo = htmlspecialchars($talento['resumo']);
+                                $resumo = htmlspecialchars((string)$talento['resumo']);
                                 $resumo_curto = substr($resumo, 0, 300);
                                 $tem_mais = strlen($resumo) > 300;
                                 ?>
@@ -321,7 +321,7 @@ $is_logged_in = isset($_SESSION['user_id']);
                     <div class="card-body">
                         <?php if (!empty($talento['experiencia'])): ?>
                             <div class="experiencia-profissional">
-                                <?php echo nl2br(htmlspecialchars($talento['experiencia'])); ?>
+                                <?php echo nl2br(htmlspecialchars((string)$talento['experiencia'])); ?>
                             </div>
                         <?php else: ?>
                             <div class="alert alert-info">
@@ -387,7 +387,7 @@ $is_logged_in = isset($_SESSION['user_id']);
                             <div class="text-center py-4">
                                 <i class="fas fa-star-half-alt fa-3x text-muted mb-3"></i>
                                 <p>Este talento ainda não possui avaliações públicas.</p>
-                                <p>Seja o primeiro a avaliar <?php echo htmlspecialchars($talento['nome']); ?>!</p>
+                                <p>Seja o primeiro a avaliar <?php echo htmlspecialchars((string)$talento['nome']); ?>!</p>
                                 <a href="<?php echo SITE_URL; ?>/?route=avaliar_talento&id=<?php echo $talento_id; ?>" class="btn btn-outline-primary">
                                     Avaliar Talento
                                 </a>
@@ -455,9 +455,9 @@ $is_logged_in = isset($_SESSION['user_id']);
                                     <div class="avaliacao-item mb-4">
                                         <div class="d-flex justify-content-between align-items-center mb-2">
                                             <div>
-                                                <h5 class="mb-0"><?php echo htmlspecialchars($avaliacao['nome_avaliador']); ?></h5>
+                                                <h5 class="mb-0"><?php echo htmlspecialchars((string)$avaliacao['nome_avaliador']); ?></h5>
                                                 <?php if (!empty($avaliacao['linkedin_avaliador'])): ?>
-                                                    <a href="<?php echo htmlspecialchars($avaliacao['linkedin_avaliador']); ?>" target="_blank" class="text-primary">
+                                                    <a href="<?php echo htmlspecialchars((string)$avaliacao['linkedin_avaliador']); ?>" target="_blank" class="text-primary">
                                                         <i class="fab fa-linkedin"></i> Ver perfil no LinkedIn
                                                     </a>
                                                 <?php endif; ?>
@@ -480,7 +480,7 @@ $is_logged_in = isset($_SESSION['user_id']);
                                         </div>
                                         
                                         <div class="avaliacao-texto">
-                                            <?php echo nl2br(htmlspecialchars($avaliacao['avaliacao'])); ?>
+                                            <?php echo nl2br(htmlspecialchars((string)$avaliacao['avaliacao'])); ?>
                                         </div>
                                         
                                         <?php if (!$is_last): ?>

@@ -147,8 +147,8 @@ try {
                                                     <label class="form-check-label" for="inscrito_<?php echo $inscrito['id']; ?>"></label>
                                                 </div>
                                             </td>
-                                            <td><?php echo htmlspecialchars($inscrito['email']); ?></td>
-                                            <td><?php echo htmlspecialchars($inscrito['nome'] ?? 'Não informado'); ?></td>
+                                            <td><?php echo htmlspecialchars((string)$inscrito['email']); ?></td>
+                                            <td><?php echo htmlspecialchars((string)$inscrito['nome'] ?? 'Não informado'); ?></td>
                                             <td><?php echo date('d/m/Y H:i', strtotime($inscrito['data_inscricao'])); ?></td>
                                             <td>
                                                 <span class="badge bg-<?php echo $inscrito['status'] == 'ativo' ? 'success' : 'danger'; ?>">
@@ -177,7 +177,7 @@ try {
                     <select class="form-select" id="modelo_id" name="modelo_id">
                         <option value="">Selecione um modelo</option>
                         <?php foreach ($modelos as $modelo): ?>
-                            <option value="<?php echo $modelo['id']; ?>"><?php echo htmlspecialchars($modelo['nome']); ?> - <?php echo htmlspecialchars($modelo['assunto']); ?></option>
+                            <option value="<?php echo $modelo['id']; ?>"><?php echo htmlspecialchars((string)$modelo['nome']); ?> - <?php echo htmlspecialchars((string)$modelo['assunto']); ?></option>
                         <?php endforeach; ?>
                     </select>
                     <?php if (empty($modelos)): ?>

@@ -257,8 +257,8 @@ try {
                                                     <?php foreach ($tipos_contrato as $tipo): ?>
                                                     <tr>
                                                         <td><?php echo $tipo['id']; ?></td>
-                                                        <td><?php echo htmlspecialchars($tipo['nome']); ?></td>
-                                                        <td><?php echo htmlspecialchars($tipo['descricao'] ?? ''); ?></td>
+                                                        <td><?php echo htmlspecialchars((string)$tipo['nome']); ?></td>
+                                                        <td><?php echo htmlspecialchars((string)$tipo['descricao'] ?? ''); ?></td>
                                                         <td>
                                                             <span class="badge bg-<?php echo $tipo['ativo'] ? 'success' : 'danger'; ?>">
                                                                 <?php echo $tipo['ativo'] ? 'Ativo' : 'Inativo'; ?>
@@ -318,8 +318,8 @@ try {
                                                     <?php foreach ($regimes_trabalho as $regime): ?>
                                                     <tr>
                                                         <td><?php echo $regime['id']; ?></td>
-                                                        <td><?php echo htmlspecialchars($regime['nome']); ?></td>
-                                                        <td><?php echo htmlspecialchars($regime['descricao'] ?? ''); ?></td>
+                                                        <td><?php echo htmlspecialchars((string)$regime['nome']); ?></td>
+                                                        <td><?php echo htmlspecialchars((string)$regime['descricao'] ?? ''); ?></td>
                                                         <td>
                                                             <span class="badge bg-<?php echo $regime['ativo'] ? 'success' : 'danger'; ?>">
                                                                 <?php echo $regime['ativo'] ? 'Ativo' : 'Inativo'; ?>
@@ -379,8 +379,8 @@ try {
                                                     <?php foreach ($niveis_experiencia as $nivel): ?>
                                                     <tr>
                                                         <td><?php echo $nivel['id']; ?></td>
-                                                        <td><?php echo htmlspecialchars($nivel['nome']); ?></td>
-                                                        <td><?php echo htmlspecialchars($nivel['descricao'] ?? ''); ?></td>
+                                                        <td><?php echo htmlspecialchars((string)$nivel['nome']); ?></td>
+                                                        <td><?php echo htmlspecialchars((string)$nivel['descricao'] ?? ''); ?></td>
                                                         <td>
                                                             <span class="badge bg-<?php echo $nivel['ativo'] ? 'success' : 'danger'; ?>">
                                                                 <?php echo $nivel['ativo'] ? 'Ativo' : 'Inativo'; ?>

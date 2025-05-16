@@ -57,25 +57,25 @@ $empresas = $db->fetchAll("
                             <td><?php echo formatAdminDate($empresa['data_cadastro']); ?></td>
                             <td>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-info" data-id="<?php echo $empresa['id']; ?>" data-nome="<?php echo htmlspecialchars($empresa['razao_social'] ?: $empresa['nome']); ?>" data-action="visualizar">
+                                    <button type="button" class="btn btn-sm btn-info" data-id="<?php echo $empresa['id']; ?>" data-nome="<?php echo htmlspecialchars((string)$empresa['razao_social'] ?: $empresa['nome']); ?>" data-action="visualizar">
                                         <i class="fas fa-eye"></i>
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-primary" data-id="<?php echo $empresa['id']; ?>" data-nome="<?php echo htmlspecialchars($empresa['razao_social'] ?: $empresa['nome']); ?>" data-action="editar">
+                                    <button type="button" class="btn btn-sm btn-primary" data-id="<?php echo $empresa['id']; ?>" data-nome="<?php echo htmlspecialchars((string)$empresa['razao_social'] ?: $empresa['nome']); ?>" data-action="editar">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-secondary" data-id="<?php echo $empresa['id']; ?>" data-nome="<?php echo htmlspecialchars($empresa['razao_social'] ?: $empresa['nome']); ?>" data-action="senha">
+                                    <button type="button" class="btn btn-sm btn-secondary" data-id="<?php echo $empresa['id']; ?>" data-nome="<?php echo htmlspecialchars((string)$empresa['razao_social'] ?: $empresa['nome']); ?>" data-action="senha">
                                         <i class="fas fa-key"></i>
                                     </button>
                                     <?php if ($empresa['status'] !== 'bloqueado'): ?>
-                                    <button type="button" class="btn btn-sm btn-warning" data-id="<?php echo $empresa['id']; ?>" data-nome="<?php echo htmlspecialchars($empresa['razao_social'] ?: $empresa['nome']); ?>" data-action="bloquear">
+                                    <button type="button" class="btn btn-sm btn-warning" data-id="<?php echo $empresa['id']; ?>" data-nome="<?php echo htmlspecialchars((string)$empresa['razao_social'] ?: $empresa['nome']); ?>" data-action="bloquear">
                                         <i class="fas fa-ban"></i>
                                     </button>
                                     <?php else: ?>
-                                    <button type="button" class="btn btn-sm btn-success" data-id="<?php echo $empresa['id']; ?>" data-nome="<?php echo htmlspecialchars($empresa['razao_social'] ?: $empresa['nome']); ?>" data-action="ativar">
+                                    <button type="button" class="btn btn-sm btn-success" data-id="<?php echo $empresa['id']; ?>" data-nome="<?php echo htmlspecialchars((string)$empresa['razao_social'] ?: $empresa['nome']); ?>" data-action="ativar">
                                         <i class="fas fa-check"></i>
                                     </button>
                                     <?php endif; ?>
-                                    <button type="button" class="btn btn-sm btn-danger" data-id="<?php echo $empresa['id']; ?>" data-nome="<?php echo htmlspecialchars($empresa['razao_social'] ?: $empresa['nome']); ?>" data-action="excluir">
+                                    <button type="button" class="btn btn-sm btn-danger" data-id="<?php echo $empresa['id']; ?>" data-nome="<?php echo htmlspecialchars((string)$empresa['razao_social'] ?: $empresa['nome']); ?>" data-action="excluir">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
@@ -481,9 +481,14 @@ function editarEmpresa(id, nome) {
             console.log('Formulário preenchido com sucesso');
         })
         .catch(error => {
-            // Fechar modal e mostrar erro
-            const modalEditarEmpresa = bootstrap.Modal.getInstance(document.getElementById('modalEditarEmpresa'));
-            modalEditarEmpresa.hide();
+            // Fechar modal se estiver aberto
+            const modalElement = document.getElementById('modalEditarEmpresa');
+            if (modalElement) {
+                const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                if (modalInstance) {
+                    modalInstance.hide();
+                }
+            }
             console.error('Erro na requisição:', error);
             alert('Erro ao carregar dados da empresa: ' + error.message);
         });

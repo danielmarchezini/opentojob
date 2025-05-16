@@ -265,7 +265,7 @@ $contagem_rejeitados = $db->fetchColumn("SELECT COUNT(*) FROM indicacoes_perfis_
                         
                         <div class="col-md-6">
                             <div class="input-group">
-                                <input type="text" class="form-control" id="busca" name="busca" placeholder="Buscar por nome, email ou assunto" value="<?php echo htmlspecialchars($busca); ?>">
+                                <input type="text" class="form-control" id="busca" name="busca" placeholder="Buscar por nome, email ou assunto" value="<?php echo htmlspecialchars((string)$busca); ?>">
                                 <button class="btn btn-outline-secondary" type="submit">
                                     <i class="fas fa-search"></i>
                                 </button>
@@ -312,17 +312,17 @@ $contagem_rejeitados = $db->fetchColumn("SELECT COUNT(*) FROM indicacoes_perfis_
                                 <tr class="<?php echo $indicacao['status'] === 'pendente' ? 'table-warning' : ($indicacao['status'] === 'aprovado' ? 'table-success' : 'table-danger'); ?>">
                                     <td><?php echo $indicacao['id']; ?></td>
                                     <td>
-                                        <?php echo htmlspecialchars($indicacao['nome_perfil']); ?>
+                                        <?php echo htmlspecialchars((string)$indicacao['nome_perfil']); ?>
                                         <div class="small text-muted">
-                                            <a href="<?php echo htmlspecialchars($indicacao['link_perfil']); ?>" target="_blank">
+                                            <a href="<?php echo htmlspecialchars((string)$indicacao['link_perfil']); ?>" target="_blank">
                                                 <i class="fab fa-linkedin"></i> Ver perfil
                                             </a>
                                         </div>
                                     </td>
-                                    <td><?php echo htmlspecialchars($indicacao['assunto']); ?></td>
+                                    <td><?php echo htmlspecialchars((string)$indicacao['assunto']); ?></td>
                                     <td>
-                                        <?php echo htmlspecialchars($indicacao['nome_indicador']); ?>
-                                        <div class="small text-muted"><?php echo htmlspecialchars($indicacao['email_indicador']); ?></div>
+                                        <?php echo htmlspecialchars((string)$indicacao['nome_indicador']); ?>
+                                        <div class="small text-muted"><?php echo htmlspecialchars((string)$indicacao['email_indicador']); ?></div>
                                     </td>
                                     <td>
                                         <?php echo date('d/m/Y H:i', strtotime($indicacao['data_indicacao'])); ?>
@@ -376,19 +376,19 @@ $contagem_rejeitados = $db->fetchColumn("SELECT COUNT(*) FROM indicacoes_perfis_
                                                                 <table class="table table-sm">
                                                                     <tr>
                                                                         <th>Nome:</th>
-                                                                        <td><?php echo htmlspecialchars($indicacao['nome_perfil']); ?></td>
+                                                                        <td><?php echo htmlspecialchars((string)$indicacao['nome_perfil']); ?></td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th>Link:</th>
                                                                         <td>
-                                                                            <a href="<?php echo htmlspecialchars($indicacao['link_perfil']); ?>" target="_blank">
-                                                                                <?php echo htmlspecialchars($indicacao['link_perfil']); ?>
+                                                                            <a href="<?php echo htmlspecialchars((string)$indicacao['link_perfil']); ?>" target="_blank">
+                                                                                <?php echo htmlspecialchars((string)$indicacao['link_perfil']); ?>
                                                                             </a>
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th>Assunto:</th>
-                                                                        <td><?php echo htmlspecialchars($indicacao['assunto']); ?></td>
+                                                                        <td><?php echo htmlspecialchars((string)$indicacao['assunto']); ?></td>
                                                                     </tr>
                                                                 </table>
                                                             </div>
@@ -397,11 +397,11 @@ $contagem_rejeitados = $db->fetchColumn("SELECT COUNT(*) FROM indicacoes_perfis_
                                                                 <table class="table table-sm">
                                                                     <tr>
                                                                         <th>Nome:</th>
-                                                                        <td><?php echo htmlspecialchars($indicacao['nome_indicador']); ?></td>
+                                                                        <td><?php echo htmlspecialchars((string)$indicacao['nome_indicador']); ?></td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th>E-mail:</th>
-                                                                        <td><?php echo htmlspecialchars($indicacao['email_indicador']); ?></td>
+                                                                        <td><?php echo htmlspecialchars((string)$indicacao['email_indicador']); ?></td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th>Data:</th>
@@ -416,7 +416,7 @@ $contagem_rejeitados = $db->fetchColumn("SELECT COUNT(*) FROM indicacoes_perfis_
                                                                 <h6>Mensagem do Indicador</h6>
                                                                 <div class="card">
                                                                     <div class="card-body bg-light">
-                                                                        <?php echo nl2br(htmlspecialchars($indicacao['mensagem'])); ?>
+                                                                        <?php echo nl2br(htmlspecialchars((string)$indicacao['mensagem'])); ?>
                                                                     </div>
                                                                 </div>
                                                             </div>

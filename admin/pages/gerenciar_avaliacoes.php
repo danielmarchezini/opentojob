@@ -1,6 +1,204 @@
 <?php
+// Habilitar exibição de erros para depuração
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 // Obter instância do banco de dados
 $db = Database::getInstance();
+
+// Função para registrar logs
+function logDebug($message) {
+    $log_file = __DIR__ . '/../../logs/avaliacoes_debug.log';
+    $date = date('Y-m-d H:i:s');
+    $log_message = "[$date] $message\n";
+    
+    // Criar diretório de logs se não existir
+    if (!is_dir(dirname($log_file))) {
+        mkdir(dirname($log_file), 0755, true);
+    }
+    
+    file_put_contents($log_file, $log_message, FILE_APPEND);
+}
+
+// Processar ações de aprovação ou rejeição via GET
+if (isset($_GET['aprovar']) && is_numeric($_GET['aprovar'])) {
+    $avaliacao_id = (int)$_GET['aprovar'];
+    logDebug("Tentando aprovar avaliação ID: $avaliacao_id via GET");
+    
+    try {
+        // Verificar se a coluna status existe
+        $colunas = $db->query("DESCRIBE avaliacoes")->fetchAll(PDO::FETCH_COLUMN);
+        logDebug("Colunas encontradas: " . implode(", ", $colunas));
+        
+        if (in_array('status', $colunas)) {
+            $resultado = $db->update('avaliacoes', [
+                'status' => 'aprovada'
+            ], 'id = :id', [
+                'id' => $avaliacao_id
+            ]);
+            logDebug("Atualizado status para 'aprovada'. Resultado: " . ($resultado ? 'sucesso' : 'falha'));
+        } else {
+            $resultado = $db->update('avaliacoes', [
+                'aprovada' => 1,
+                'rejeitada' => 0
+            ], 'id = :id', [
+                'id' => $avaliacao_id
+            ]);
+            logDebug("Atualizado aprovada=1, rejeitada=0. Resultado: " . ($resultado ? 'sucesso' : 'falha'));
+        }
+        
+        $_SESSION['flash_message'] = "Avaliação aprovada com sucesso!";
+        $_SESSION['flash_type'] = "success";
+    } catch (Exception $e) {
+        logDebug("ERRO ao aprovar avaliação: " . $e->getMessage());
+        $_SESSION['flash_message'] = "Erro ao aprovar avaliação: " . $e->getMessage();
+        $_SESSION['flash_type'] = "danger";
+    }
+    
+    // Redirecionar para evitar reenvio
+    header("Location: " . SITE_URL . "/admin/?page=gerenciar_avaliacoes&acao=pendentes");
+    exit;
+} else if (isset($_GET['rejeitar']) && is_numeric($_GET['rejeitar'])) {
+    $avaliacao_id = (int)$_GET['rejeitar'];
+    logDebug("Tentando rejeitar avaliação ID: $avaliacao_id via GET");
+    
+    try {
+        // Verificar se a coluna status existe
+        $colunas = $db->query("DESCRIBE avaliacoes")->fetchAll(PDO::FETCH_COLUMN);
+        
+        if (in_array('status', $colunas)) {
+            $resultado = $db->update('avaliacoes', [
+                'status' => 'rejeitada'
+            ], 'id = :id', [
+                'id' => $avaliacao_id
+            ]);
+            logDebug("Atualizado status para 'rejeitada'. Resultado: " . ($resultado ? 'sucesso' : 'falha'));
+        } else {
+            $resultado = $db->update('avaliacoes', [
+                'aprovada' => 0,
+                'rejeitada' => 1
+            ], 'id = :id', [
+                'id' => $avaliacao_id
+            ]);
+            logDebug("Atualizado aprovada=0, rejeitada=1. Resultado: " . ($resultado ? 'sucesso' : 'falha'));
+        }
+        
+        $_SESSION['flash_message'] = "Avaliação rejeitada com sucesso!";
+        $_SESSION['flash_type'] = "success";
+    } catch (Exception $e) {
+        logDebug("ERRO ao rejeitar avaliação: " . $e->getMessage());
+        $_SESSION['flash_message'] = "Erro ao rejeitar avaliação: " . $e->getMessage();
+        $_SESSION['flash_type'] = "danger";
+    }
+    
+    // Redirecionar para evitar reenvio
+    header("Location: " . SITE_URL . "/admin/?page=gerenciar_avaliacoes&acao=pendentes");
+    exit;
+}
+
+// Verificar se foi solicitada a visualização de uma avaliação específica
+if (isset($_GET['view_id']) && is_numeric($_GET['view_id'])) {
+    $avaliacao_id = (int)$_GET['view_id'];
+    
+    // Função para buscar detalhes da avaliação
+    function buscarDetalhesAvaliacao($id) {
+        global $db;
+        
+        try {
+            $avaliacao = $db->fetch("
+                SELECT a.*, 
+                       u.nome as talento_nome, 
+                       t.profissao,
+                       COALESCE(e.nome, a.nome_avaliador) as empresa_nome,
+                       a.pontuacao as nota,
+                       a.data_avaliacao as data_criacao,
+                       CASE 
+                           WHEN a.status = 'aprovada' OR a.aprovada = 1 THEN 1
+                           ELSE 0
+                       END as aprovada
+                FROM avaliacoes a
+                JOIN usuarios u ON a.talento_id = u.id
+                LEFT JOIN talentos t ON u.id = t.usuario_id
+                LEFT JOIN usuarios e ON a.empresa_id = e.id
+                WHERE a.id = :id
+            ", [
+                'id' => $id
+            ]);
+            
+            return $avaliacao;
+        } catch (Exception $e) {
+            return null;
+        }
+    }
+    
+    // Buscar avaliação
+    $avaliacao = buscarDetalhesAvaliacao($avaliacao_id);
+    
+    // Se a avaliação foi encontrada, retornar o HTML com os detalhes
+    if ($avaliacao) {
+        // Verificar e ajustar campos nulos ou ausentes
+        if (!isset($avaliacao['nome_avaliador']) || empty($avaliacao['nome_avaliador'])) {
+            $avaliacao['nome_avaliador'] = 'Anônimo';
+        }
+        
+        if (!isset($avaliacao['linkedin_avaliador'])) {
+            $avaliacao['linkedin_avaliador'] = '';
+        }
+        
+        if (!isset($avaliacao['avaliacao']) && isset($avaliacao['texto'])) {
+            $avaliacao['avaliacao'] = $avaliacao['texto'];
+        } else if (!isset($avaliacao['avaliacao']) && isset($avaliacao['comentario'])) {
+            $avaliacao['avaliacao'] = $avaliacao['comentario'];
+        } else if (!isset($avaliacao['avaliacao'])) {
+            $avaliacao['avaliacao'] = 'Sem comentários';
+        }
+        
+        // Formatar data
+        $data_formatada = !empty($avaliacao['data_criacao']) 
+            ? date('d/m/Y H:i', strtotime($avaliacao['data_criacao'])) 
+            : date('d/m/Y H:i', strtotime($avaliacao['data_avaliacao'] ?? 'now'));
+        
+        // Construir HTML com os detalhes da avaliação
+        echo '<div id="avaliacaoDetalhes">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5>Informações do Talento</h5>
+                    <p><strong>Nome:</strong> ' . htmlspecialchars((string)$avaliacao['talento_nome']) . '</p>
+                    <p><strong>Profissão:</strong> ' . htmlspecialchars((string)$avaliacao['profissao'] ?? 'Não informado') . '</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Informações do Avaliador</h5>
+                    <p><strong>Nome:</strong> ' . htmlspecialchars((string)$avaliacao['nome_avaliador']) . '</p>
+                    <p><strong>LinkedIn:</strong> ' . (!empty($avaliacao['linkedin_avaliador']) ? '<a href="' . htmlspecialchars((string)$avaliacao['linkedin_avaliador']) . '" target="_blank">' . htmlspecialchars((string)$avaliacao['linkedin_avaliador']) . '</a>' : 'Não informado') . '</p>
+                </div>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5>Detalhes da Avaliação</h5>
+                    <p><strong>Data:</strong> ' . $data_formatada . '</p>
+                    <p><strong>Nota:</strong> ' . htmlspecialchars((string)$avaliacao['nota']) . '</p>
+                    <p><strong>Status:</strong> ' . ($avaliacao['aprovada'] ? '<span class="badge bg-success">Aprovada</span>' : '<span class="badge bg-warning">Pendente</span>') . '</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Conteúdo da Avaliação</h5>
+                    <div class="p-3 bg-light rounded">
+                        ' . nl2br(htmlspecialchars((string)$avaliacao['avaliacao'])) . '
+                    </div>
+                </div>
+            </div>
+        </div>';
+        exit;
+    } else {
+        // Se a avaliação não foi encontrada, retornar mensagem de erro
+        echo '<div id="avaliacaoDetalhes">
+            <div class="alert alert-danger">
+                Avaliação não encontrada ou excluída.
+            </div>
+        </div>';
+        exit;
+    }
+}
 
 // Definir ação (pendentes, aprovadas, rejeitadas)
 $acao = isset($_GET['acao']) ? $_GET['acao'] : 'pendentes';
@@ -9,43 +207,40 @@ $acao = isset($_GET['acao']) ? $_GET['acao'] : 'pendentes';
 $tabela_existe = $db->fetch("SELECT COUNT(*) as count FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = 'avaliacoes'");
 $tabela_existe = ($tabela_existe && $tabela_existe['count'] > 0);
 
-// Processar ações de aprovação ou rejeição
+// Manter o código de processamento POST para compatibilidade com outras funcionalidades
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['aprovar_avaliacao']) && isset($_POST['avaliacao_id'])) {
+    logDebug('Processando formulário POST: ' . json_encode($_POST));
+    
+    // Obter a ação do POST ou do GET
+    if (isset($_POST['acao'])) {
+        $acao = $_POST['acao'];
+        logDebug("Ação obtida do POST: $acao");
+    }
+    
+    if (isset($_POST['excluir_avaliacao']) && isset($_POST['avaliacao_id'])) {
         $avaliacao_id = (int)$_POST['avaliacao_id'];
+        logDebug("Tentando excluir avaliação ID: $avaliacao_id");
         
-        $db->update('avaliacoes', [
-            'aprovada' => 1
-        ], 'id = :id', [
-            'id' => $avaliacao_id
-        ]);
-        
-        $_SESSION['flash_message'] = "Avaliação aprovada com sucesso!";
-        $_SESSION['flash_type'] = "success";
-    } elseif (isset($_POST['rejeitar_avaliacao']) && isset($_POST['avaliacao_id'])) {
-        $avaliacao_id = (int)$_POST['avaliacao_id'];
-        
-        $db->update('avaliacoes', [
-            'aprovada' => 0
-        ], 'id = :id', [
-            'id' => $avaliacao_id
-        ]);
-        
-        $_SESSION['flash_message'] = "Avaliação rejeitada com sucesso!";
-        $_SESSION['flash_type'] = "success";
-    } elseif (isset($_POST['excluir_avaliacao']) && isset($_POST['avaliacao_id'])) {
-        $avaliacao_id = (int)$_POST['avaliacao_id'];
-        
-        $db->delete('avaliacoes', 'id = :id', [
-            'id' => $avaliacao_id
-        ]);
-        
-        $_SESSION['flash_message'] = "Avaliação excluída com sucesso!";
-        $_SESSION['flash_type'] = "success";
+        try {
+            $resultado = $db->delete('avaliacoes', 'id = :id', [
+                'id' => $avaliacao_id
+            ]);
+            logDebug("Exclusão de avaliação. Resultado: " . ($resultado ? 'sucesso' : 'falha'));
+            
+            $_SESSION['flash_message'] = "Avaliação excluída com sucesso!";
+            $_SESSION['flash_type'] = "success";
+        } catch (Exception $e) {
+            logDebug("ERRO ao excluir avaliação: " . $e->getMessage());
+            $_SESSION['flash_message'] = "Erro ao excluir avaliação: " . $e->getMessage();
+            $_SESSION['flash_type'] = "danger";
+        }
     }
     
     // Redirecionar para evitar reenvio do formulário
-    header("Location: " . SITE_URL . "/?route=gerenciar_avaliacoes_admin&acao=" . $acao);
+    $redirect_url = SITE_URL . "/admin/?page=gerenciar_avaliacoes&acao=" . $acao;
+    logDebug("Redirecionando para: $redirect_url");
+    
+    header("Location: $redirect_url");
     exit;
 }
 
@@ -60,33 +255,45 @@ if ($tabela_existe) {
     try {
         if ($acao === 'pendentes') {
             $avaliacoes = $db->fetchAll("
-                SELECT a.*, u.nome as talento_nome, t.profissao
+                SELECT a.*, u.nome as talento_nome, t.profissao, 
+                       COALESCE(e.nome, a.nome_avaliador) as empresa_nome,
+                       a.pontuacao as nota, 
+                       a.data_avaliacao as data_criacao
                 FROM avaliacoes a
                 JOIN usuarios u ON a.talento_id = u.id
                 LEFT JOIN talentos t ON u.id = t.usuario_id
-                WHERE a.aprovada = 0
+                LEFT JOIN usuarios e ON a.empresa_id = e.id
+                WHERE (a.status = 'pendente' OR a.aprovada = 0)
                 ORDER BY a.data_avaliacao DESC
             ");
             
             $titulo_pagina = "Avaliações Pendentes";
         } elseif ($acao === 'aprovadas') {
             $avaliacoes = $db->fetchAll("
-                SELECT a.*, u.nome as talento_nome, t.profissao
+                SELECT a.*, u.nome as talento_nome, t.profissao, 
+                       COALESCE(e.nome, a.nome_avaliador) as empresa_nome,
+                       a.pontuacao as nota, 
+                       a.data_avaliacao as data_criacao
                 FROM avaliacoes a
                 JOIN usuarios u ON a.talento_id = u.id
                 LEFT JOIN talentos t ON u.id = t.usuario_id
-                WHERE a.aprovada = 1
+                LEFT JOIN usuarios e ON a.empresa_id = e.id
+                WHERE a.status = 'aprovada' OR a.aprovada = 1
                 ORDER BY a.data_avaliacao DESC
             ");
             
             $titulo_pagina = "Avaliações Aprovadas";
         } elseif ($acao === 'rejeitadas') {
             $avaliacoes = $db->fetchAll("
-                SELECT a.*, u.nome as talento_nome, t.profissao
+                SELECT a.*, u.nome as talento_nome, t.profissao, 
+                       COALESCE(e.nome, a.nome_avaliador) as empresa_nome,
+                       a.pontuacao as nota, 
+                       a.data_avaliacao as data_criacao
                 FROM avaliacoes a
                 JOIN usuarios u ON a.talento_id = u.id
                 LEFT JOIN talentos t ON u.id = t.usuario_id
-                WHERE a.aprovada = 0 AND a.rejeitada = 1
+                LEFT JOIN usuarios e ON a.empresa_id = e.id
+                WHERE (a.status = 'rejeitada' OR (a.aprovada = 0 AND a.rejeitada = 1))
                 ORDER BY a.data_avaliacao DESC
             ");
             
@@ -99,13 +306,13 @@ if ($tabela_existe) {
 
         // Contar avaliações pendentes, aprovadas e rejeitadas
         $total_pendentes = $db->fetchColumn("
-            SELECT COUNT(*) FROM avaliacoes WHERE aprovada = 0 AND rejeitada = 0
+            SELECT COUNT(*) FROM avaliacoes WHERE status = 'pendente' OR (aprovada = 0 AND (rejeitada = 0 OR rejeitada IS NULL))
         ");
         $total_aprovadas = $db->fetchColumn("
-            SELECT COUNT(*) FROM avaliacoes WHERE aprovada = 1
+            SELECT COUNT(*) FROM avaliacoes WHERE status = 'aprovada' OR aprovada = 1
         ");
         $total_rejeitadas = $db->fetchColumn("
-            SELECT COUNT(*) FROM avaliacoes WHERE aprovada = 0 AND rejeitada = 1
+            SELECT COUNT(*) FROM avaliacoes WHERE status = 'rejeitada' OR (aprovada = 0 AND rejeitada = 1)
         ");
     } catch (Exception $e) {
         // Silenciar erros
@@ -203,12 +410,12 @@ if ($tabela_existe) {
                                         <td><?php echo $avaliacao['id']; ?></td>
                                         <td>
                                             <a href="<?php echo SITE_URL; ?>/?route=perfil_talento&id=<?php echo $avaliacao['talento_id']; ?>" target="_blank">
-                                                <?php echo htmlspecialchars($avaliacao['talento_nome']); ?>
+                                                <?php echo htmlspecialchars((string)$avaliacao['talento_nome']); ?>
                                             </a>
                                         </td>
                                         <td>
                                             <a href="<?php echo SITE_URL; ?>/?route=perfil_empresa&id=<?php echo $avaliacao['empresa_id']; ?>" target="_blank">
-                                                <?php echo htmlspecialchars($avaliacao['empresa_nome']); ?>
+                                                <?php echo htmlspecialchars((string)$avaliacao['empresa_nome']); ?>
                                             </a>
                                         </td>
                                         <td>
@@ -227,7 +434,7 @@ if ($tabela_existe) {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td><?php echo date('d/m/Y H:i', strtotime($avaliacao['data_criacao'])); ?></td>
+                                        <td><?php echo !empty($avaliacao['data_criacao']) ? date('d/m/Y H:i', strtotime($avaliacao['data_criacao'])) : date('d/m/Y H:i', strtotime($avaliacao['data_avaliacao'])); ?></td>
                                         <td>
                                             <div class="btn-group">
                                                 <button type="button" class="btn btn-sm btn-info" onclick="visualizarAvaliacao(<?php echo $avaliacao['id']; ?>)">
@@ -235,21 +442,13 @@ if ($tabela_existe) {
                                                 </button>
                                                 
                                                 <?php if ($acao === 'pendentes'): ?>
-                                                    <form method="post" class="d-inline">
-                                                        <input type="hidden" name="avaliacao_id" value="<?php echo $avaliacao['id']; ?>">
-                                                        <input type="hidden" name="aprovar_avaliacao" value="1">
-                                                        <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Tem certeza que deseja aprovar esta avaliação?')">
-                                                            <i class="fas fa-check"></i>
-                                                        </button>
-                                                    </form>
+                                                    <button type="button" class="btn btn-sm btn-success" onclick="aprovarAvaliacao(<?php echo $avaliacao['id']; ?>)">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
                                                     
-                                                    <form method="post" class="d-inline">
-                                                        <input type="hidden" name="avaliacao_id" value="<?php echo $avaliacao['id']; ?>">
-                                                        <input type="hidden" name="rejeitar_avaliacao" value="1">
-                                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja rejeitar esta avaliação?')">
-                                                            <i class="fas fa-times"></i>
-                                                        </button>
-                                                    </form>
+                                                    <button type="button" class="btn btn-sm btn-danger" onclick="rejeitarAvaliacao(<?php echo $avaliacao['id']; ?>)">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
                                                 <?php endif; ?>
                                             </div>
                                         </td>
@@ -286,15 +485,163 @@ if ($tabela_existe) {
     </div>
 </div>
 
+<!-- Incluir jQuery se ainda não estiver incluído -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-$(document).ready(function() {
-    $('#avaliacoesTable').DataTable({
-        language: {
-            url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Portuguese-Brasil.json'
-        },
-        order: [[0, 'desc']]
-    });
+// Criar o modal de status no carregamento da página
+document.addEventListener('DOMContentLoaded', function() {
+    // Criar modal de status antecipadamente
+    const modalHTML = `
+        <div class="modal fade" id="modalStatus" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalStatusTitulo"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body" id="modalStatusMensagem"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="location.reload();">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    const div = document.createElement('div');
+    div.innerHTML = modalHTML;
+    document.body.appendChild(div.firstChild);
+    
+    // Inicializar DataTables com tradução em português diretamente
+    if (typeof $ !== 'undefined' && $.fn.DataTable) {
+        $('#avaliacoesTable').DataTable({
+            language: {
+                "emptyTable": "Nenhum registro encontrado",
+                "info": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                "infoEmpty": "Mostrando 0 até 0 de 0 registros",
+                "infoFiltered": "(Filtrados de _MAX_ registros)",
+                "infoThousands": ".",
+                "lengthMenu": "_MENU_ resultados por página",
+                "loadingRecords": "Carregando...",
+                "processing": "Processando...",
+                "zeroRecords": "Nenhum registro encontrado",
+                "search": "Pesquisar",
+                "paginate": {
+                    "next": "Próximo",
+                    "previous": "Anterior",
+                    "first": "Primeiro",
+                    "last": "Último"
+                },
+                "aria": {
+                    "sortAscending": ": Ordenar colunas de forma ascendente",
+                    "sortDescending": ": Ordenar colunas de forma descendente"
+                }
+            },
+            order: [[0, 'desc']]
+        });
+    } else {
+        console.error('jQuery ou DataTables não estão disponíveis');
+    }
 });
+
+<?php
+// Função para buscar detalhes da avaliação
+function buscarDetalhesAvaliacao($id) {
+    global $db;
+    
+    try {
+        $avaliacao = $db->fetch("
+            SELECT a.*, 
+                   u.nome as talento_nome, 
+                   t.profissao,
+                   COALESCE(e.nome, a.nome_avaliador) as empresa_nome,
+                   a.pontuacao as nota,
+                   a.data_avaliacao as data_criacao,
+                   CASE 
+                       WHEN a.status = 'aprovada' OR a.aprovada = 1 THEN 1
+                       ELSE 0
+                   END as aprovada
+            FROM avaliacoes a
+            JOIN usuarios u ON a.talento_id = u.id
+            LEFT JOIN talentos t ON u.id = t.usuario_id
+            LEFT JOIN usuarios e ON a.empresa_id = e.id
+            WHERE a.id = :id
+        ", [
+            'id' => $id
+        ]);
+        
+        return $avaliacao;
+    } catch (Exception $e) {
+        return null;
+    }
+}
+?>
+
+<?php
+// Pré-carregar todas as avaliações para uso no JavaScript
+$todas_avaliacoes = [];
+if ($tabela_existe) {
+    try {
+        $todas_avaliacoes = $db->fetchAll("
+            SELECT a.*, 
+                   u.nome as talento_nome, 
+                   t.profissao,
+                   COALESCE(e.nome, a.nome_avaliador) as empresa_nome,
+                   a.pontuacao as nota,
+                   a.data_avaliacao as data_criacao,
+                   CASE 
+                       WHEN a.status = 'aprovada' OR a.aprovada = 1 THEN 1
+                       ELSE 0
+                   END as aprovada
+            FROM avaliacoes a
+            JOIN usuarios u ON a.talento_id = u.id
+            LEFT JOIN talentos t ON u.id = t.usuario_id
+            LEFT JOIN usuarios e ON a.empresa_id = e.id
+        ");
+    } catch (Exception $e) {
+        // Silenciar erros
+    }
+}
+?>
+
+// Função simplificada para mostrar mensagens (não usada mais)
+function mostrarModalStatus(titulo, mensagem, tipo) {
+    alert(mensagem);
+    location.reload();
+}
+
+// Função para aprovar avaliação
+function aprovarAvaliacao(id) {
+    if (!confirm('Tem certeza que deseja aprovar esta avaliação?')) {
+        return;
+    }
+    
+    // Mostrar indicador de carregamento
+    const btnAprovar = event.target.closest('button');
+    const iconOriginal = btnAprovar.innerHTML;
+    btnAprovar.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+    btnAprovar.disabled = true;
+    
+    // Redirecionar para o arquivo de processamento
+    window.location.href = '<?php echo SITE_URL; ?>/admin/processar_avaliacao.php?aprovar=' + id;
+}
+
+// Função para rejeitar avaliação
+function rejeitarAvaliacao(id) {
+    if (!confirm('Tem certeza que deseja rejeitar esta avaliação?')) {
+        return;
+    }
+    
+    // Mostrar indicador de carregamento
+    const btnRejeitar = event.target.closest('button');
+    const iconOriginal = btnRejeitar.innerHTML;
+    btnRejeitar.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+    btnRejeitar.disabled = true;
+    
+    // Redirecionar para o arquivo de processamento
+    window.location.href = '<?php echo SITE_URL; ?>/admin/processar_avaliacao.php?rejeitar=' + id;
+}
 
 function visualizarAvaliacao(id) {
     // Mostrar loading
@@ -307,61 +654,66 @@ function visualizarAvaliacao(id) {
     `;
     
     // Abrir modal
-    $('#modalVisualizarAvaliacao').modal('show');
+    if (typeof $ !== 'undefined') {
+        $('#modalVisualizarAvaliacao').modal('show');
+    } else {
+        // Fallback para Bootstrap 5 nativo se jQuery não estiver disponível
+        var modal = document.getElementById('modalVisualizarAvaliacao');
+        if (modal && typeof bootstrap !== 'undefined') {
+            var modalInstance = new bootstrap.Modal(modal);
+            modalInstance.show();
+        }
+    }
     
-    // Carregar detalhes da avaliação via AJAX
-    fetch('<?php echo SITE_URL; ?>/?route=api_avaliacao_detalhe&id=' + id)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const avaliacao = data.avaliacao;
-                
-                // Construir HTML com os detalhes da avaliação
-                let html = `
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <h5>Informações do Talento</h5>
-                            <p><strong>Nome:</strong> ${avaliacao.talento_nome}</p>
-                            <p><strong>Profissão:</strong> ${avaliacao.profissao || 'Não informado'}</p>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>Informações do Avaliador</h5>
-                            <p><strong>Nome:</strong> ${avaliacao.nome_avaliador}</p>
-                            <p><strong>LinkedIn:</strong> ${avaliacao.linkedin_avaliador ? `<a href="${avaliacao.linkedin_avaliador}" target="_blank">${avaliacao.linkedin_avaliador}</a>` : 'Não informado'}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <h5>Detalhes da Avaliação</h5>
-                            <p><strong>Data:</strong> ${new Date(avaliacao.data_criacao).toLocaleString('pt-BR')}</p>
-                            <p><strong>Nota:</strong> ${avaliacao.nota}</p>
-                            <p><strong>Status:</strong> ${avaliacao.aprovada ? '<span class="badge bg-success">Aprovada</span>' : '<span class="badge bg-warning">Pendente</span>'}</p>
-                        </div>
-                        <div class="col-md-6">
-                            <h5>Conteúdo da Avaliação</h5>
-                            <div class="p-3 bg-light rounded">
-                                ${avaliacao.avaliacao.replace(/\n/g, '<br>')}
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                document.getElementById('avaliacaoDetalhes').innerHTML = html;
-            } else {
-                document.getElementById('avaliacaoDetalhes').innerHTML = `
-                    <div class="alert alert-danger">
-                        Erro ao carregar detalhes da avaliação: ${data.message || 'Erro desconhecido'}
-                    </div>
-                `;
-            }
-        })
-        .catch(error => {
-            document.getElementById('avaliacaoDetalhes').innerHTML = `
-                <div class="alert alert-danger">
-                    Erro ao carregar detalhes da avaliação: ${error.message}
+    // Dados das avaliações pré-carregados do PHP
+    const avaliacoes = <?php echo json_encode($todas_avaliacoes); ?>;
+    
+    // Encontrar a avaliação pelo ID
+    const avaliacao = avaliacoes.find(a => a.id == id);
+    
+    if (avaliacao) {
+        // Formatar data
+        const dataObj = new Date(avaliacao.data_criacao || avaliacao.data_avaliacao);
+        const dataFormatada = dataObj.toLocaleDateString('pt-BR') + ' ' + dataObj.toLocaleTimeString('pt-BR');
+        
+        // Construir HTML com os detalhes da avaliação
+        const html = `
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5>Informações do Talento</h5>
+                    <p><strong>Nome:</strong> ${avaliacao.talento_nome || 'Não informado'}</p>
+                    <p><strong>Profissão:</strong> ${avaliacao.profissao || 'Não informado'}</p>
                 </div>
-            `;
-        });
+                <div class="col-md-6">
+                    <h5>Informações do Avaliador</h5>
+                    <p><strong>Nome:</strong> ${avaliacao.nome_avaliador || avaliacao.empresa_nome || 'Anônimo'}</p>
+                    <p><strong>LinkedIn:</strong> ${avaliacao.linkedin_avaliador ? `<a href="${avaliacao.linkedin_avaliador}" target="_blank">${avaliacao.linkedin_avaliador}</a>` : 'Não informado'}</p>
+                </div>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5>Detalhes da Avaliação</h5>
+                    <p><strong>Data:</strong> ${dataFormatada}</p>
+                    <p><strong>Nota:</strong> ${avaliacao.nota || avaliacao.pontuacao || '0'}</p>
+                    <p><strong>Status:</strong> ${avaliacao.aprovada == 1 ? '<span class="badge bg-success">Aprovada</span>' : '<span class="badge bg-warning">Pendente</span>'}</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Conteúdo da Avaliação</h5>
+                    <div class="p-3 bg-light rounded">
+                        ${(avaliacao.avaliacao || avaliacao.texto || avaliacao.comentario || 'Sem comentários').replace(/\n/g, '<br>')}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('avaliacaoDetalhes').innerHTML = html;
+    } else {
+        document.getElementById('avaliacaoDetalhes').innerHTML = `
+            <div class="alert alert-danger">
+                Avaliação não encontrada ou excluída.
+            </div>
+        `;
+    }
 }
 </script>

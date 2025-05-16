@@ -69,13 +69,13 @@ if (!$tabela_existe) {
                         <tbody>
                             <?php foreach ($webhooks as $webhook): ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($webhook['nome']); ?></td>
-                                <td><?php echo htmlspecialchars($webhook['tipo']); ?></td>
+                                <td><?php echo htmlspecialchars((string)$webhook['nome']); ?></td>
+                                <td><?php echo htmlspecialchars((string)$webhook['tipo']); ?></td>
                                 <td>
                                     <?php if (empty($webhook['url'])): ?>
                                     <span class="text-muted">Não configurado</span>
                                     <?php else: ?>
-                                    <?php echo htmlspecialchars($webhook['url']); ?>
+                                    <?php echo htmlspecialchars((string)$webhook['url']); ?>
                                     <?php endif; ?>
                                 </td>
                                 <td>
@@ -88,10 +88,10 @@ if (!$tabela_existe) {
                                 <td>
                                     <button type="button" class="btn btn-primary btn-sm" 
                                         data-id="<?php echo $webhook['id']; ?>"
-                                        data-nome="<?php echo htmlspecialchars($webhook['nome']); ?>"
-                                        data-tipo="<?php echo htmlspecialchars($webhook['tipo']); ?>"
-                                        data-url="<?php echo htmlspecialchars($webhook['url']); ?>"
-                                        data-api-key="<?php echo htmlspecialchars($webhook['api_key']); ?>"
+                                        data-nome="<?php echo htmlspecialchars((string)$webhook['nome']); ?>"
+                                        data-tipo="<?php echo htmlspecialchars((string)$webhook['tipo']); ?>"
+                                        data-url="<?php echo htmlspecialchars((string)$webhook['url']); ?>"
+                                        data-api-key="<?php echo htmlspecialchars((string)$webhook['api_key']); ?>"
                                         data-ativo="<?php echo $webhook['ativo']; ?>"
                                         data-bs-toggle="modal" data-bs-target="#modalEditarWebhook">
                                         <i class="fas fa-edit"></i> Editar
@@ -99,19 +99,19 @@ if (!$tabela_existe) {
                                     
                                     <button type="button" class="btn btn-info btn-sm" 
                                         data-id="<?php echo $webhook['id']; ?>"
-                                        data-tipo="<?php echo htmlspecialchars($webhook['tipo']); ?>"
+                                        data-tipo="<?php echo htmlspecialchars((string)$webhook['tipo']); ?>"
                                         data-bs-toggle="modal" data-bs-target="#modalTestarWebhook">
                                         <i class="fas fa-vial"></i> Testar
                                     </button>
                                     
                                     <?php if ($webhook['ativo']): ?>
                                     <button type="button" class="btn btn-warning btn-sm"
-                                        onclick="confirmarAcao('desativar', <?php echo $webhook['id']; ?>, '<?php echo htmlspecialchars($webhook['nome']); ?>')">
+                                        onclick="confirmarAcao('desativar', <?php echo $webhook['id']; ?>, '<?php echo htmlspecialchars((string)$webhook['nome']); ?>')">
                                         <i class="fas fa-pause"></i> Desativar
                                     </button>
                                     <?php else: ?>
                                     <button type="button" class="btn btn-success btn-sm"
-                                        onclick="confirmarAcao('ativar', <?php echo $webhook['id']; ?>, '<?php echo htmlspecialchars($webhook['nome']); ?>')">
+                                        onclick="confirmarAcao('ativar', <?php echo $webhook['id']; ?>, '<?php echo htmlspecialchars((string)$webhook['nome']); ?>')">
                                         <i class="fas fa-play"></i> Ativar
                                     </button>
                                     <?php endif; ?>
@@ -158,8 +158,8 @@ if (!$tabela_existe) {
                             <?php foreach ($logs as $log): ?>
                             <tr>
                                 <td><?php echo date('d/m/Y H:i:s', strtotime($log['data_hora'])); ?></td>
-                                <td><?php echo htmlspecialchars($log['acao']); ?></td>
-                                <td><?php echo htmlspecialchars($log['descricao']); ?></td>
+                                <td><?php echo htmlspecialchars((string)$log['acao']); ?></td>
+                                <td><?php echo htmlspecialchars((string)$log['descricao']); ?></td>
                             </tr>
                             <?php endforeach; ?>
                             <?php endif; ?>

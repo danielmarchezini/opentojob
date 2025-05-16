@@ -314,13 +314,13 @@ function formatCacheDate($timestamp) {
                         <tbody>
                             <?php foreach ($cacheInfo['groups'] as $group => $info): ?>
                                 <tr>
-                                    <td><?php echo htmlspecialchars($group); ?></td>
+                                    <td><?php echo htmlspecialchars((string)$group); ?></td>
                                     <td><?php echo $info['count']; ?></td>
                                     <td><?php echo formatSize($info['size']); ?></td>
                                     <td>
                                         <form method="post" class="d-inline">
                                             <input type="hidden" name="action" value="clear_group">
-                                            <input type="hidden" name="cache_group" value="<?php echo htmlspecialchars($group); ?>">
+                                            <input type="hidden" name="cache_group" value="<?php echo htmlspecialchars((string)$group); ?>">
                                             <button type="submit" class="btn btn-sm btn-warning">Limpar</button>
                                         </form>
                                     </td>
@@ -349,8 +349,8 @@ function formatCacheDate($timestamp) {
                         <tbody>
                             <?php foreach ($cacheInfo['files'] as $file): ?>
                                 <tr class="<?php echo $file['expired'] ? 'table-danger' : ''; ?>">
-                                    <td><?php echo htmlspecialchars($file['key']); ?></td>
-                                    <td><?php echo htmlspecialchars($file['group']); ?></td>
+                                    <td><?php echo htmlspecialchars((string)$file['key']); ?></td>
+                                    <td><?php echo htmlspecialchars((string)$file['group']); ?></td>
                                     <td><?php echo formatSize($file['size']); ?></td>
                                     <td><?php echo formatCacheDate($file['created']); ?></td>
                                     <td>
@@ -366,7 +366,7 @@ function formatCacheDate($timestamp) {
                                     <td>
                                         <form method="post" class="d-inline">
                                             <input type="hidden" name="action" value="delete_cache">
-                                            <input type="hidden" name="cache_key" value="<?php echo htmlspecialchars($file['key']); ?>">
+                                            <input type="hidden" name="cache_key" value="<?php echo htmlspecialchars((string)$file['key']); ?>">
                                             <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
                                         </form>
                                     </td>

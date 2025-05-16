@@ -196,14 +196,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="nome" class="form-label">Nome do Perfil <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="nome" name="nome" value="<?php echo htmlspecialchars($nome); ?>" required>
+                        <input type="text" class="form-control" id="nome" name="nome" value="<?php echo htmlspecialchars((string)$nome); ?>" required>
                         <div class="invalid-feedback">
                             Por favor, informe o nome do perfil.
                         </div>
                     </div>
                     <div class="col-md-6">
                         <label for="assunto" class="form-label">Assunto Principal <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="assunto" name="assunto" value="<?php echo htmlspecialchars($assunto); ?>" placeholder="Ex: Carreira em Tecnologia, Empregabilidade" required>
+                        <input type="text" class="form-control" id="assunto" name="assunto" value="<?php echo htmlspecialchars((string)$assunto); ?>" placeholder="Ex: Carreira em Tecnologia, Empregabilidade" required>
                         <div class="invalid-feedback">
                             Por favor, informe o assunto principal do perfil.
                         </div>
@@ -212,7 +212,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 <div class="mb-3">
                     <label for="link_perfil" class="form-label">Link do Perfil no LinkedIn <span class="text-danger">*</span></label>
-                    <input type="url" class="form-control" id="link_perfil" name="link_perfil" value="<?php echo htmlspecialchars($link_perfil); ?>" placeholder="https://www.linkedin.com/in/nome-do-perfil/" required>
+                    <input type="url" class="form-control" id="link_perfil" name="link_perfil" value="<?php echo htmlspecialchars((string)$link_perfil); ?>" placeholder="https://www.linkedin.com/in/nome-do-perfil/" required>
                     <div class="invalid-feedback">
                         Por favor, informe um link válido do LinkedIn.
                     </div>
@@ -226,8 +226,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="row">
                         <div class="col-md-3">
                             <div class="mb-3">
-                                <img src="<?php echo SITE_URL; ?>/uploads/perfis_linkedin/<?php echo htmlspecialchars($foto_atual); ?>" 
-                                     alt="<?php echo htmlspecialchars($nome); ?>" 
+                                <img src="<?php echo SITE_URL; ?>/uploads/perfis_linkedin/<?php echo htmlspecialchars((string)$foto_atual); ?>" 
+                                     alt="<?php echo htmlspecialchars((string)$nome); ?>" 
                                      class="img-thumbnail" 
                                      style="max-width: 200px; max-height: 200px;">
                                 <div class="form-text">

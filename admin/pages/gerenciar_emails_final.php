@@ -74,9 +74,9 @@ try {
                                 <?php foreach ($modelos as $modelo): ?>
                                     <tr>
                                         <td><?php echo $modelo['id']; ?></td>
-                                        <td><?php echo htmlspecialchars($modelo['codigo']); ?></td>
-                                        <td><?php echo htmlspecialchars($modelo['nome']); ?></td>
-                                        <td><?php echo htmlspecialchars($modelo['assunto']); ?></td>
+                                        <td><?php echo htmlspecialchars((string)$modelo['codigo']); ?></td>
+                                        <td><?php echo htmlspecialchars((string)$modelo['nome']); ?></td>
+                                        <td><?php echo htmlspecialchars((string)$modelo['assunto']); ?></td>
                                         <td><?php echo date('d/m/Y H:i', strtotime($modelo['data_atualizacao'])); ?></td>
                                         <td>
                                             <button type="button" class="btn btn-info btn-sm" onclick="visualizarModelo(<?php echo $modelo['id']; ?>, '<?php echo addslashes($modelo['nome']); ?>')">

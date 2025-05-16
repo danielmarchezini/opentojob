@@ -118,28 +118,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <form method="post" action="<?php echo SITE_URL; ?>/?route=cadastrar_vaga_externa">
                     <div class="form-group mb-3">
                         <label for="empresa_externa">Nome da Empresa *</label>
-                        <input type="text" name="empresa_externa" id="empresa_externa" class="form-control" value="<?php echo isset($empresa_externa) ? htmlspecialchars($empresa_externa) : ''; ?>" required>
+                        <input type="text" name="empresa_externa" id="empresa_externa" class="form-control" value="<?php echo isset($empresa_externa) ? htmlspecialchars((string)$empresa_externa) : ''; ?>" required>
                         <small class="form-text text-muted">Digite o nome da empresa externa (não cadastrada no sistema).</small>
                     </div>
                     
                     <div class="form-group mb-3">
                         <label for="titulo">Título da Vaga *</label>
-                        <input type="text" name="titulo" id="titulo" class="form-control" value="<?php echo isset($titulo) ? htmlspecialchars($titulo) : ''; ?>" required>
+                        <input type="text" name="titulo" id="titulo" class="form-control" value="<?php echo isset($titulo) ? htmlspecialchars((string)$titulo) : ''; ?>" required>
                     </div>
                     
                     <div class="form-group mb-3">
                         <label for="descricao">Descrição da Vaga *</label>
-                        <textarea name="descricao" id="descricao" class="form-control" rows="5" required><?php echo isset($descricao) ? htmlspecialchars($descricao) : ''; ?></textarea>
+                        <textarea name="descricao" id="descricao" class="form-control" rows="5" required><?php echo isset($descricao) ? htmlspecialchars((string)$descricao) : ''; ?></textarea>
                     </div>
                     
                     <div class="form-group mb-3">
                         <label for="requisitos">Requisitos</label>
-                        <textarea name="requisitos" id="requisitos" class="form-control" rows="4"><?php echo isset($requisitos) ? htmlspecialchars($requisitos) : ''; ?></textarea>
+                        <textarea name="requisitos" id="requisitos" class="form-control" rows="4"><?php echo isset($requisitos) ? htmlspecialchars((string)$requisitos) : ''; ?></textarea>
                     </div>
                     
                     <div class="form-group mb-3">
                         <label for="beneficios">Benefícios</label>
-                        <textarea name="beneficios" id="beneficios" class="form-control" rows="4"><?php echo isset($beneficios) ? htmlspecialchars($beneficios) : ''; ?></textarea>
+                        <textarea name="beneficios" id="beneficios" class="form-control" rows="4"><?php echo isset($beneficios) ? htmlspecialchars((string)$beneficios) : ''; ?></textarea>
                     </div>
                     
                     <div class="row mb-3">
@@ -150,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <option value="">Selecione</option>
                                     <?php foreach ($tipos_contrato as $tipo): ?>
                                         <option value="<?php echo $tipo['id']; ?>" <?php echo (isset($tipo_contrato_id) && $tipo_contrato_id == $tipo['id']) ? 'selected' : ''; ?>>
-                                            <?php echo htmlspecialchars($tipo['nome']); ?>
+                                            <?php echo htmlspecialchars((string)$tipo['nome']); ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -163,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <option value="">Selecione</option>
                                     <?php foreach ($regimes_trabalho as $regime): ?>
                                         <option value="<?php echo $regime['id']; ?>" <?php echo (isset($regime_trabalho_id) && $regime_trabalho_id == $regime['id']) ? 'selected' : ''; ?>>
-                                            <?php echo htmlspecialchars($regime['nome']); ?>
+                                            <?php echo htmlspecialchars((string)$regime['nome']); ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -176,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <option value="">Selecione</option>
                                     <?php foreach ($niveis_experiencia as $nivel): ?>
                                         <option value="<?php echo $nivel['id']; ?>" <?php echo (isset($nivel_experiencia_id) && $nivel_experiencia_id == $nivel['id']) ? 'selected' : ''; ?>>
-                                            <?php echo htmlspecialchars($nivel['nome']); ?>
+                                            <?php echo htmlspecialchars((string)$nivel['nome']); ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -188,19 +188,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="localizacao">Localização</label>
-                                <input type="text" name="localizacao" id="localizacao" class="form-control" value="<?php echo isset($localizacao) ? htmlspecialchars($localizacao) : ''; ?>">
+                                <input type="text" name="localizacao" id="localizacao" class="form-control" value="<?php echo isset($localizacao) ? htmlspecialchars((string)$localizacao) : ''; ?>">
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="salario_min">Salário Mínimo</label>
-                                <input type="number" class="form-control" id="salario_min" name="salario_min" step="0.01" value="<?php echo isset($salario_min) ? htmlspecialchars($salario_min) : ''; ?>">
+                                <input type="number" class="form-control" id="salario_min" name="salario_min" step="0.01" value="<?php echo isset($salario_min) ? htmlspecialchars((string)$salario_min) : ''; ?>">
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="salario_max">Salário Máximo</label>
-                                <input type="number" class="form-control" id="salario_max" name="salario_max" step="0.01" value="<?php echo isset($salario_max) ? htmlspecialchars($salario_max) : ''; ?>">
+                                <input type="number" class="form-control" id="salario_max" name="salario_max" step="0.01" value="<?php echo isset($salario_max) ? htmlspecialchars((string)$salario_max) : ''; ?>">
                             </div>
                         </div>
                     </div>
@@ -211,7 +211,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-link"></i></span>
                             </div>
-                            <input type="url" name="url_externa" id="url_externa" class="form-control" placeholder="https://exemplo.com/vaga" value="<?php echo isset($url_externa) ? htmlspecialchars($url_externa) : ''; ?>" required>
+                            <input type="url" name="url_externa" id="url_externa" class="form-control" placeholder="https://exemplo.com/vaga" value="<?php echo isset($url_externa) ? htmlspecialchars((string)$url_externa) : ''; ?>" required>
                         </div>
                         <small class="form-text text-muted">Insira o link direto para a vaga no site da empresa ou plataforma de empregos.</small>
                     </div>

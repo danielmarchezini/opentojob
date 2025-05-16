@@ -82,22 +82,22 @@ endif; ?>
                             <td><?php echo formatAdminDate($usuario['data_cadastro']); ?></td>
                             <td>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-info" onclick="visualizarUsuario(<?php echo $usuario['id']; ?>, '<?php echo htmlspecialchars($usuario['nome']); ?>', '<?php echo $usuario['email']; ?>', '<?php echo $usuario['tipo']; ?>', '<?php echo $usuario['status']; ?>')">
+                                    <button type="button" class="btn btn-sm btn-info" onclick="visualizarUsuario(<?php echo $usuario['id']; ?>, '<?php echo htmlspecialchars((string)$usuario['nome']); ?>', '<?php echo $usuario['email']; ?>', '<?php echo $usuario['tipo']; ?>', '<?php echo $usuario['status']; ?>')">
                                         <i class="fas fa-eye"></i>
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-warning" onclick="editarUsuario(<?php echo $usuario['id']; ?>, '<?php echo htmlspecialchars($usuario['nome']); ?>', '<?php echo $usuario['email']; ?>', '<?php echo $usuario['tipo']; ?>', '<?php echo $usuario['status']; ?>')">
+                                    <button type="button" class="btn btn-sm btn-warning" onclick="editarUsuario(<?php echo $usuario['id']; ?>, '<?php echo htmlspecialchars((string)$usuario['nome']); ?>', '<?php echo $usuario['email']; ?>', '<?php echo $usuario['tipo']; ?>', '<?php echo $usuario['status']; ?>')">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <?php if ($usuario['status'] == 'ativo'): ?>
-                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmarAcao('bloquear', <?php echo $usuario['id']; ?>, '<?php echo htmlspecialchars($usuario['nome']); ?>')">
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmarAcao('bloquear', <?php echo $usuario['id']; ?>, '<?php echo htmlspecialchars((string)$usuario['nome']); ?>')">
                                         <i class="fas fa-ban"></i>
                                     </button>
                                     <?php else: ?>
-                                    <button type="button" class="btn btn-sm btn-success" onclick="confirmarAcao('ativar', <?php echo $usuario['id']; ?>, '<?php echo htmlspecialchars($usuario['nome']); ?>')">
+                                    <button type="button" class="btn btn-sm btn-success" onclick="confirmarAcao('ativar', <?php echo $usuario['id']; ?>, '<?php echo htmlspecialchars((string)$usuario['nome']); ?>')">
                                         <i class="fas fa-check"></i>
                                     </button>
                                     <?php endif; ?>
-                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmarAcao('excluir', <?php echo $usuario['id']; ?>, '<?php echo htmlspecialchars($usuario['nome']); ?>')">
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmarAcao('excluir', <?php echo $usuario['id']; ?>, '<?php echo htmlspecialchars((string)$usuario['nome']); ?>')">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>

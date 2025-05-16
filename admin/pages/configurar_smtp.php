@@ -112,7 +112,7 @@ try {
                                         <div class="form-group">
                                             <label for="host">Servidor SMTP</label>
                                             <input type="text" class="form-control" id="host" name="host" 
-                                                   value="<?php echo htmlspecialchars($config['host'] ?? ''); ?>" required>
+                                                   value="<?php echo htmlspecialchars((string)$config['host'] ?? ''); ?>" required>
                                             <small class="form-text text-muted">Ex: smtp.gmail.com, smtp.office365.com</small>
                                         </div>
                                     </div>
@@ -120,7 +120,7 @@ try {
                                         <div class="form-group">
                                             <label for="porta">Porta</label>
                                             <input type="number" class="form-control" id="porta" name="porta" 
-                                                   value="<?php echo htmlspecialchars($config['porta'] ?? 587); ?>" required>
+                                                   value="<?php echo htmlspecialchars((string)$config['porta'] ?? 587); ?>" required>
                                             <small class="form-text text-muted">Portas comuns: 25, 465 (SSL), 587 (TLS)</small>
                                         </div>
                                     </div>
@@ -131,7 +131,7 @@ try {
                                         <div class="form-group">
                                             <label for="usuario">Usuário</label>
                                             <input type="text" class="form-control" id="usuario" name="usuario" 
-                                                   value="<?php echo htmlspecialchars($config['usuario'] ?? ''); ?>" required>
+                                                   value="<?php echo htmlspecialchars((string)$config['usuario'] ?? ''); ?>" required>
                                             <small class="form-text text-muted">Geralmente é o endereço de e-mail completo</small>
                                         </div>
                                     </div>
@@ -139,7 +139,7 @@ try {
                                         <div class="form-group">
                                             <label for="senha">Senha</label>
                                             <input type="password" class="form-control" id="senha" name="senha" 
-                                                   value="<?php echo htmlspecialchars($config['senha'] ?? ''); ?>" required>
+                                                   value="<?php echo htmlspecialchars((string)$config['senha'] ?? ''); ?>" required>
                                             <small class="form-text text-muted">Para Gmail, use senha de app</small>
                                         </div>
                                     </div>
@@ -150,14 +150,14 @@ try {
                                         <div class="form-group">
                                             <label for="email_remetente">E-mail do Remetente</label>
                                             <input type="email" class="form-control" id="email_remetente" name="email_remetente" 
-                                                   value="<?php echo htmlspecialchars($config['email_remetente'] ?? ''); ?>" required>
+                                                   value="<?php echo htmlspecialchars((string)$config['email_remetente'] ?? ''); ?>" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="nome_remetente">Nome do Remetente</label>
                                             <input type="text" class="form-control" id="nome_remetente" name="nome_remetente" 
-                                                   value="<?php echo htmlspecialchars($config['nome_remetente'] ?? ''); ?>" required>
+                                                   value="<?php echo htmlspecialchars((string)$config['nome_remetente'] ?? ''); ?>" required>
                                         </div>
                                     </div>
                                 </div>

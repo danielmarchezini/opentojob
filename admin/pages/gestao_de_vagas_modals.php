@@ -33,7 +33,7 @@
                         <select class="form-control" id="empresa_id" name="empresa_id">
                             <option value="">Selecione uma empresa</option>
                             <?php foreach ($empresas as $empresa): ?>
-                            <option value="<?php echo $empresa['id']; ?>"><?php echo htmlspecialchars($empresa['nome']); ?></option>
+                            <option value="<?php echo $empresa['id']; ?>"><?php echo htmlspecialchars((string)$empresa['nome']); ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -65,7 +65,7 @@
                                 <select class="form-control" id="tipo_contrato_id" name="tipo_contrato_id">
                                     <option value="">Selecione</option>
                                     <?php foreach ($tipos_contrato as $tipo): ?>
-                                        <option value="<?php echo $tipo['id']; ?>"><?php echo htmlspecialchars($tipo['nome']); ?></option>
+                                        <option value="<?php echo $tipo['id']; ?>"><?php echo htmlspecialchars((string)$tipo['nome']); ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -76,7 +76,7 @@
                                 <select class="form-control" id="regime_trabalho_id" name="regime_trabalho_id">
                                     <option value="">Selecione</option>
                                     <?php foreach ($regimes_trabalho as $regime): ?>
-                                        <option value="<?php echo $regime['id']; ?>"><?php echo htmlspecialchars($regime['nome']); ?></option>
+                                        <option value="<?php echo $regime['id']; ?>"><?php echo htmlspecialchars((string)$regime['nome']); ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -87,7 +87,7 @@
                                 <select class="form-control" id="nivel_experiencia_id" name="nivel_experiencia_id">
                                     <option value="">Selecione</option>
                                     <?php foreach ($niveis_experiencia as $nivel): ?>
-                                        <option value="<?php echo $nivel['id']; ?>"><?php echo htmlspecialchars($nivel['nome']); ?></option>
+                                        <option value="<?php echo $nivel['id']; ?>"><?php echo htmlspecialchars((string)$nivel['nome']); ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -200,7 +200,7 @@
                         <select class="form-control" id="editar_empresa_id" name="empresa_id">
                             <option value="">Selecione uma empresa</option>
                             <?php foreach ($empresas as $empresa): ?>
-                            <option value="<?php echo $empresa['id']; ?>"><?php echo htmlspecialchars($empresa['nome']); ?></option>
+                            <option value="<?php echo $empresa['id']; ?>"><?php echo htmlspecialchars((string)$empresa['nome']); ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -232,7 +232,7 @@
                                 <select class="form-control" id="editar_tipo_contrato_id" name="tipo_contrato_id">
                                     <option value="">Selecione</option>
                                     <?php foreach ($tipos_contrato as $tipo): ?>
-                                        <option value="<?php echo $tipo['id']; ?>"><?php echo htmlspecialchars($tipo['nome']); ?></option>
+                                        <option value="<?php echo $tipo['id']; ?>"><?php echo htmlspecialchars((string)$tipo['nome']); ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -243,7 +243,7 @@
                                 <select class="form-control" id="editar_regime_trabalho_id" name="regime_trabalho_id">
                                     <option value="">Selecione</option>
                                     <?php foreach ($regimes_trabalho as $regime): ?>
-                                        <option value="<?php echo $regime['id']; ?>"><?php echo htmlspecialchars($regime['nome']); ?></option>
+                                        <option value="<?php echo $regime['id']; ?>"><?php echo htmlspecialchars((string)$regime['nome']); ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -254,7 +254,7 @@
                                 <select class="form-control" id="editar_nivel_experiencia_id" name="nivel_experiencia_id">
                                     <option value="">Selecione</option>
                                     <?php foreach ($niveis_experiencia as $nivel): ?>
-                                        <option value="<?php echo $nivel['id']; ?>"><?php echo htmlspecialchars($nivel['nome']); ?></option>
+                                        <option value="<?php echo $nivel['id']; ?>"><?php echo htmlspecialchars((string)$nivel['nome']); ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>

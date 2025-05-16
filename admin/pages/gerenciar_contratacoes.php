@@ -211,18 +211,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <?php if (!empty($contratacao['talento_foto'])): ?>
                                         <img src="<?php echo SITE_URL; ?>/uploads/perfil/<?php echo $contratacao['talento_foto']; ?>" class="img-circle me-2" width="30" height="30" alt="Foto">
                                     <?php endif; ?>
-                                    <?php echo htmlspecialchars($contratacao['talento_nome']); ?>
+                                    <?php echo htmlspecialchars((string)$contratacao['talento_nome']); ?>
                                 </td>
                                 <td>
                                     <?php 
                                     if (!empty($contratacao['empresa_nome_cadastrada'])) {
-                                        echo htmlspecialchars($contratacao['empresa_nome_cadastrada']);
+                                        echo htmlspecialchars((string)$contratacao['empresa_nome_cadastrada']);
                                     } else {
-                                        echo htmlspecialchars($contratacao['empresa_nome'] ?? 'N/A');
+                                        echo htmlspecialchars((string)$contratacao['empresa_nome'] ?? 'N/A');
                                     }
                                     ?>
                                 </td>
-                                <td><?php echo htmlspecialchars($contratacao['cargo']); ?></td>
+                                <td><?php echo htmlspecialchars((string)$contratacao['cargo']); ?></td>
                                 <td><?php echo date('d/m/Y', strtotime($contratacao['data_contratacao'])); ?></td>
                                 <td>
                                     <?php 
@@ -277,23 +277,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <div class="modal-body">
                                             <div class="row mb-3">
                                                 <div class="col-md-4 text-right"><strong>Talento:</strong></div>
-                                                <div class="col-md-8"><?php echo htmlspecialchars($contratacao['talento_nome']); ?></div>
+                                                <div class="col-md-8"><?php echo htmlspecialchars((string)$contratacao['talento_nome']); ?></div>
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-4 text-right"><strong>Empresa:</strong></div>
                                                 <div class="col-md-8">
                                                     <?php 
                                                     if (!empty($contratacao['empresa_nome_cadastrada'])) {
-                                                        echo htmlspecialchars($contratacao['empresa_nome_cadastrada']);
+                                                        echo htmlspecialchars((string)$contratacao['empresa_nome_cadastrada']);
                                                     } else {
-                                                        echo htmlspecialchars($contratacao['empresa_nome'] ?? 'N/A');
+                                                        echo htmlspecialchars((string)$contratacao['empresa_nome'] ?? 'N/A');
                                                     }
                                                     ?>
                                                 </div>
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-4 text-right"><strong>Cargo:</strong></div>
-                                                <div class="col-md-8"><?php echo htmlspecialchars($contratacao['cargo']); ?></div>
+                                                <div class="col-md-8"><?php echo htmlspecialchars((string)$contratacao['cargo']); ?></div>
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-4 text-right"><strong>Data:</strong></div>
@@ -315,7 +315,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 <div class="col-md-4 text-right"><strong>Depoimento:</strong></div>
                                                 <div class="col-md-8">
                                                     <div class="p-2 bg-light rounded">
-                                                        <?php echo nl2br(htmlspecialchars($contratacao['descricao'])); ?>
+                                                        <?php echo nl2br(htmlspecialchars((string)$contratacao['descricao'])); ?>
                                                     </div>
                                                 </div>
                                             </div>
@@ -343,7 +343,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <p>Deseja confirmar a contratação de <strong><?php echo htmlspecialchars($contratacao['talento_nome']); ?></strong> como <strong><?php echo htmlspecialchars($contratacao['cargo']); ?></strong> na empresa <strong><?php echo htmlspecialchars($contratacao['empresa_nome']); ?></strong>?</p>
+                                            <p>Deseja confirmar a contratação de <strong><?php echo htmlspecialchars((string)$contratacao['talento_nome']); ?></strong> como <strong><?php echo htmlspecialchars((string)$contratacao['cargo']); ?></strong> na empresa <strong><?php echo htmlspecialchars((string)$contratacao['empresa_nome']); ?></strong>?</p>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -365,7 +365,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <p>Deseja rejeitar a contratação de <strong><?php echo htmlspecialchars($contratacao['talento_nome']); ?></strong> como <strong><?php echo htmlspecialchars($contratacao['cargo']); ?></strong> na empresa <strong><?php echo htmlspecialchars($contratacao['empresa_nome']); ?></strong>?</p>
+                                            <p>Deseja rejeitar a contratação de <strong><?php echo htmlspecialchars((string)$contratacao['talento_nome']); ?></strong> como <strong><?php echo htmlspecialchars((string)$contratacao['cargo']); ?></strong> na empresa <strong><?php echo htmlspecialchars((string)$contratacao['empresa_nome']); ?></strong>?</p>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -387,7 +387,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <p>Deseja adicionar a contratação de <strong><?php echo htmlspecialchars($contratacao['talento_nome']); ?></strong> como <strong><?php echo htmlspecialchars($contratacao['cargo']); ?></strong> na empresa <strong><?php echo htmlspecialchars($contratacao['empresa_nome']); ?></strong> como depoimento na página inicial?</p>
+                                            <p>Deseja adicionar a contratação de <strong><?php echo htmlspecialchars((string)$contratacao['talento_nome']); ?></strong> como <strong><?php echo htmlspecialchars((string)$contratacao['cargo']); ?></strong> na empresa <strong><?php echo htmlspecialchars((string)$contratacao['empresa_nome']); ?></strong> como depoimento na página inicial?</p>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

@@ -49,6 +49,7 @@ $valid_pages = [
     'categorias', 
     'configuracoes',
     'configuracoes_seo',
+    'configuracoes_monetizacao',
     'perfil',
     'gerenciar_depoimentos',
     'gerenciar_opcoes_vagas',

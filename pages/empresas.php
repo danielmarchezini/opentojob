@@ -97,7 +97,7 @@ $segmentos = $db->fetchAll("
                         <div class="col-lg-6 mb-3">
                             <div class="input-group">
                                 <span class="input-group-text bg-white"><i class="fas fa-search"></i></span>
-                                <input type="text" class="form-control form-control-lg" id="busca" name="busca" placeholder="Buscar por nome, razão social ou segmento..." value="<?php echo htmlspecialchars($busca); ?>">
+                                <input type="text" class="form-control form-control-lg" id="busca" name="busca" placeholder="Buscar por nome, razão social ou segmento..." value="<?php echo htmlspecialchars((string)$busca); ?>">
                             </div>
                         </div>
                         
@@ -105,8 +105,8 @@ $segmentos = $db->fetchAll("
                             <select class="form-control form-control-lg" id="segmento" name="segmento">
                                 <option value="">Todos os segmentos</option>
                                 <?php foreach ($segmentos as $seg): ?>
-                                    <option value="<?php echo htmlspecialchars($seg['segmento']); ?>" <?php echo ($filtro_segmento == $seg['segmento']) ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($seg['segmento']); ?>
+                                    <option value="<?php echo htmlspecialchars((string)$seg['segmento']); ?>" <?php echo ($filtro_segmento == $seg['segmento']) ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars((string)$seg['segmento']); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -145,7 +145,7 @@ $segmentos = $db->fetchAll("
                                 <div class="d-flex align-items-center mb-3">
                                     <div class="empresa-logo me-3">
                                         <?php if (!empty($empresa['foto_perfil'])): ?>
-                                            <img src="<?php echo SITE_URL; ?>/uploads/empresas/<?php echo $empresa['foto_perfil']; ?>" alt="<?php echo htmlspecialchars($empresa['razao_social']); ?>" class="img-fluid">
+                                            <img src="<?php echo SITE_URL; ?>/uploads/empresas/<?php echo $empresa['foto_perfil']; ?>" alt="<?php echo htmlspecialchars((string)$empresa['razao_social']); ?>" class="img-fluid">
                                         <?php else: ?>
                                             <div class="logo-placeholder bg-light d-flex align-items-center justify-content-center">
                                                 <i class="fas fa-building text-secondary"></i>
@@ -153,9 +153,9 @@ $segmentos = $db->fetchAll("
                                         <?php endif; ?>
                                     </div>
                                     <div>
-                                        <h5 class="card-title mb-0"><?php echo htmlspecialchars($empresa['razao_social']); ?></h5>
+                                        <h5 class="card-title mb-0"><?php echo htmlspecialchars((string)$empresa['razao_social']); ?></h5>
                                         <?php if (!empty($empresa['segmento'])): ?>
-                                            <p class="segmento-tag mb-0"><?php echo htmlspecialchars($empresa['segmento']); ?></p>
+                                            <p class="segmento-tag mb-0"><?php echo htmlspecialchars((string)$empresa['segmento']); ?></p>
                                         <?php endif; ?>
                                     </div>
                                 </div>
@@ -165,9 +165,9 @@ $segmentos = $db->fetchAll("
                                         <p class="mb-0">
                                             <i class="fas fa-map-marker-alt me-2"></i>
                                             <?php 
-                                                echo !empty($empresa['cidade']) ? htmlspecialchars($empresa['cidade']) : '';
+                                                echo !empty($empresa['cidade']) ? htmlspecialchars((string)$empresa['cidade']) : '';
                                                 echo (!empty($empresa['cidade']) && !empty($empresa['estado'])) ? ', ' : '';
-                                                echo !empty($empresa['estado']) ? htmlspecialchars($empresa['estado']) : '';
+                                                echo !empty($empresa['estado']) ? htmlspecialchars((string)$empresa['estado']) : '';
                                             ?>
                                         </p>
                                     </div>
@@ -188,7 +188,7 @@ $segmentos = $db->fetchAll("
                                 <div class="text-center mt-3">
                                     <a href="<?php echo SITE_URL; ?>/?route=perfil_empresa&id=<?php echo $empresa['id']; ?>" class="btn btn-primary btn-sm">Ver perfil completo</a>
                                     <?php if (!empty($empresa['site'])): ?>
-                                        <a href="<?php echo htmlspecialchars($empresa['site']); ?>" class="btn btn-outline-primary btn-sm ms-2" target="_blank">Visitar site</a>
+                                        <a href="<?php echo htmlspecialchars((string)$empresa['site']); ?>" class="btn btn-outline-primary btn-sm ms-2" target="_blank">Visitar site</a>
                                     <?php endif; ?>
                                 </div>
                             </div>

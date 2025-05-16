@@ -149,17 +149,17 @@ function getStatusClassVaga($status) {
                         <?php foreach ($vagas as $vaga): ?>
                             <tr data-vaga-id="<?php echo $vaga['id']; ?>">
                                 <td><?php echo $vaga['id']; ?></td>
-                                <td><?php echo htmlspecialchars($vaga['titulo']); ?></td>
+                                <td><?php echo htmlspecialchars((string)$vaga['titulo']); ?></td>
                                 <td>
                                     <?php if ($vaga['tipo_vaga'] === 'externa'): ?>
-                                        <span class="badge badge-info">Externa</span> <?php echo htmlspecialchars($vaga['empresa_nome']); ?>
+                                        <span class="badge badge-info">Externa</span> <?php echo htmlspecialchars((string)$vaga['empresa_nome']); ?>
                                     <?php else: ?>
-                                        <?php echo htmlspecialchars($vaga['empresa_nome']); ?>
+                                        <?php echo htmlspecialchars((string)$vaga['empresa_nome']); ?>
                                     <?php endif; ?>
                                 </td>
-                                <td><?php echo htmlspecialchars($vaga['tipo_contrato_nome'] ?? $vaga['tipo_contrato'] ?? 'N/A'); ?></td>
-                                <td><?php echo htmlspecialchars($vaga['regime_trabalho_nome'] ?? $vaga['regime_trabalho'] ?? 'N/A'); ?></td>
-                                <td><?php echo htmlspecialchars($vaga['nivel_experiencia_nome'] ?? $vaga['nivel_experiencia'] ?? 'N/A'); ?></td>
+                                <td><?php echo htmlspecialchars((string)$vaga['tipo_contrato_nome'] ?? $vaga['tipo_contrato'] ?? 'N/A'); ?></td>
+                                <td><?php echo htmlspecialchars((string)$vaga['regime_trabalho_nome'] ?? $vaga['regime_trabalho'] ?? 'N/A'); ?></td>
+                                <td><?php echo htmlspecialchars((string)$vaga['nivel_experiencia_nome'] ?? $vaga['nivel_experiencia'] ?? 'N/A'); ?></td>
                                 <td><?php echo formatarDataVaga($vaga['data_publicacao']); ?></td>
                                 <td>
                                     <span class="badge badge-<?php echo getStatusClassVaga($vaga['status']); ?>">

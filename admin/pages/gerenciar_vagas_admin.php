@@ -128,16 +128,16 @@ try {
                         <?php foreach ($vagas as $vaga): ?>
                             <tr>
                                 <td><?php echo $vaga['id']; ?></td>
-                                <td><?php echo htmlspecialchars($vaga['titulo']); ?></td>
+                                <td><?php echo htmlspecialchars((string)$vaga['titulo']); ?></td>
                                 <td>
                                     <?php echo ($vaga['tipo_vaga'] == 'interna') ? 'Interna' : 'Externa'; ?>
                                 </td>
                                 <td>
                                     <?php 
                                     if ($vaga['tipo_vaga'] == 'interna') {
-                                        echo htmlspecialchars($vaga['empresa_nome'] ?? 'Não informada');
+                                        echo htmlspecialchars((string)$vaga['empresa_nome'] ?? 'Não informada');
                                     } else {
-                                        echo htmlspecialchars($vaga['empresa_externa'] ?? 'Não informada');
+                                        echo htmlspecialchars((string)$vaga['empresa_externa'] ?? 'Não informada');
                                     }
                                     ?>
                                 </td>
@@ -149,9 +149,9 @@ try {
                                     echo !empty($localizacao) ? htmlspecialchars(implode(' - ', $localizacao)) : 'Não informada';
                                     ?>
                                 </td>
-                                <td><?php echo !empty($vaga['tipo_contrato_nome']) ? htmlspecialchars($vaga['tipo_contrato_nome']) : (!empty($vaga['tipo_contrato']) ? htmlspecialchars($vaga['tipo_contrato']) : 'Não informado'); ?></td>
-                                <td><?php echo !empty($vaga['regime_trabalho_nome']) ? htmlspecialchars($vaga['regime_trabalho_nome']) : (!empty($vaga['regime_trabalho']) ? htmlspecialchars($vaga['regime_trabalho']) : 'Não informado'); ?></td>
-                                <td><?php echo !empty($vaga['nivel_experiencia_nome']) ? htmlspecialchars($vaga['nivel_experiencia_nome']) : (!empty($vaga['nivel_experiencia']) ? htmlspecialchars($vaga['nivel_experiencia']) : 'Não informado'); ?></td>
+                                <td><?php echo !empty($vaga['tipo_contrato_nome']) ? htmlspecialchars((string)$vaga['tipo_contrato_nome']) : (!empty($vaga['tipo_contrato']) ? htmlspecialchars((string)$vaga['tipo_contrato']) : 'Não informado'); ?></td>
+                                <td><?php echo !empty($vaga['regime_trabalho_nome']) ? htmlspecialchars((string)$vaga['regime_trabalho_nome']) : (!empty($vaga['regime_trabalho']) ? htmlspecialchars((string)$vaga['regime_trabalho']) : 'Não informado'); ?></td>
+                                <td><?php echo !empty($vaga['nivel_experiencia_nome']) ? htmlspecialchars((string)$vaga['nivel_experiencia_nome']) : (!empty($vaga['nivel_experiencia']) ? htmlspecialchars((string)$vaga['nivel_experiencia']) : 'Não informado'); ?></td>
                                 <td>
                                     <?php
                                     $status = isset($vaga['status']) ? $vaga['status'] : 'pendente';
@@ -269,7 +269,7 @@ try {
                                 <select class="form-control" id="tipo_contrato" name="tipo_contrato_id">
                                     <option value="">Selecione</option>
                                     <?php foreach ($tipos_contrato as $tipo): ?>
-                                        <option value="<?php echo $tipo['id']; ?>"><?php echo htmlspecialchars($tipo['nome']); ?></option>
+                                        <option value="<?php echo $tipo['id']; ?>"><?php echo htmlspecialchars((string)$tipo['nome']); ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -280,7 +280,7 @@ try {
                                 <select class="form-control" id="regime_trabalho" name="regime_trabalho_id">
                                     <option value="">Selecione</option>
                                     <?php foreach ($regimes_trabalho as $regime): ?>
-                                        <option value="<?php echo $regime['id']; ?>"><?php echo htmlspecialchars($regime['nome']); ?></option>
+                                        <option value="<?php echo $regime['id']; ?>"><?php echo htmlspecialchars((string)$regime['nome']); ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -291,7 +291,7 @@ try {
                                 <select class="form-control" id="nivel_experiencia" name="nivel_experiencia_id">
                                     <option value="">Selecione</option>
                                     <?php foreach ($niveis_experiencia as $nivel): ?>
-                                        <option value="<?php echo $nivel['id']; ?>"><?php echo htmlspecialchars($nivel['nome']); ?></option>
+                                        <option value="<?php echo $nivel['id']; ?>"><?php echo htmlspecialchars((string)$nivel['nome']); ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>

@@ -13,8 +13,8 @@
     <!-- JavaScript Principal -->
     <script src="<?php echo SITE_URL; ?>/admin/assets/js/admin.js"></script>
     
-    <!-- Script de correção de modais (desativado) -->
-    <!-- <script src="<?php echo SITE_URL; ?>/admin/assets/js/modals-fix.js"></script> -->
+    <!-- Script de correção de modais -->
+    <script src="<?php echo SITE_URL; ?>/admin/assets/js/modals-fix.js"></script>
     
     <!-- JavaScript específico da página (se existir) -->
     <?php 

@@ -128,7 +128,7 @@ $page_title = "Candidatar-se à Vaga: " . $vaga['titulo'];
     <div class="row mb-4">
         <div class="col-md-8">
             <h1 class="h2 mb-0">Candidatar-se à Vaga</h1>
-            <p class="text-muted">Envie sua candidatura para a vaga: <?php echo htmlspecialchars($vaga['titulo']); ?></p>
+            <p class="text-muted">Envie sua candidatura para a vaga: <?php echo htmlspecialchars((string)$vaga['titulo']); ?></p>
         </div>
         <div class="col-md-4 text-md-end">
             <a href="<?php echo SITE_URL; ?>/?route=vaga&id=<?php echo $vaga_id; ?>" class="btn btn-outline-primary">
@@ -144,18 +144,18 @@ $page_title = "Candidatar-se à Vaga: " . $vaga['titulo'];
                     <h5 class="card-title mb-0">Detalhes da Vaga</h5>
                 </div>
                 <div class="card-body">
-                    <h5><?php echo htmlspecialchars($vaga['titulo']); ?></h5>
+                    <h5><?php echo htmlspecialchars((string)$vaga['titulo']); ?></h5>
                     <p class="text-muted mb-2">
-                        <i class="fas fa-building me-1"></i> <?php echo htmlspecialchars($vaga['nome_empresa']); ?>
+                        <i class="fas fa-building me-1"></i> <?php echo htmlspecialchars((string)$vaga['nome_empresa']); ?>
                     </p>
                     <p class="text-muted mb-2">
-                        <i class="fas fa-map-marker-alt me-1"></i> <?php echo htmlspecialchars($vaga['localizacao']); ?>
+                        <i class="fas fa-map-marker-alt me-1"></i> <?php echo htmlspecialchars((string)$vaga['localizacao']); ?>
                     </p>
                     <p class="text-muted mb-2">
-                        <i class="fas fa-money-bill-wave me-1"></i> <?php echo htmlspecialchars($vaga['faixa_salarial']); ?>
+                        <i class="fas fa-money-bill-wave me-1"></i> <?php echo htmlspecialchars((string)$vaga['faixa_salarial']); ?>
                     </p>
                     <p class="text-muted mb-2">
-                        <i class="fas fa-briefcase me-1"></i> <?php echo htmlspecialchars($vaga['tipo_contrato']); ?>
+                        <i class="fas fa-briefcase me-1"></i> <?php echo htmlspecialchars((string)$vaga['tipo_contrato']); ?>
                     </p>
                     <p class="text-muted mb-2">
                         <i class="fas fa-calendar-alt me-1"></i> Publicada em: <?php echo date('d/m/Y', strtotime($vaga['data_publicacao'])); ?>
@@ -169,15 +169,15 @@ $page_title = "Candidatar-se à Vaga: " . $vaga['titulo'];
                 </div>
                 <div class="card-body text-center">
                     <?php if (!empty($talento['foto_perfil'])): ?>
-                        <img src="<?php echo SITE_URL; ?>/uploads/perfil/<?php echo $talento['foto_perfil']; ?>" alt="<?php echo htmlspecialchars($talento['nome']); ?>" class="img-fluid rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;">
+                        <img src="<?php echo SITE_URL; ?>/uploads/perfil/<?php echo $talento['foto_perfil']; ?>" alt="<?php echo htmlspecialchars((string)$talento['nome']); ?>" class="img-fluid rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;">
                     <?php else: ?>
                         <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 100px; height: 100px;">
                             <i class="fas fa-user fa-3x text-secondary"></i>
                         </div>
                     <?php endif; ?>
                     
-                    <h5 class="card-title"><?php echo htmlspecialchars($talento['nome']); ?></h5>
-                    <p class="text-muted"><?php echo htmlspecialchars($talento['profissao']); ?></p>
+                    <h5 class="card-title"><?php echo htmlspecialchars((string)$talento['nome']); ?></h5>
+                    <p class="text-muted"><?php echo htmlspecialchars((string)$talento['profissao']); ?></p>
                     
                     <?php if (!empty($talento['curriculo'])): ?>
                         <p class="mb-0">
@@ -203,7 +203,7 @@ $page_title = "Candidatar-se à Vaga: " . $vaga['titulo'];
                     <form action="<?php echo SITE_URL; ?>/?route=candidatar_vaga&id=<?php echo $vaga_id; ?>" method="POST">
                         <div class="mb-3">
                             <label for="carta_apresentacao" class="form-label">Carta de Apresentação</label>
-                            <textarea class="form-control" id="carta_apresentacao" name="carta_apresentacao" rows="8" required><?php echo isset($_POST['carta_apresentacao']) ? htmlspecialchars($_POST['carta_apresentacao']) : ''; ?></textarea>
+                            <textarea class="form-control" id="carta_apresentacao" name="carta_apresentacao" rows="8" required><?php echo isset($_POST['carta_apresentacao']) ? htmlspecialchars((string)$_POST['carta_apresentacao']) : ''; ?></textarea>
                             <div class="form-text">
                                 Descreva por que você é um bom candidato para esta vaga. Destaque suas habilidades e experiências relevantes.
                             </div>

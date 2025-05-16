@@ -117,14 +117,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <label for="nome_indicador" class="form-label">Seu Nome <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="nome_indicador" name="nome_indicador" value="<?php echo htmlspecialchars($nome_indicador ?? ''); ?>" required>
+                                        <input type="text" class="form-control" id="nome_indicador" name="nome_indicador" value="<?php echo htmlspecialchars((string)$nome_indicador ?? ''); ?>" required>
                                         <div class="invalid-feedback">
                                             Por favor, informe seu nome.
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="email_indicador" class="form-label">Seu E-mail <span class="text-danger">*</span></label>
-                                        <input type="email" class="form-control" id="email_indicador" name="email_indicador" value="<?php echo htmlspecialchars($email_indicador ?? ''); ?>" required>
+                                        <input type="email" class="form-control" id="email_indicador" name="email_indicador" value="<?php echo htmlspecialchars((string)$email_indicador ?? ''); ?>" required>
                                         <div class="invalid-feedback">
                                             Por favor, informe um e-mail válido.
                                         </div>
@@ -133,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 
                                 <div class="mb-3">
                                     <label for="nome_perfil" class="form-label">Nome do Perfil <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="nome_perfil" name="nome_perfil" value="<?php echo htmlspecialchars($nome_perfil ?? ''); ?>" required>
+                                    <input type="text" class="form-control" id="nome_perfil" name="nome_perfil" value="<?php echo htmlspecialchars((string)$nome_perfil ?? ''); ?>" required>
                                     <div class="invalid-feedback">
                                         Por favor, informe o nome do perfil.
                                     </div>
@@ -141,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 
                                 <div class="mb-3">
                                     <label for="link_perfil" class="form-label">Link do Perfil no LinkedIn <span class="text-danger">*</span></label>
-                                    <input type="url" class="form-control" id="link_perfil" name="link_perfil" value="<?php echo htmlspecialchars($link_perfil ?? ''); ?>" placeholder="https://www.linkedin.com/in/nome-do-perfil/" required>
+                                    <input type="url" class="form-control" id="link_perfil" name="link_perfil" value="<?php echo htmlspecialchars((string)$link_perfil ?? ''); ?>" placeholder="https://www.linkedin.com/in/nome-do-perfil/" required>
                                     <div class="invalid-feedback">
                                         Por favor, informe um link válido do LinkedIn.
                                     </div>
@@ -152,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 
                                 <div class="mb-3">
                                     <label for="assunto" class="form-label">Assunto Principal <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="assunto" name="assunto" value="<?php echo htmlspecialchars($assunto ?? ''); ?>" placeholder="Ex: Carreira em Tecnologia, Empregabilidade, Desenvolvimento Profissional" required>
+                                    <input type="text" class="form-control" id="assunto" name="assunto" value="<?php echo htmlspecialchars((string)$assunto ?? ''); ?>" placeholder="Ex: Carreira em Tecnologia, Empregabilidade, Desenvolvimento Profissional" required>
                                     <div class="invalid-feedback">
                                         Por favor, informe o assunto principal do perfil.
                                     </div>
@@ -160,7 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 
                                 <div class="mb-3">
                                     <label for="mensagem" class="form-label">Por que você recomenda este perfil?</label>
-                                    <textarea class="form-control" id="mensagem" name="mensagem" rows="3"><?php echo htmlspecialchars($mensagem_indicacao ?? ''); ?></textarea>
+                                    <textarea class="form-control" id="mensagem" name="mensagem" rows="3"><?php echo htmlspecialchars((string)$mensagem_indicacao ?? ''); ?></textarea>
                                     <div class="form-text">
                                         Conte-nos por que você acha que este perfil seria útil para nossa comunidade.
                                     </div>
@@ -230,10 +230,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             foreach ($perfis_destaque as $perfil) {
                                 echo '<li class="list-group-item d-flex justify-content-between align-items-center">';
                                 echo '<div class="d-flex align-items-center">';
-                                echo '<img src="' . SITE_URL . '/uploads/perfis_linkedin/' . htmlspecialchars($perfil['foto']) . '" alt="' . htmlspecialchars($perfil['nome']) . '" class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;">';
-                                echo '<span>' . htmlspecialchars($perfil['nome']) . '</span>';
+                                echo '<img src="' . SITE_URL . '/uploads/perfis_linkedin/' . htmlspecialchars((string)$perfil['foto']) . '" alt="' . htmlspecialchars((string)$perfil['nome']) . '" class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;">';
+                                echo '<span>' . htmlspecialchars((string)$perfil['nome']) . '</span>';
                                 echo '</div>';
-                                echo '<a href="' . htmlspecialchars($perfil['link_perfil']) . '" class="btn btn-sm btn-linkedin" target="_blank">';
+                                echo '<a href="' . htmlspecialchars((string)$perfil['link_perfil']) . '" class="btn btn-sm btn-linkedin" target="_blank">';
                                 echo '<i class="fab fa-linkedin"></i>';
                                 echo '</a>';
                                 echo '</li>';

@@ -100,7 +100,7 @@ $niveis_experiencia = $db->fetchAll("SELECT DISTINCT nivel_experiencia FROM vaga
                         <div class="col-lg-6 mb-3">
                             <div class="input-group">
                                 <span class="input-group-text bg-white"><i class="fas fa-search"></i></span>
-                                <input type="text" class="form-control" id="busca" name="busca" placeholder="Buscar vagas..." value="<?php echo htmlspecialchars($busca); ?>">
+                                <input type="text" class="form-control" id="busca" name="busca" placeholder="Buscar vagas..." value="<?php echo htmlspecialchars((string)$busca); ?>">
                             </div>
                         </div>
                         
@@ -108,8 +108,8 @@ $niveis_experiencia = $db->fetchAll("SELECT DISTINCT nivel_experiencia FROM vaga
                             <select class="form-control" id="tipo" name="tipo">
                                 <option value="">Tipo de Contrato</option>
                                 <?php foreach ($tipos_contrato as $tipo): ?>
-                                    <option value="<?php echo htmlspecialchars($tipo['tipo_contrato']); ?>" <?php echo ($filtro_tipo == $tipo['tipo_contrato']) ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($tipo['tipo_contrato']); ?>
+                                    <option value="<?php echo htmlspecialchars((string)$tipo['tipo_contrato']); ?>" <?php echo ($filtro_tipo == $tipo['tipo_contrato']) ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars((string)$tipo['tipo_contrato']); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -119,8 +119,8 @@ $niveis_experiencia = $db->fetchAll("SELECT DISTINCT nivel_experiencia FROM vaga
                             <select class="form-control" id="modelo" name="modelo">
                                 <option value="">Modelo de Trabalho</option>
                                 <?php foreach ($modelos_trabalho as $modelo): ?>
-                                    <option value="<?php echo htmlspecialchars($modelo['regime_trabalho']); ?>" <?php echo ($filtro_modelo == $modelo['regime_trabalho']) ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($modelo['regime_trabalho']); ?>
+                                    <option value="<?php echo htmlspecialchars((string)$modelo['regime_trabalho']); ?>" <?php echo ($filtro_modelo == $modelo['regime_trabalho']) ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars((string)$modelo['regime_trabalho']); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -154,11 +154,11 @@ $niveis_experiencia = $db->fetchAll("SELECT DISTINCT nivel_experiencia FROM vaga
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-start mb-3">
                                     <div>
-                                        <h5 class="card-title mb-1"><?php echo htmlspecialchars($vaga['titulo']); ?></h5>
-                                        <h6 class="card-subtitle text-muted"><?php echo htmlspecialchars($vaga['empresa_nome']); ?></h6>
+                                        <h5 class="card-title mb-1"><?php echo htmlspecialchars((string)$vaga['titulo']); ?></h5>
+                                        <h6 class="card-subtitle text-muted"><?php echo htmlspecialchars((string)$vaga['empresa_nome']); ?></h6>
                                     </div>
                                     <?php if (!empty($vaga['empresa_logo'])): ?>
-                                        <img src="<?php echo SITE_URL; ?>/uploads/empresas/<?php echo $vaga['empresa_logo']; ?>" alt="<?php echo htmlspecialchars($vaga['empresa_nome']); ?>" class="empresa-logo">
+                                        <img src="<?php echo SITE_URL; ?>/uploads/empresas/<?php echo $vaga['empresa_logo']; ?>" alt="<?php echo htmlspecialchars((string)$vaga['empresa_nome']); ?>" class="empresa-logo">
                                     <?php else: ?>
                                         <div class="empresa-logo-placeholder"><?php echo substr($vaga['empresa_nome'], 0, 1); ?></div>
                                     <?php endif; ?>
@@ -166,19 +166,19 @@ $niveis_experiencia = $db->fetchAll("SELECT DISTINCT nivel_experiencia FROM vaga
                                 
                                 <div class="vaga-info mb-3">
                                     <?php if (!empty($vaga['localizacao'])): ?>
-                                        <p class="mb-1"><i class="fas fa-map-marker-alt me-2"></i><?php echo htmlspecialchars($vaga['localizacao']); ?></p>
+                                        <p class="mb-1"><i class="fas fa-map-marker-alt me-2"></i><?php echo htmlspecialchars((string)$vaga['localizacao']); ?></p>
                                     <?php endif; ?>
                                     
                                     <?php if (!empty($vaga['tipo_contrato'])): ?>
-                                        <p class="mb-1"><i class="fas fa-file-contract me-2"></i><?php echo htmlspecialchars($vaga['tipo_contrato']); ?></p>
+                                        <p class="mb-1"><i class="fas fa-file-contract me-2"></i><?php echo htmlspecialchars((string)$vaga['tipo_contrato']); ?></p>
                                     <?php endif; ?>
                                     
                                     <?php if (!empty($vaga['regime_trabalho'])): ?>
-                                        <p class="mb-1"><i class="fas fa-laptop-house me-2"></i><?php echo htmlspecialchars($vaga['regime_trabalho']); ?></p>
+                                        <p class="mb-1"><i class="fas fa-laptop-house me-2"></i><?php echo htmlspecialchars((string)$vaga['regime_trabalho']); ?></p>
                                     <?php endif; ?>
                                     
                                     <?php if (!empty($vaga['nivel_experiencia'])): ?>
-                                        <p class="mb-1"><i class="fas fa-user-graduate me-2"></i><?php echo htmlspecialchars($vaga['nivel_experiencia']); ?></p>
+                                        <p class="mb-1"><i class="fas fa-user-graduate me-2"></i><?php echo htmlspecialchars((string)$vaga['nivel_experiencia']); ?></p>
                                     <?php endif; ?>
                                     
                                     <p class="mb-1"><i class="far fa-clock me-2"></i>Publicada em <?php echo date('d/m/Y', strtotime($vaga['data_publicacao'])); ?></p>
@@ -187,7 +187,7 @@ $niveis_experiencia = $db->fetchAll("SELECT DISTINCT nivel_experiencia FROM vaga
                                 <p class="vaga-descricao"><?php echo nl2br(htmlspecialchars(substr($vaga['descricao'], 0, 150) . (strlen($vaga['descricao']) > 150 ? '...' : ''))); ?></p>
                             </div>
                             <div class="card-footer bg-white border-top-0">
-                                <a href="<?php echo htmlspecialchars($vaga['url_externa']); ?>" target="_blank" class="btn btn-primary btn-sm w-100">
+                                <a href="<?php echo htmlspecialchars((string)$vaga['url_externa']); ?>" target="_blank" class="btn btn-primary btn-sm w-100">
                                     <i class="fas fa-external-link-alt me-2"></i>Candidatar-se Externamente
                                 </a>
                             </div>

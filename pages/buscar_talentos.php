@@ -135,7 +135,7 @@ try {
                         <div class="mb-3">
                             <label for="busca" class="form-label">Busca por palavra-chave</label>
                             <input type="text" class="form-control" id="busca" name="busca" 
-                                   value="<?php echo htmlspecialchars($busca); ?>" 
+                                   value="<?php echo htmlspecialchars((string)$busca); ?>" 
                                    placeholder="Nome, profissão, habilidades...">
                         </div>
                         
@@ -255,27 +255,27 @@ try {
                         <div class="row g-0">
                             <div class="col-md-4">
                                 <div class="talent-photo">
-                                    <img src="<?php echo $foto_perfil; ?>" class="img-fluid rounded-start" alt="Foto de <?php echo htmlspecialchars($talento['nome']); ?>">
+                                    <img src="<?php echo $foto_perfil; ?>" class="img-fluid rounded-start" alt="Foto de <?php echo htmlspecialchars((string)$talento['nome']); ?>">
                                 </div>
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
-                                    <h5 class="card-title"><?php echo htmlspecialchars($talento['nome']); ?></h5>
+                                    <h5 class="card-title"><?php echo htmlspecialchars((string)$talento['nome']); ?></h5>
                                     
                                     <div class="d-flex align-items-center mb-2">
-                                        <span class="profession text-primary"><?php echo htmlspecialchars($talento['profissao'] ?? 'Profissional'); ?></span>
+                                        <span class="profession text-primary"><?php echo htmlspecialchars((string)$talento['profissao'] ?? 'Profissional'); ?></span>
                                         <?php if (!empty($talento['nivel'])): ?>
-                                        <span class="badge bg-info text-dark ms-2"><?php echo htmlspecialchars($talento['nivel']); ?></span>
+                                        <span class="badge bg-info text-dark ms-2"><?php echo htmlspecialchars((string)$talento['nivel']); ?></span>
                                         <?php endif; ?>
                                     </div>
                                     
                                     <?php if (!empty($carta_apresentacao)): ?>
-                                    <p class="card-text small"><?php echo nl2br(htmlspecialchars($carta_apresentacao)); ?></p>
+                                    <p class="card-text small"><?php echo nl2br(htmlspecialchars((string)$carta_apresentacao)); ?></p>
                                     <?php else: ?>
                                     <p class="card-text text-muted small">
-                                        <?php echo htmlspecialchars($talento['nome']); ?> é um(a) 
-                                        <?php echo htmlspecialchars($talento['nivel'] ?? 'profissional'); ?> 
-                                        na área de <?php echo htmlspecialchars($talento['profissao'] ?? 'tecnologia'); ?>.
+                                        <?php echo htmlspecialchars((string)$talento['nome']); ?> é um(a) 
+                                        <?php echo htmlspecialchars((string)$talento['nivel'] ?? 'profissional'); ?> 
+                                        na área de <?php echo htmlspecialchars((string)$talento['profissao'] ?? 'tecnologia'); ?>.
                                     </p>
                                     <?php endif; ?>
                                     

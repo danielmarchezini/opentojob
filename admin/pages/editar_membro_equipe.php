@@ -55,11 +55,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $foto = $membro['foto']; // Manter a foto atual por padrão
     
     if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = $_SERVER['DOCUMENT_ROOT'] . '/open2w/uploads/equipe/';
+        // Registrar informações de depuração
+        error_log('Iniciando upload de foto para membro da equipe');
+        error_log('Nome do arquivo: ' . $_FILES['foto']['name']);
+        error_log('Tamanho do arquivo: ' . $_FILES['foto']['size'] . ' bytes');
+        
+        // Definir o caminho do diretório de upload
+        $upload_dir = $_SERVER['DOCUMENT_ROOT'] . '/uploads/equipe/';
+        error_log('Diretório de upload: ' . $upload_dir);
         
         // Criar diretório se não existir
         if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0755, true);
+            error_log('Criando diretório: ' . $upload_dir);
+            $created = mkdir($upload_dir, 0755, true);
+            error_log('Diretório criado: ' . ($created ? 'Sim' : 'Não'));
         }
         
         $file_name = $_FILES['foto']['name'];
@@ -70,20 +79,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $allowed_ext = ['jpg', 'jpeg', 'png', 'gif'];
         if (!in_array($file_ext, $allowed_ext)) {
             $erros[] = "Formato de arquivo não permitido. Use apenas JPG, JPEG, PNG ou GIF.";
+            error_log('Extensão não permitida: ' . $file_ext);
         } else {
             // Gerar nome único para o arquivo
             $novo_nome = 'membro_' . time() . '_' . uniqid() . '.' . $file_ext;
             $destino = $upload_dir . $novo_nome;
+            error_log('Destino do arquivo: ' . $destino);
+            
+            // Verificar permissões do diretório
+            error_log('Permissões do diretório: ' . substr(sprintf('%o', fileperms($upload_dir)), -4));
+            error_log('Diretório gravável: ' . (is_writable($upload_dir) ? 'Sim' : 'Não'));
             
             if (move_uploaded_file($file_tmp, $destino)) {
-                // Excluir foto antiga se existir e for diferente do padrão
-                if (!empty($membro['foto']) && file_exists($_SERVER['DOCUMENT_ROOT'] . '/open2w/' . $membro['foto'])) {
-                    unlink($_SERVER['DOCUMENT_ROOT'] . '/open2w/' . $membro['foto']);
+                error_log('Arquivo movido com sucesso para: ' . $destino);
+                
+                // Excluir foto antiga se existir
+                if (!empty($membro['foto'])) {
+                    $caminho_antigo = $_SERVER['DOCUMENT_ROOT'] . '/' . $membro['foto'];
+                    error_log('Verificando arquivo antigo: ' . $caminho_antigo);
+                    
+                    if (file_exists($caminho_antigo)) {
+                        error_log('Excluindo arquivo antigo: ' . $caminho_antigo);
+                        unlink($caminho_antigo);
+                    } else {
+                        error_log('Arquivo antigo não encontrado: ' . $caminho_antigo);
+                    }
                 }
                 
                 $foto = 'uploads/equipe/' . $novo_nome;
+                error_log('Caminho da foto salvo no banco: ' . $foto);
             } else {
                 $erros[] = "Falha ao fazer upload da foto.";
+                error_log('Falha ao mover o arquivo para: ' . $destino);
+                error_log('Erro de upload: ' . error_get_last()['message']);
             }
         }
     }
@@ -151,29 +179,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="nome" class="form-label">Nome Completo <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="nome" name="nome" value="<?php echo htmlspecialchars($membro['nome']); ?>" required>
+                            <input type="text" class="form-control" id="nome" name="nome" value="<?php echo htmlspecialchars((string)$membro['nome']); ?>" required>
                         </div>
                         
                         <div class="mb-3">
                             <label for="profissao" class="form-label">Profissão/Cargo <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="profissao" name="profissao" value="<?php echo htmlspecialchars($membro['profissao']); ?>" required>
+                            <input type="text" class="form-control" id="profissao" name="profissao" value="<?php echo htmlspecialchars((string)$membro['profissao']); ?>" required>
                         </div>
                         
                         <div class="mb-3">
                             <label for="subtitulo" class="form-label">Subtítulo</label>
-                            <input type="text" class="form-control" id="subtitulo" name="subtitulo" value="<?php echo htmlspecialchars($membro['subtitulo'] ?? ''); ?>">
+                            <input type="text" class="form-control" id="subtitulo" name="subtitulo" value="<?php echo htmlspecialchars((string)$membro['subtitulo'] ?? ''); ?>">
                             <div class="form-text">Breve descrição ou frase que aparecerá abaixo do nome</div>
                         </div>
                         
                         <div class="mb-3">
                             <label for="comentarios" class="form-label">Comentários/Biografia</label>
-                            <textarea class="form-control" id="comentarios" name="comentarios" rows="4"><?php echo htmlspecialchars($membro['comentarios'] ?? ''); ?></textarea>
+                            <textarea class="form-control" id="comentarios" name="comentarios" rows="4"><?php echo htmlspecialchars((string)$membro['comentarios'] ?? ''); ?></textarea>
                             <div class="form-text">Informações adicionais sobre o membro que serão exibidas na página Sobre</div>
                         </div>
                         
                         <div class="mb-3">
                             <label for="linkedin" class="form-label">LinkedIn (URL)</label>
-                            <input type="url" class="form-control" id="linkedin" name="linkedin" value="<?php echo htmlspecialchars($membro['linkedin']); ?>" placeholder="https://www.linkedin.com/in/seu-perfil">
+                            <input type="url" class="form-control" id="linkedin" name="linkedin" value="<?php echo htmlspecialchars((string)$membro['linkedin']); ?>" placeholder="https://www.linkedin.com/in/seu-perfil">
                             <div class="form-text">URL completa do perfil do LinkedIn (opcional)</div>
                         </div>
                         
@@ -204,11 +232,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="form-text">Formatos aceitos: JPG, JPEG, PNG, GIF. Tamanho recomendado: 300x300px</div>
                         </div>
                         
-                        <?php if (!empty($membro['foto']) && file_exists($_SERVER['DOCUMENT_ROOT'] . '/open2w/' . $membro['foto'])): ?>
+                        <?php if (!empty($membro['foto'])): ?>
                         <div class="mb-3">
                             <label class="form-label">Foto Atual</label>
                             <div class="text-center p-3 bg-light rounded">
-                                <img src="<?php echo SITE_URL . '/open2w/' . $membro['foto']; ?>" alt="Foto atual" class="img-thumbnail" style="max-height: 200px;">
+                                <img src="<?php echo SITE_URL . '/' . $membro['foto']; ?>" alt="Foto atual" class="img-thumbnail" style="max-height: 200px;">
                             </div>
                             <div class="form-text">Envie uma nova foto para substituir a atual</div>
                         </div>

@@ -106,7 +106,7 @@ $page_title = "Contatar " . $empresa['nome_empresa'];
     <div class="row mb-4">
         <div class="col-md-8">
             <h1 class="h2 mb-0">Contatar Empresa</h1>
-            <p class="text-muted">Envie uma mensagem para <?php echo htmlspecialchars($empresa['nome_empresa']); ?></p>
+            <p class="text-muted">Envie uma mensagem para <?php echo htmlspecialchars((string)$empresa['nome_empresa']); ?></p>
         </div>
         <div class="col-md-4 text-md-end">
             <a href="<?php echo SITE_URL; ?>/?route=perfil_empresa&id=<?php echo $empresa_id; ?>" class="btn btn-outline-primary">
@@ -120,15 +120,15 @@ $page_title = "Contatar " . $empresa['nome_empresa'];
             <div class="card border-0 shadow-sm">
                 <div class="card-body text-center">
                     <?php if (!empty($empresa['logo'])): ?>
-                        <img src="<?php echo SITE_URL; ?>/uploads/empresas/<?php echo $empresa['logo']; ?>" alt="<?php echo htmlspecialchars($empresa['nome_empresa']); ?>" class="img-fluid rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+                        <img src="<?php echo SITE_URL; ?>/uploads/empresas/<?php echo $empresa['logo']; ?>" alt="<?php echo htmlspecialchars((string)$empresa['nome_empresa']); ?>" class="img-fluid rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
                     <?php else: ?>
                         <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 120px; height: 120px;">
                             <i class="fas fa-building fa-4x text-secondary"></i>
                         </div>
                     <?php endif; ?>
                     
-                    <h4 class="card-title"><?php echo htmlspecialchars($empresa['nome_empresa']); ?></h4>
-                    <p class="text-muted"><?php echo htmlspecialchars($empresa['nome']); ?></p>
+                    <h4 class="card-title"><?php echo htmlspecialchars((string)$empresa['nome_empresa']); ?></h4>
+                    <p class="text-muted"><?php echo htmlspecialchars((string)$empresa['nome']); ?></p>
                     
                     <hr>
                     
@@ -150,12 +150,12 @@ $page_title = "Contatar " . $empresa['nome_empresa'];
                     <form action="<?php echo SITE_URL; ?>/?route=contatar_empresa&id=<?php echo $empresa_id; ?>" method="POST">
                         <div class="mb-3">
                             <label for="assunto" class="form-label">Assunto</label>
-                            <input type="text" class="form-control" id="assunto" name="assunto" required value="<?php echo isset($_POST['assunto']) ? htmlspecialchars($_POST['assunto']) : ''; ?>">
+                            <input type="text" class="form-control" id="assunto" name="assunto" required value="<?php echo isset($_POST['assunto']) ? htmlspecialchars((string)$_POST['assunto']) : ''; ?>">
                         </div>
                         
                         <div class="mb-3">
                             <label for="mensagem" class="form-label">Mensagem</label>
-                            <textarea class="form-control" id="mensagem" name="mensagem" rows="6" required><?php echo isset($_POST['mensagem']) ? htmlspecialchars($_POST['mensagem']) : ''; ?></textarea>
+                            <textarea class="form-control" id="mensagem" name="mensagem" rows="6" required><?php echo isset($_POST['mensagem']) ? htmlspecialchars((string)$_POST['mensagem']) : ''; ?></textarea>
                         </div>
                         
                         <div class="d-grid gap-2">

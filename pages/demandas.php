@@ -163,7 +163,7 @@ foreach ($demandas as $key => $demanda) {
                         <div class="col-lg-5 mb-3">
                             <div class="input-group">
                                 <span class="input-group-text bg-white"><i class="fas fa-search"></i></span>
-                                <input type="text" class="form-control form-control-lg" id="busca" name="busca" placeholder="Buscar por título ou descrição..." value="<?php echo htmlspecialchars($busca); ?>">
+                                <input type="text" class="form-control form-control-lg" id="busca" name="busca" placeholder="Buscar por título ou descrição..." value="<?php echo htmlspecialchars((string)$busca); ?>">
                             </div>
                         </div>
                         
@@ -171,8 +171,8 @@ foreach ($demandas as $key => $demanda) {
                             <select class="form-control form-control-lg" id="profissao" name="profissao">
                                 <option value="">Todas as profissões</option>
                                 <?php foreach ($profissoes as $prof): ?>
-                                    <option value="<?php echo htmlspecialchars($prof['profissao']); ?>" <?php echo ($filtro_profissao == $prof['profissao']) ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($prof['profissao']); ?>
+                                    <option value="<?php echo htmlspecialchars((string)$prof['profissao']); ?>" <?php echo ($filtro_profissao == $prof['profissao']) ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars((string)$prof['profissao']); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -182,8 +182,8 @@ foreach ($demandas as $key => $demanda) {
                             <select class="form-control form-control-lg" id="modelo" name="modelo">
                                 <option value="">Todos os modelos</option>
                                 <?php foreach ($modelos_trabalho as $modelo): ?>
-                                    <option value="<?php echo htmlspecialchars($modelo['regime_trabalho']); ?>" <?php echo ($filtro_modelo == $modelo['regime_trabalho']) ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($modelo['regime_trabalho']); ?>
+                                    <option value="<?php echo htmlspecialchars((string)$modelo['regime_trabalho']); ?>" <?php echo ($filtro_modelo == $modelo['regime_trabalho']) ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars((string)$modelo['regime_trabalho']); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -218,7 +218,7 @@ foreach ($demandas as $key => $demanda) {
                                 <div class="d-flex align-items-center mb-3">
                                     <div class="empresa-logo me-3">
                                         <?php if (isset($demanda['empresa_logo']) && !empty($demanda['empresa_logo'])): ?>
-                                            <img src="<?php echo SITE_URL; ?>/uploads/perfil/<?php echo $demanda['empresa_logo']; ?>" alt="<?php echo htmlspecialchars($demanda['empresa_nome']); ?>" class="rounded-circle">
+                                            <img src="<?php echo SITE_URL; ?>/uploads/perfil/<?php echo $demanda['empresa_logo']; ?>" alt="<?php echo htmlspecialchars((string)$demanda['empresa_nome']); ?>" class="rounded-circle">
                                         <?php else: ?>
                                             <div class="logo-placeholder rounded-circle bg-light text-primary">
                                                 <?php echo strtoupper(substr($demanda['empresa_nome'], 0, 1)); ?>
@@ -226,10 +226,10 @@ foreach ($demandas as $key => $demanda) {
                                         <?php endif; ?>
                                     </div>
                                     <div>
-                                        <h5 class="card-title mb-0"><?php echo htmlspecialchars($demanda['titulo']); ?></h5>
+                                        <h5 class="card-title mb-0"><?php echo htmlspecialchars((string)$demanda['titulo']); ?></h5>
                                         <p class="text-muted small mb-0">
                                             <a href="<?php echo SITE_URL; ?>/?route=perfil_empresa&id=<?php echo $demanda['usuario_id']; ?>">
-                                                <?php echo htmlspecialchars($demanda['empresa_nome']); ?>
+                                                <?php echo htmlspecialchars((string)$demanda['empresa_nome']); ?>
                                             </a>
                                         </p>
                                     </div>
@@ -239,14 +239,14 @@ foreach ($demandas as $key => $demanda) {
                                     <?php if (!empty($demanda['modelo_trabalho'])): ?>
                                     <p class="mb-1">
                                         <i class="fas fa-building me-2"></i>
-                                        <?php echo htmlspecialchars($demanda['modelo_trabalho']); ?>
+                                        <?php echo htmlspecialchars((string)$demanda['modelo_trabalho']); ?>
                                     </p>
                                     <?php endif; ?>
                                     
                                     <?php if (!empty($demanda['nivel_experiencia'])): ?>
                                     <p class="mb-1">
                                         <i class="fas fa-user-tie me-2"></i>
-                                        Nível: <?php echo htmlspecialchars($demanda['nivel_experiencia']); ?>
+                                        Nível: <?php echo htmlspecialchars((string)$demanda['nivel_experiencia']); ?>
                                     </p>
                                     <?php endif; ?>
                                     
@@ -267,7 +267,7 @@ foreach ($demandas as $key => $demanda) {
                                     <h6>Profissões desejadas:</h6>
                                     <div class="profissoes-tags">
                                         <?php foreach ($demanda['profissoes'] as $prof): ?>
-                                            <span class="badge bg-light text-dark mb-1 me-1"><?php echo htmlspecialchars($prof['profissao']); ?></span>
+                                            <span class="badge bg-light text-dark mb-1 me-1"><?php echo htmlspecialchars((string)$prof['profissao']); ?></span>
                                         <?php endforeach; ?>
                                     </div>
                                 </div>

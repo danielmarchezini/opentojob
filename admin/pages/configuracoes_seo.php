@@ -175,19 +175,19 @@ if (empty($robots_txt_personalizado) && file_exists($root_path . '/robots.txt'))
                         
                         <div class="mb-3">
                             <label for="meta_description" class="form-label">Meta Description</label>
-                            <textarea class="form-control" id="meta_description" name="meta_description" rows="3"><?php echo htmlspecialchars($meta_description); ?></textarea>
+                            <textarea class="form-control" id="meta_description" name="meta_description" rows="3"><?php echo htmlspecialchars((string)$meta_description); ?></textarea>
                             <div class="form-text">Descrição que aparece nos resultados de busca. Recomendado: até 160 caracteres.</div>
                         </div>
                         
                         <div class="mb-3">
                             <label for="meta_keywords" class="form-label">Meta Keywords</label>
-                            <input type="text" class="form-control" id="meta_keywords" name="meta_keywords" value="<?php echo htmlspecialchars($meta_keywords); ?>">
+                            <input type="text" class="form-control" id="meta_keywords" name="meta_keywords" value="<?php echo htmlspecialchars((string)$meta_keywords); ?>">
                             <div class="form-text">Palavras-chave separadas por vírgula.</div>
                         </div>
                         
                         <div class="mb-3">
                             <label for="google_tag_manager_id" class="form-label">ID do Google Tag Manager</label>
-                            <input type="text" class="form-control" id="google_tag_manager_id" name="google_tag_manager_id" value="<?php echo htmlspecialchars($google_tag_manager_id); ?>" placeholder="GTM-XXXXXX">
+                            <input type="text" class="form-control" id="google_tag_manager_id" name="google_tag_manager_id" value="<?php echo htmlspecialchars((string)$google_tag_manager_id); ?>" placeholder="GTM-XXXXXX">
                             <div class="form-text">Formato: GTM-XXXXXX. O código será gerado automaticamente.</div>
                         </div>
                         
@@ -199,7 +199,7 @@ if (empty($robots_txt_personalizado) && file_exists($root_path . '/robots.txt'))
                         
                         <div class="mb-3">
                             <label for="robots_txt_personalizado" class="form-label">Conteúdo do robots.txt</label>
-                            <textarea class="form-control" id="robots_txt_personalizado" name="robots_txt_personalizado" rows="6"><?php echo htmlspecialchars($robots_txt_personalizado); ?></textarea>
+                            <textarea class="form-control" id="robots_txt_personalizado" name="robots_txt_personalizado" rows="6"><?php echo htmlspecialchars((string)$robots_txt_personalizado); ?></textarea>
                             <div class="form-text">Conteúdo personalizado para o arquivo robots.txt. Deixe em branco para usar o padrão.</div>
                         </div>
                         
@@ -303,13 +303,13 @@ if (empty($robots_txt_personalizado) && file_exists($root_path . '/robots.txt'))
                             foreach ($paginas as $rota => $titulo) {
                                 $descricao = isset($meta_descricoes[$rota]) ? $meta_descricoes[$rota] : ($descricoes_padrao[$rota] ?? '');
                                 echo '<tr>';
-                                echo '<td>' . htmlspecialchars($titulo) . ' <small class="text-muted">(' . htmlspecialchars($rota) . ')</small></td>';
+                                echo '<td>' . htmlspecialchars((string)$titulo) . ' <small class="text-muted">(' . htmlspecialchars((string)$rota) . ')</small></td>';
                                 echo '<td>';
-                                echo '<textarea class="form-control meta-desc-field" id="meta_desc_' . htmlspecialchars($rota) . '" data-pagina="' . htmlspecialchars($rota) . '" rows="2">' . htmlspecialchars($descricao) . '</textarea>';
+                                echo '<textarea class="form-control meta-desc-field" id="meta_desc_' . htmlspecialchars((string)$rota) . '" data-pagina="' . htmlspecialchars((string)$rota) . '" rows="2">' . htmlspecialchars((string)$descricao) . '</textarea>';
                                 echo '<small class="text-muted caracteres-count">Caracteres: ' . mb_strlen($descricao) . '/160</small>';
                                 echo '</td>';
                                 echo '<td>';
-                                echo '<button type="button" class="btn btn-sm btn-primary salvar-meta-desc" data-pagina="' . htmlspecialchars($rota) . '">Salvar</button>';
+                                echo '<button type="button" class="btn btn-sm btn-primary salvar-meta-desc" data-pagina="' . htmlspecialchars((string)$rota) . '">Salvar</button>';
                                 echo '</td>';
                                 echo '</tr>';
                             }

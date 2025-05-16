@@ -171,7 +171,7 @@ $total_paginas = ceil($total_perfis / $perfis_por_pagina);
                         
                         <div class="col-md-4">
                             <div class="input-group">
-                                <input type="text" class="form-control" id="busca" name="busca" placeholder="Buscar por nome ou assunto" value="<?php echo htmlspecialchars($busca); ?>">
+                                <input type="text" class="form-control" id="busca" name="busca" placeholder="Buscar por nome ou assunto" value="<?php echo htmlspecialchars((string)$busca); ?>">
                                 <button class="btn btn-outline-secondary" type="submit">
                                     <i class="fas fa-search"></i>
                                 </button>
@@ -226,13 +226,13 @@ $total_paginas = ceil($total_perfis / $perfis_por_pagina);
                                 <tr>
                                     <td><?php echo $perfil['id']; ?></td>
                                     <td class="text-center">
-                                        <img src="<?php echo SITE_URL; ?>/uploads/perfis_linkedin/<?php echo htmlspecialchars($perfil['foto']); ?>" 
-                                             alt="<?php echo htmlspecialchars($perfil['nome']); ?>" 
+                                        <img src="<?php echo SITE_URL; ?>/uploads/perfis_linkedin/<?php echo htmlspecialchars((string)$perfil['foto']); ?>" 
+                                             alt="<?php echo htmlspecialchars((string)$perfil['nome']); ?>" 
                                              class="img-thumbnail" 
                                              style="width: 50px; height: 50px; object-fit: cover;">
                                     </td>
-                                    <td><?php echo htmlspecialchars($perfil['nome']); ?></td>
-                                    <td><?php echo htmlspecialchars($perfil['assunto']); ?></td>
+                                    <td><?php echo htmlspecialchars((string)$perfil['nome']); ?></td>
+                                    <td><?php echo htmlspecialchars((string)$perfil['assunto']); ?></td>
                                     <td>
                                         <span class="badge bg-<?php echo $perfil['status'] === 'ativo' ? 'success' : 'danger'; ?>">
                                             <?php echo $perfil['status'] === 'ativo' ? 'Ativo' : 'Inativo'; ?>

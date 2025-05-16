@@ -116,7 +116,7 @@ if (!$posicoes_ativas) {
                 
                 <div class="mb-4">
                     <label for="codigo_adsense" class="form-label">Código do Google AdSense</label>
-                    <textarea class="form-control" id="codigo_adsense" name="codigo_adsense" rows="3" placeholder="Cole aqui o código de publicador do Google AdSense"><?php echo htmlspecialchars($config['codigo_adsense']); ?></textarea>
+                    <textarea class="form-control" id="codigo_adsense" name="codigo_adsense" rows="3" placeholder="Cole aqui o código de publicador do Google AdSense"><?php echo htmlspecialchars((string)$config['codigo_adsense']); ?></textarea>
                     <small class="text-muted">Exemplo: <code>data-ad-client="ca-pub-1234567890123456"</code></small>
                 </div>
                 

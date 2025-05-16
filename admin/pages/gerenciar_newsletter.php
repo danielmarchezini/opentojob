@@ -74,15 +74,15 @@ function formatarData($data) {
                         <?php foreach ($inscritos as $inscrito): ?>
                             <tr>
                                 <td><?php echo $inscrito['id']; ?></td>
-                                <td><?php echo htmlspecialchars($inscrito['email']); ?></td>
-                                <td><?php echo htmlspecialchars($inscrito['nome'] ?? 'N/A'); ?></td>
+                                <td><?php echo htmlspecialchars((string)$inscrito['email']); ?></td>
+                                <td><?php echo htmlspecialchars((string)$inscrito['nome'] ?? 'N/A'); ?></td>
                                 <td><?php echo formatarData($inscrito['data_inscricao']); ?></td>
                                 <td>
                                     <span class="badge bg-<?php echo $inscrito['status'] === 'ativo' ? 'success' : 'danger'; ?>">
                                         <?php echo ucfirst($inscrito['status']); ?>
                                     </span>
                                 </td>
-                                <td><?php echo htmlspecialchars($inscrito['ip_inscricao'] ?? 'N/A'); ?></td>
+                                <td><?php echo htmlspecialchars((string)$inscrito['ip_inscricao'] ?? 'N/A'); ?></td>
                                 <td>
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-primary" onclick="alterarStatus(<?php echo $inscrito['id']; ?>, '<?php echo $inscrito['status'] === 'ativo' ? 'inativo' : 'ativo'; ?>')">

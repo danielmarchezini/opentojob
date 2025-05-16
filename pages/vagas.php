@@ -490,7 +490,7 @@ if (count($featuredCompanies) < 4) {
             
             <div class="filter-group">
                 <label for="q" class="filter-label">Palavra-chave</label>
-                <input type="text" id="q" name="q" class="filter-control" placeholder="Cargo, habilidade ou empresa" value="<?php echo isset($busca) ? htmlspecialchars($busca) : ''; ?>">
+                <input type="text" id="q" name="q" class="filter-control" placeholder="Cargo, habilidade ou empresa" value="<?php echo isset($busca) ? htmlspecialchars((string)$busca) : ''; ?>">
             </div>
             
             <div class="filter-group">
@@ -498,8 +498,8 @@ if (count($featuredCompanies) < 4) {
                 <select id="location" name="location" class="filter-control">
                     <option value="">Todas as localizações</option>
                     <?php foreach ($localizacoes as $loc): ?>
-                        <option value="<?php echo htmlspecialchars($loc['localizacao']); ?>" <?php echo $filtro_localizacao === $loc['localizacao'] ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($loc['localizacao']); ?>
+                        <option value="<?php echo htmlspecialchars((string)$loc['localizacao']); ?>" <?php echo $filtro_localizacao === $loc['localizacao'] ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars((string)$loc['localizacao']); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -510,8 +510,8 @@ if (count($featuredCompanies) < 4) {
                 <select id="type" name="type" class="filter-control">
                     <option value="">Todos os tipos</option>
                     <?php foreach ($tipos_contrato as $tipo): ?>
-                        <option value="<?php echo htmlspecialchars($tipo['tipo_contrato']); ?>" <?php echo $filtro_tipo === $tipo['tipo_contrato'] ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($tipo['tipo_contrato']); ?>
+                        <option value="<?php echo htmlspecialchars((string)$tipo['tipo_contrato']); ?>" <?php echo $filtro_tipo === $tipo['tipo_contrato'] ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars((string)$tipo['tipo_contrato']); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -522,8 +522,8 @@ if (count($featuredCompanies) < 4) {
                 <select id="model" name="model" class="filter-control">
                     <option value="">Todos os modelos</option>
                     <?php foreach ($modelos_trabalho as $modelo): ?>
-                        <option value="<?php echo htmlspecialchars($modelo['regime_trabalho']); ?>" <?php echo $filtro_modelo === $modelo['regime_trabalho'] ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($modelo['regime_trabalho']); ?>
+                        <option value="<?php echo htmlspecialchars((string)$modelo['regime_trabalho']); ?>" <?php echo $filtro_modelo === $modelo['regime_trabalho'] ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars((string)$modelo['regime_trabalho']); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -534,8 +534,8 @@ if (count($featuredCompanies) < 4) {
                 <select id="experience" name="experience" class="filter-control">
                     <option value="">Todos os níveis</option>
                     <?php foreach ($niveis_experiencia as $nivel): ?>
-                        <option value="<?php echo htmlspecialchars($nivel['nivel_experiencia']); ?>" <?php echo $filtro_nivel === $nivel['nivel_experiencia'] ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($nivel['nivel_experiencia']); ?>
+                        <option value="<?php echo htmlspecialchars((string)$nivel['nivel_experiencia']); ?>" <?php echo $filtro_nivel === $nivel['nivel_experiencia'] ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars((string)$nivel['nivel_experiencia']); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -566,24 +566,24 @@ if (count($featuredCompanies) < 4) {
                         <div class="job-header">
                             <img src="<?php echo SITE_URL; ?>/uploads/empresas/<?php echo $vaga['empresa_logo']; ?>" alt="<?php echo $vaga['empresa_nome']; ?>" class="job-logo">
                             <div class="job-title-container">
-                                <h3 class="job-title"><?php echo htmlspecialchars($vaga['titulo']); ?></h3>
-                                <div class="job-company"><?php echo htmlspecialchars($vaga['empresa_nome']); ?></div>
+                                <h3 class="job-title"><?php echo htmlspecialchars((string)$vaga['titulo']); ?></h3>
+                                <div class="job-company"><?php echo htmlspecialchars((string)$vaga['empresa_nome']); ?></div>
                             </div>
                         </div>
                         <div class="job-details">
-                            <div class="job-location"><i class="fas fa-map-marker-alt"></i> <?php echo isset($vaga['localizacao']) && $vaga['localizacao'] !== null ? htmlspecialchars($vaga['localizacao']) : ''; ?></div>
-                            <div class="job-type"><i class="fas fa-briefcase"></i> <?php echo isset($vaga['tipo_contrato']) && $vaga['tipo_contrato'] !== null ? htmlspecialchars($vaga['tipo_contrato']) : ''; ?></div>
+                            <div class="job-location"><i class="fas fa-map-marker-alt"></i> <?php echo isset($vaga['localizacao']) && $vaga['localizacao'] !== null ? htmlspecialchars((string)$vaga['localizacao']) : ''; ?></div>
+                            <div class="job-type"><i class="fas fa-briefcase"></i> <?php echo isset($vaga['tipo_contrato']) && $vaga['tipo_contrato'] !== null ? htmlspecialchars((string)$vaga['tipo_contrato']) : ''; ?></div>
                             <?php if (!empty($vaga['modelo_trabalho'])): ?>
-                                <div class="job-model"><i class="fas fa-building"></i> <?php echo htmlspecialchars($vaga['modelo_trabalho']); ?></div>
+                                <div class="job-model"><i class="fas fa-building"></i> <?php echo htmlspecialchars((string)$vaga['modelo_trabalho']); ?></div>
                             <?php endif; ?>
                             <?php if (!empty($vaga['nivel_experiencia'])): ?>
-                                <div class="job-experience"><i class="fas fa-user-graduate"></i> <?php echo htmlspecialchars($vaga['nivel_experiencia']); ?></div>
+                                <div class="job-experience"><i class="fas fa-user-graduate"></i> <?php echo htmlspecialchars((string)$vaga['nivel_experiencia']); ?></div>
                             <?php endif; ?>
                         </div>
                         <div class="job-actions">
                             <a href="<?php echo SITE_URL; ?>/?route=vaga&id=<?php echo $vaga['id']; ?>" class="btn btn-primary">Ver detalhes</a>
                             <?php if (!empty($vaga['link_candidatura'])): ?>
-                            <a href="<?php echo htmlspecialchars($vaga['link_candidatura']); ?>" class="btn btn-outline-primary" target="_blank">Candidatar-se</a>
+                            <a href="<?php echo htmlspecialchars((string)$vaga['link_candidatura']); ?>" class="btn btn-outline-primary" target="_blank">Candidatar-se</a>
                             <?php else: ?>
                             <a href="<?php echo SITE_URL; ?>/?route=vaga&id=<?php echo $vaga['id']; ?>" class="btn btn-outline-primary">Candidatar-se</a>
                             <?php endif; ?>

@@ -118,7 +118,7 @@ endif; ?>
                             <?php foreach ($vagas as $vaga): ?>
                                 <tr>
                                     <td><?php echo $vaga['id']; ?></td>
-                                    <td><?php echo htmlspecialchars($vaga['titulo']); ?></td>
+                                    <td><?php echo htmlspecialchars((string)$vaga['titulo']); ?></td>
                                     <td>
                                         <?php if (isset($vaga['tipo_vaga']) && $vaga['tipo_vaga'] == 'externa'): ?>
                                             <span class="badge badge-info">Externa</span>
@@ -129,9 +129,9 @@ endif; ?>
                                     <td>
                                         <?php 
                                         if (isset($vaga['tipo_vaga']) && $vaga['tipo_vaga'] == 'externa' && !empty($vaga['empresa_externa'])) {
-                                            echo htmlspecialchars($vaga['empresa_externa']);
+                                            echo htmlspecialchars((string)$vaga['empresa_externa']);
                                         } else {
-                                            echo !empty($vaga['empresa_nome']) ? htmlspecialchars($vaga['empresa_nome']) : 'Não informado';
+                                            echo !empty($vaga['empresa_nome']) ? htmlspecialchars((string)$vaga['empresa_nome']) : 'Não informado';
                                         }
                                         ?>
                                     </td>
@@ -143,7 +143,7 @@ endif; ?>
                                         echo !empty($localizacao) ? htmlspecialchars(implode(', ', $localizacao)) : 'Não informado';
                                         ?>
                                     </td>
-                                    <td><?php echo !empty($vaga['regime_trabalho']) ? ucfirst(htmlspecialchars($vaga['regime_trabalho'])) : 'Não informado'; ?></td>
+                                    <td><?php echo !empty($vaga['regime_trabalho']) ? ucfirst(htmlspecialchars((string)$vaga['regime_trabalho'])) : 'Não informado'; ?></td>
                                     <td>
                                         <?php
                                         $status = isset($vaga['status']) ? $vaga['status'] : 'pendente';
@@ -178,19 +178,19 @@ endif; ?>
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-sm btn-info btn-visualizar" 
                                                     data-id="<?php echo $vaga['id']; ?>" 
-                                                    data-titulo="<?php echo htmlspecialchars($vaga['titulo']); ?>"
+                                                    data-titulo="<?php echo htmlspecialchars((string)$vaga['titulo']); ?>"
                                                     onclick="visualizarVaga(<?php echo $vaga['id']; ?>, '<?php echo addslashes($vaga['titulo']); ?>')">
                                                 <i class="fas fa-eye"></i>
                                             </button>
                                             <button type="button" class="btn btn-sm btn-primary btn-editar" 
                                                     data-id="<?php echo $vaga['id']; ?>" 
-                                                    data-titulo="<?php echo htmlspecialchars($vaga['titulo']); ?>"
+                                                    data-titulo="<?php echo htmlspecialchars((string)$vaga['titulo']); ?>"
                                                     onclick="editarVaga(<?php echo $vaga['id']; ?>, '<?php echo addslashes($vaga['titulo']); ?>')">
                                                 <i class="fas fa-edit"></i>
                                             </button>
                                             <button type="button" class="btn btn-sm btn-danger btn-excluir" 
                                                     data-id="<?php echo $vaga['id']; ?>" 
-                                                    data-titulo="<?php echo htmlspecialchars($vaga['titulo']); ?>"
+                                                    data-titulo="<?php echo htmlspecialchars((string)$vaga['titulo']); ?>"
                                                     onclick="confirmarExclusao(<?php echo $vaga['id']; ?>, '<?php echo addslashes($vaga['titulo']); ?>')">
                                                 <i class="fas fa-trash"></i>
                                             </button>
@@ -234,7 +234,7 @@ endif; ?>
                             <option value="">Selecione uma empresa</option>
                             <?php foreach ($empresas as $empresa): ?>
                                 <option value="<?php echo $empresa['id']; ?>">
-                                    <?php echo !empty($empresa['razao_social']) ? htmlspecialchars($empresa['razao_social']) : htmlspecialchars($empresa['nome']); ?>
+                                    <?php echo !empty($empresa['razao_social']) ? htmlspecialchars((string)$empresa['razao_social']) : htmlspecialchars((string)$empresa['nome']); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -445,7 +445,7 @@ endif; ?>
                                 <option value="">Selecione uma empresa</option>
                                 <?php foreach ($empresas as $empresa): ?>
                                     <option value="<?php echo $empresa['id']; ?>">
-                                        <?php echo !empty($empresa['razao_social']) ? htmlspecialchars($empresa['razao_social']) : htmlspecialchars($empresa['nome']); ?>
+                                        <?php echo !empty($empresa['razao_social']) ? htmlspecialchars((string)$empresa['razao_social']) : htmlspecialchars((string)$empresa['nome']); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>

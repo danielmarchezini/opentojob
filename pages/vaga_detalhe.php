@@ -154,7 +154,7 @@ if ($is_logged_in && $is_talento) {
 
 <div class="jobs-header">
     <div class="container">
-        <h1 class="jobs-title"><?php echo htmlspecialchars($vaga['titulo']); ?></h1>
+        <h1 class="jobs-title"><?php echo htmlspecialchars((string)$vaga['titulo']); ?></h1>
         <p class="jobs-subtitle">Vaga publicada em <?php echo $data_publicacao; ?></p>
     </div>
 </div>
@@ -162,25 +162,25 @@ if ($is_logged_in && $is_talento) {
 <div class="container job-detail-container">
     <div class="job-detail-main">
         <div class="job-detail-header">
-            <img src="<?php echo $empresa_logo; ?>" alt="<?php echo htmlspecialchars($empresa_nome); ?>" class="job-detail-logo">
+            <img src="<?php echo $empresa_logo; ?>" alt="<?php echo htmlspecialchars((string)$empresa_nome); ?>" class="job-detail-logo">
             <div>
-                <h2 class="job-detail-company"><?php echo htmlspecialchars($empresa_nome); ?></h2>
-                <p class="job-detail-location"><?php echo htmlspecialchars($vaga['cidade'] . ', ' . $vaga['estado']); ?></p>
+                <h2 class="job-detail-company"><?php echo htmlspecialchars((string)$empresa_nome); ?></h2>
+                <p class="job-detail-location"><?php echo htmlspecialchars((string)$vaga['cidade'] . ', ' . $vaga['estado']); ?></p>
             </div>
         </div>
         
         <div class="job-meta">
             <div class="job-meta-item">
                 <i class="fas fa-briefcase"></i>
-                <span><?php echo htmlspecialchars(isset($vaga['tipo_contrato_nome']) && !empty($vaga['tipo_contrato_nome']) ? $vaga['tipo_contrato_nome'] : (isset($vaga['tipo_contrato']) && !empty($vaga['tipo_contrato']) ? $vaga['tipo_contrato'] : 'Tipo não informado')); ?></span>
+                <span><?php echo htmlspecialchars((string)isset($vaga['tipo_contrato_nome']) && !empty($vaga['tipo_contrato_nome']) ? $vaga['tipo_contrato_nome'] : (isset($vaga['tipo_contrato']) && !empty($vaga['tipo_contrato']) ? $vaga['tipo_contrato'] : 'Tipo não informado')); ?></span>
             </div>
             <div class="job-meta-item">
                 <i class="fas fa-map-marker-alt"></i>
-                <span><?php echo htmlspecialchars(isset($vaga['regime_trabalho_nome']) && !empty($vaga['regime_trabalho_nome']) ? $vaga['regime_trabalho_nome'] : (isset($vaga['regime_trabalho']) && !empty($vaga['regime_trabalho']) ? $vaga['regime_trabalho'] : 'Regime não informado')); ?></span>
+                <span><?php echo htmlspecialchars((string)isset($vaga['regime_trabalho_nome']) && !empty($vaga['regime_trabalho_nome']) ? $vaga['regime_trabalho_nome'] : (isset($vaga['regime_trabalho']) && !empty($vaga['regime_trabalho']) ? $vaga['regime_trabalho'] : 'Regime não informado')); ?></span>
             </div>
             <div class="job-meta-item">
                 <i class="fas fa-user-graduate"></i>
-                <span><?php echo htmlspecialchars(isset($vaga['nivel_experiencia_nome']) && !empty($vaga['nivel_experiencia_nome']) ? $vaga['nivel_experiencia_nome'] : (isset($vaga['nivel_experiencia']) && !empty($vaga['nivel_experiencia']) ? $vaga['nivel_experiencia'] : 'Nível não informado')); ?></span>
+                <span><?php echo htmlspecialchars((string)isset($vaga['nivel_experiencia_nome']) && !empty($vaga['nivel_experiencia_nome']) ? $vaga['nivel_experiencia_nome'] : (isset($vaga['nivel_experiencia']) && !empty($vaga['nivel_experiencia']) ? $vaga['nivel_experiencia'] : 'Nível não informado')); ?></span>
             </div>
             <div class="job-meta-item">
                 <i class="fas fa-money-bill-wave"></i>
@@ -197,7 +197,7 @@ if ($is_logged_in && $is_talento) {
         <div class="job-detail-section">
             <h2 class="job-detail-section-title">Descrição da vaga</h2>
             <div class="job-detail-description">
-                <p><?php echo nl2br(htmlspecialchars($vaga['descricao'])); ?></p>
+                <p><?php echo nl2br(htmlspecialchars((string)$vaga['descricao'])); ?></p>
             </div>
         </div>
         
@@ -207,7 +207,7 @@ if ($is_logged_in && $is_talento) {
             <ul class="job-detail-list">
                 <?php foreach ($responsabilidades as $responsabilidade): ?>
                     <?php if (!empty(trim($responsabilidade))): ?>
-                        <li><?php echo htmlspecialchars($responsabilidade); ?></li>
+                        <li><?php echo htmlspecialchars((string)$responsabilidade); ?></li>
                     <?php endif; ?>
                 <?php endforeach; ?>
             </ul>
@@ -220,7 +220,7 @@ if ($is_logged_in && $is_talento) {
             <ul class="job-detail-list">
                 <?php foreach ($requisitos as $requisito): ?>
                     <?php if (!empty(trim($requisito))): ?>
-                        <li><?php echo htmlspecialchars($requisito); ?></li>
+                        <li><?php echo htmlspecialchars((string)$requisito); ?></li>
                     <?php endif; ?>
                 <?php endforeach; ?>
             </ul>
@@ -233,7 +233,7 @@ if ($is_logged_in && $is_talento) {
             <ul class="job-detail-list">
                 <?php foreach ($beneficios as $beneficio): ?>
                     <?php if (!empty(trim($beneficio))): ?>
-                        <li><?php echo htmlspecialchars($beneficio); ?></li>
+                        <li><?php echo htmlspecialchars((string)$beneficio); ?></li>
                     <?php endif; ?>
                 <?php endforeach; ?>
             </ul>
@@ -246,7 +246,7 @@ if ($is_logged_in && $is_talento) {
             <div class="job-tags">
                 <?php foreach ($tags as $tag): ?>
                     <?php if (!empty(trim($tag))): ?>
-                        <span class="job-tag"><?php echo htmlspecialchars($tag); ?></span>
+                        <span class="job-tag"><?php echo htmlspecialchars((string)$tag); ?></span>
                     <?php endif; ?>
                 <?php endforeach; ?>
             </div>
@@ -264,7 +264,7 @@ if ($is_logged_in && $is_talento) {
             
             <?php if ($vaga['tipo_vaga'] === 'externa'): ?>
                 <!-- Botão para vaga externa -->
-                <a href="<?php echo htmlspecialchars($vaga['url_externa']); ?>" target="_blank" class="btn btn-success job-apply-btn">
+                <a href="<?php echo htmlspecialchars((string)$vaga['url_externa']); ?>" target="_blank" class="btn btn-success job-apply-btn">
                     <i class="fas fa-external-link-alt me-2"></i> Candidatar-se no site externo
                 </a>
                 <?php if ($is_logged_in && $is_talento): ?>
@@ -310,21 +310,21 @@ if ($is_logged_in && $is_talento) {
         <div class="company-widget">
             <h3 class="company-widget-title">Sobre a empresa</h3>
             <div class="company-widget-info">
-                <img src="<?php echo $empresa_logo; ?>" alt="<?php echo htmlspecialchars($empresa_nome); ?>" class="company-widget-logo">
+                <img src="<?php echo $empresa_logo; ?>" alt="<?php echo htmlspecialchars((string)$empresa_nome); ?>" class="company-widget-logo">
                 <div>
-                    <p class="company-widget-name"><?php echo htmlspecialchars($empresa_nome); ?></p>
-                    <p class="company-widget-location"><?php echo htmlspecialchars($vaga['cidade'] . ', ' . $vaga['estado']); ?></p>
+                    <p class="company-widget-name"><?php echo htmlspecialchars((string)$empresa_nome); ?></p>
+                    <p class="company-widget-location"><?php echo htmlspecialchars((string)$vaga['cidade'] . ', ' . $vaga['estado']); ?></p>
                 </div>
             </div>
             
             <?php if (!empty($vaga['empresa_descricao'])): ?>
-            <p class="company-widget-description"><?php echo htmlspecialchars($vaga['empresa_descricao']); ?></p>
+            <p class="company-widget-description"><?php echo htmlspecialchars((string)$vaga['empresa_descricao']); ?></p>
             <?php endif; ?>
             
             <div class="company-widget-stats">
                 <?php if (!empty($vaga['empresa_tamanho'])): ?>
                 <div class="company-stat-item">
-                    <p class="company-stat-value"><?php echo htmlspecialchars($vaga['empresa_tamanho']); ?></p>
+                    <p class="company-stat-value"><?php echo htmlspecialchars((string)$vaga['empresa_tamanho']); ?></p>
                     <p class="company-stat-label">Tamanho</p>
                 </div>
                 <?php endif; ?>
@@ -351,7 +351,7 @@ if ($is_logged_in && $is_talento) {
             </div>
             
             <?php if (!empty($vaga['empresa_website'])): ?>
-            <a href="<?php echo htmlspecialchars($vaga['empresa_website']); ?>" target="_blank" class="company-widget-link">
+            <a href="<?php echo htmlspecialchars((string)$vaga['empresa_website']); ?>" target="_blank" class="company-widget-link">
                 <i class="fas fa-globe"></i> Visitar site
             </a>
             <?php endif; ?>
@@ -390,11 +390,11 @@ if ($is_logged_in && $is_talento) {
             ?>
                 <div class="job-item" style="padding: 15px; margin-bottom: 15px;">
                     <h4 style="font-size: 1rem; margin-bottom: 10px;">
-                        <a href="<?php echo SITE_URL; ?>/?route=vaga&id=<?php echo $vaga_semelhante['id']; ?>"><?php echo htmlspecialchars($vaga_semelhante['titulo']); ?></a>
+                        <a href="<?php echo SITE_URL; ?>/?route=vaga&id=<?php echo $vaga_semelhante['id']; ?>"><?php echo htmlspecialchars((string)$vaga_semelhante['titulo']); ?></a>
                     </h4>
                     <div style="display: flex; gap: 10px; font-size: 0.8rem; color: #6c757d; margin-bottom: 5px;">
-                        <span><i class="fas fa-building"></i> <?php echo htmlspecialchars($empresa_semelhante); ?></span>
-                        <span><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($vaga_semelhante['cidade'] . ', ' . $vaga_semelhante['estado']); ?></span>
+                        <span><i class="fas fa-building"></i> <?php echo htmlspecialchars((string)$empresa_semelhante); ?></span>
+                        <span><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars((string)$vaga_semelhante['cidade'] . ', ' . $vaga_semelhante['estado']); ?></span>
                     </div>
                 </div>
             <?php

@@ -101,14 +101,14 @@ try {
                             <?php foreach ($vagas as $vaga): ?>
                                 <tr>
                                     <td><?php echo $vaga['id']; ?></td>
-                                    <td><?php echo htmlspecialchars($vaga['titulo']); ?></td>
+                                    <td><?php echo htmlspecialchars((string)$vaga['titulo']); ?></td>
                                     <td>
                                         <?php 
                                         if ($vaga['tipo_vaga'] == 'externa') {
                                              echo '<span class="badge bg-info">Externa</span> ';
-                                            echo htmlspecialchars($vaga['empresa_externa'] ?? 'Não informada');
+                                            echo htmlspecialchars((string)$vaga['empresa_externa'] ?? 'Não informada');
                                         } else {
-                                            echo htmlspecialchars($vaga['empresa_nome'] ?? 'Não informada');
+                                            echo htmlspecialchars((string)$vaga['empresa_nome'] ?? 'Não informada');
                                         }
                                         ?>
                                     </td>
@@ -116,9 +116,9 @@ try {
                                         <?php 
                                         $localizacao = '';
                                         if (!empty($vaga['cidade'])) {
-                                            $localizacao .= htmlspecialchars($vaga['cidade']);
+                                            $localizacao .= htmlspecialchars((string)$vaga['cidade']);
                                             if (!empty($vaga['estado'])) {
-                                                $localizacao .= '/' . htmlspecialchars($vaga['estado']);
+                                                $localizacao .= '/' . htmlspecialchars((string)$vaga['estado']);
                                             }
                                         } else {
                                             $localizacao = 'Não informado';
@@ -126,8 +126,8 @@ try {
                                         echo $localizacao;
                                         ?>
                                     </td>
-                                    <td><?php echo !empty($vaga['tipo_contrato']) ? ucfirst(htmlspecialchars($vaga['tipo_contrato'])) : 'Não informado'; ?></td>
-                                    <td><?php echo !empty($vaga['regime_trabalho']) ? htmlspecialchars($vaga['regime_trabalho']) : 'Não informado'; ?></td>
+                                    <td><?php echo !empty($vaga['tipo_contrato']) ? ucfirst(htmlspecialchars((string)$vaga['tipo_contrato'])) : 'Não informado'; ?></td>
+                                    <td><?php echo !empty($vaga['regime_trabalho']) ? htmlspecialchars((string)$vaga['regime_trabalho']) : 'Não informado'; ?></td>
                                     <td>
                                         <?php
                                         $status = isset($vaga['status']) ? $vaga['status'] : 'pendente';
@@ -158,13 +158,13 @@ try {
                                     </td>
                                     <td>
                                         <div class="btn-group">
-                                            <button type="button" class="btn btn-sm btn-info" onclick="visualizarVaga(<?php echo $vaga['id']; ?>, '<?php echo addslashes(htmlspecialchars($vaga['titulo'])); ?>')" title="Visualizar">
+                                            <button type="button" class="btn btn-sm btn-info" onclick="visualizarVaga(<?php echo $vaga['id']; ?>, '<?php echo addslashes(htmlspecialchars((string)$vaga['titulo'])); ?>')" title="Visualizar">
                                                 <i class="fas fa-eye"></i>
                                             </button>
-                                            <button type="button" class="btn btn-sm btn-primary" onclick="editarVaga(<?php echo $vaga['id']; ?>, '<?php echo addslashes(htmlspecialchars($vaga['titulo'])); ?>')" title="Editar">
+                                            <button type="button" class="btn btn-sm btn-primary" onclick="editarVaga(<?php echo $vaga['id']; ?>, '<?php echo addslashes(htmlspecialchars((string)$vaga['titulo'])); ?>')" title="Editar">
                                                 <i class="fas fa-edit"></i>
                                             </button>
-                                            <button type="button" class="btn btn-sm btn-danger" onclick="confirmarExclusao(<?php echo $vaga['id']; ?>, '<?php echo addslashes(htmlspecialchars($vaga['titulo'])); ?>')" title="Excluir">
+                                            <button type="button" class="btn btn-sm btn-danger" onclick="confirmarExclusao(<?php echo $vaga['id']; ?>, '<?php echo addslashes(htmlspecialchars((string)$vaga['titulo'])); ?>')" title="Excluir">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </div>

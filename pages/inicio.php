@@ -108,7 +108,7 @@
                 <div class="category-icon">
                     <i class="<?php echo $icone; ?>"></i>
                 </div>
-                <h3 class="category-title"><?php echo htmlspecialchars($profissao['profissao']); ?></h3>
+                <h3 class="category-title"><?php echo htmlspecialchars((string)$profissao['profissao']); ?></h3>
                 <p class="category-description"><?php echo $descricao; ?></p>
                 <p class="category-count"><?php echo $profissao['total']; ?> talentos disponíveis</p>
                 <div class="category-action">
@@ -251,7 +251,7 @@
                     if ($tem_foto): 
                     ?>
                         <img src="<?php echo SITE_URL; ?>/uploads/perfil/<?php echo $talento['foto_perfil']; ?>" 
-                             alt="<?php echo htmlspecialchars($talento['nome']); ?>" 
+                             alt="<?php echo htmlspecialchars((string)$talento['nome']); ?>" 
                              class="talent-avatar">
                     <?php else: ?>
                         <div class="talent-avatar-placeholder">
@@ -273,16 +273,16 @@
                         </div>
                     <?php endif; ?>
                     <div class="talent-info">
-                        <h3 class="talent-name"><?php echo htmlspecialchars($talento['nome']); ?></h3>
-                        <p class="talent-title"><?php echo htmlspecialchars($talento['profissao']); ?></p>
-                        <p class="talent-location"><i class="fas fa-map-marker-alt"></i> <?php echo !empty($localidade) ? htmlspecialchars($localidade) : ''; ?></p>
+                        <h3 class="talent-name"><?php echo htmlspecialchars((string)$talento['nome']); ?></h3>
+                        <p class="talent-title"><?php echo htmlspecialchars((string)$talento['profissao']); ?></p>
+                        <p class="talent-location"><i class="fas fa-map-marker-alt"></i> <?php echo !empty($localidade) ? htmlspecialchars((string)$localidade) : ''; ?></p>
                     </div>
                 </div>
                 
                 <div class="talent-details">
                     <div class="talent-detail">
                         <i class="fas fa-clock"></i>
-                        <span>Disponibilidade <?php echo htmlspecialchars($disponibilidade); ?></span>
+                        <span>Disponibilidade <?php echo htmlspecialchars((string)$disponibilidade); ?></span>
                     </div>
                 </div>
                 
@@ -505,7 +505,7 @@
                 
                 <div class="job-tags">
                     <?php foreach ($job['tags'] as $tag): ?>
-                    <span class="job-tag"><?php echo htmlspecialchars($tag); ?></span>
+                    <span class="job-tag"><?php echo htmlspecialchars((string)$tag); ?></span>
                     <?php endforeach; ?>
                 </div>
                 
@@ -556,7 +556,7 @@
                 echo '<div class="partner-logos">';
                 foreach ($empresas as $empresa) {
                     $logo = !empty($empresa['logo']) ? $empresa['logo'] : 'default-company.png';
-                    echo '<img src="' . SITE_URL . '/uploads/empresas/' . $logo . '" alt="' . htmlspecialchars($empresa['nome']) . '" class="partner-logo">';
+                    echo '<img src="' . SITE_URL . '/uploads/empresas/' . $logo . '" alt="' . htmlspecialchars((string)$empresa['nome']) . '" class="partner-logo">';
                 }
                 echo '</div>';
             } else {
@@ -607,15 +607,15 @@ try {
         <div class="testimonials-grid">
             <?php foreach ($depoimentos as $depoimento): ?>
             <div class="testimonial-card">
-                <p class="testimonial-text"><?php echo htmlspecialchars($depoimento['depoimento']); ?></p>
+                <p class="testimonial-text"><?php echo htmlspecialchars((string)$depoimento['depoimento']); ?></p>
                 <div class="testimonial-author">
                     <?php 
                     $foto = !empty($depoimento['foto']) ? $depoimento['foto'] : 'default-user.jpg';
                     ?>
-                    <img src="<?php echo SITE_URL; ?>/uploads/perfil/<?php echo $foto; ?>" alt="<?php echo htmlspecialchars($depoimento['nome']); ?>" class="testimonial-avatar">
+                    <img src="<?php echo SITE_URL; ?>/uploads/perfil/<?php echo $foto; ?>" alt="<?php echo htmlspecialchars((string)$depoimento['nome']); ?>" class="testimonial-avatar">
                     <div>
-                        <p class="testimonial-name"><?php echo htmlspecialchars($depoimento['nome']); ?></p>
-                        <p class="testimonial-position"><?php echo htmlspecialchars($depoimento['profissao']); ?></p>
+                        <p class="testimonial-name"><?php echo htmlspecialchars((string)$depoimento['nome']); ?></p>
+                        <p class="testimonial-position"><?php echo htmlspecialchars((string)$depoimento['profissao']); ?></p>
                     </div>
                 </div>
             </div>

@@ -84,8 +84,8 @@ $demandas_relacionadas = $db->fetchAll("
     <div class="container">
         <div class="row">
             <div class="col-lg-8">
-                <h1><?php echo htmlspecialchars($demanda['titulo']); ?></h1>
-                <p class="lead">Demanda de talentos publicada por <?php echo htmlspecialchars($demanda['empresa_nome']); ?></p>
+                <h1><?php echo htmlspecialchars((string)$demanda['titulo']); ?></h1>
+                <p class="lead">Demanda de talentos publicada por <?php echo htmlspecialchars((string)$demanda['empresa_nome']); ?></p>
             </div>
             <div class="col-lg-4">
                 <nav aria-label="breadcrumb">
@@ -110,7 +110,7 @@ $demandas_relacionadas = $db->fetchAll("
                         <div class="d-flex align-items-center mb-4">
                             <div class="empresa-logo me-3">
                                 <?php if (isset($demanda['empresa_logo']) && !empty($demanda['empresa_logo'])): ?>
-                                    <img src="<?php echo SITE_URL; ?>/uploads/perfil/<?php echo $demanda['empresa_logo']; ?>" alt="<?php echo htmlspecialchars($demanda['empresa_nome']); ?>" class="rounded-circle">
+                                    <img src="<?php echo SITE_URL; ?>/uploads/perfil/<?php echo $demanda['empresa_logo']; ?>" alt="<?php echo htmlspecialchars((string)$demanda['empresa_nome']); ?>" class="rounded-circle">
                                 <?php else: ?>
                                     <div class="logo-placeholder rounded-circle bg-light text-primary">
                                         <?php echo strtoupper(substr($demanda['empresa_nome'], 0, 1)); ?>
@@ -118,7 +118,7 @@ $demandas_relacionadas = $db->fetchAll("
                                 <?php endif; ?>
                             </div>
                             <div>
-                                <h4 class="mb-0"><?php echo htmlspecialchars($demanda['empresa_nome']); ?></h4>
+                                <h4 class="mb-0"><?php echo htmlspecialchars((string)$demanda['empresa_nome']); ?></h4>
                                 <p class="text-muted mb-0">
                                     <a href="<?php echo SITE_URL; ?>/?route=perfil_empresa&id=<?php echo $demanda['usuario_id']; ?>">
                                         Ver perfil da empresa
@@ -134,14 +134,14 @@ $demandas_relacionadas = $db->fetchAll("
                                     <?php if (!empty($demanda['regime_trabalho'])): ?>
                                     <li class="mb-2">
                                         <i class="fas fa-building me-2"></i>
-                                        <strong>Regime de trabalho:</strong> <?php echo htmlspecialchars($demanda['regime_trabalho']); ?>
+                                        <strong>Regime de trabalho:</strong> <?php echo htmlspecialchars((string)$demanda['regime_trabalho']); ?>
                                     </li>
                                     <?php endif; ?>
                                     
                                     <?php if (!empty($demanda['nivel_experiencia'])): ?>
                                     <li class="mb-2">
                                         <i class="fas fa-user-tie me-2"></i>
-                                        <strong>Nível de experiência:</strong> <?php echo htmlspecialchars($demanda['nivel_experiencia']); ?>
+                                        <strong>Nível de experiência:</strong> <?php echo htmlspecialchars((string)$demanda['nivel_experiencia']); ?>
                                     </li>
                                     <?php endif; ?>
                                     
@@ -165,7 +165,7 @@ $demandas_relacionadas = $db->fetchAll("
                                     <?php if (!empty($demanda['cidade']) && !empty($demanda['estado'])): ?>
                                     <li class="mb-2">
                                         <i class="fas fa-map-marker-alt me-2"></i>
-                                        <strong>Localização:</strong> <?php echo htmlspecialchars($demanda['cidade'] . ', ' . $demanda['estado']); ?>
+                                        <strong>Localização:</strong> <?php echo htmlspecialchars((string)$demanda['cidade'] . ', ' . $demanda['estado']); ?>
                                     </li>
                                     <?php endif; ?>
                                     
@@ -173,8 +173,8 @@ $demandas_relacionadas = $db->fetchAll("
                                     <li class="mb-2">
                                         <i class="fas fa-globe me-2"></i>
                                         <strong>Website:</strong> 
-                                        <a href="<?php echo htmlspecialchars($demanda['site']); ?>" target="_blank">
-                                            <?php echo htmlspecialchars($demanda['site']); ?>
+                                        <a href="<?php echo htmlspecialchars((string)$demanda['site']); ?>" target="_blank">
+                                            <?php echo htmlspecialchars((string)$demanda['site']); ?>
                                         </a>
                                     </li>
                                     <?php endif; ?>
@@ -186,7 +186,7 @@ $demandas_relacionadas = $db->fetchAll("
                             <h5>Profissões desejadas</h5>
                             <div class="profissoes-tags">
                                 <?php foreach ($profissoes as $prof): ?>
-                                    <span class="badge bg-primary mb-1 me-1"><?php echo htmlspecialchars($prof['profissao']); ?></span>
+                                    <span class="badge bg-primary mb-1 me-1"><?php echo htmlspecialchars((string)$prof['profissao']); ?></span>
                                 <?php endforeach; ?>
                             </div>
                         </div>
@@ -196,7 +196,7 @@ $demandas_relacionadas = $db->fetchAll("
                             <div class="demanda-descricao">
                                 <?php 
                                 if (!empty($demanda['descricao'])) {
-                                    echo nl2br(htmlspecialchars($demanda['descricao']));
+                                    echo nl2br(htmlspecialchars((string)$demanda['descricao']));
                                 } else {
                                     echo '<p class="text-muted">Sem descrição disponível.</p>';
                                 }
@@ -283,8 +283,8 @@ $demandas_relacionadas = $db->fetchAll("
                                     <a href="<?php echo SITE_URL; ?>/?route=visualizar_demanda&id=<?php echo $rel['id']; ?>" class="text-decoration-none">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
-                                                <h6 class="mb-0"><?php echo htmlspecialchars($rel['titulo']); ?></h6>
-                                                <small class="text-muted"><?php echo htmlspecialchars($rel['empresa_nome']); ?></small>
+                                                <h6 class="mb-0"><?php echo htmlspecialchars((string)$rel['titulo']); ?></h6>
+                                                <small class="text-muted"><?php echo htmlspecialchars((string)$rel['empresa_nome']); ?></small>
                                             </div>
                                             <i class="fas fa-chevron-right text-muted"></i>
                                         </div>

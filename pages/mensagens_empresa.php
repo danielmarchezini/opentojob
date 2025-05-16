@@ -306,17 +306,17 @@ $empresa = $db->fetchRow("
                                                         <?php endif; ?>
                                                     </div>
                                                     <div>
-                                                        <h6 class="mb-1"><?php echo htmlspecialchars($msg['assunto']); ?></h6>
+                                                        <h6 class="mb-1"><?php echo htmlspecialchars((string)$msg['assunto']); ?></h6>
                                                         <p class="mb-1 text-muted">
                                                             <?php if ($acao === 'inbox'): ?>
-                                                                De: <?php echo htmlspecialchars($msg['remetente_nome']); ?>
+                                                                De: <?php echo htmlspecialchars((string)$msg['remetente_nome']); ?>
                                                                 <?php if (!empty($msg['profissao'])): ?>
-                                                                    <small>(<?php echo htmlspecialchars($msg['profissao']); ?>)</small>
+                                                                    <small>(<?php echo htmlspecialchars((string)$msg['profissao']); ?>)</small>
                                                                 <?php endif; ?>
                                                             <?php else: ?>
-                                                                Para: <?php echo htmlspecialchars($msg['destinatario_nome']); ?>
+                                                                Para: <?php echo htmlspecialchars((string)$msg['destinatario_nome']); ?>
                                                                 <?php if (!empty($msg['profissao'])): ?>
-                                                                    <small>(<?php echo htmlspecialchars($msg['profissao']); ?>)</small>
+                                                                    <small>(<?php echo htmlspecialchars((string)$msg['profissao']); ?>)</small>
                                                                 <?php endif; ?>
                                                             <?php endif; ?>
                                                         </p>
@@ -334,7 +334,7 @@ $empresa = $db->fetchRow("
                         <div class="card-body">
                             <div class="mensagem-header mb-4">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h5 class="mb-0"><?php echo htmlspecialchars($mensagem['assunto']); ?></h5>
+                                    <h5 class="mb-0"><?php echo htmlspecialchars((string)$mensagem['assunto']); ?></h5>
                                     <small class="text-muted"><?php echo date('d/m/Y H:i', strtotime($mensagem['data_envio'])); ?></small>
                                 </div>
                                 
@@ -350,20 +350,20 @@ $empresa = $db->fetchRow("
                                     </div>
                                     <div>
                                         <p class="mb-0">
-                                            <strong>De:</strong> <?php echo htmlspecialchars($mensagem['remetente_nome']); ?>
+                                            <strong>De:</strong> <?php echo htmlspecialchars((string)$mensagem['remetente_nome']); ?>
                                             <?php if (!empty($mensagem['profissao_remetente'])): ?>
-                                                <small>(<?php echo htmlspecialchars($mensagem['profissao_remetente']); ?>)</small>
+                                                <small>(<?php echo htmlspecialchars((string)$mensagem['profissao_remetente']); ?>)</small>
                                             <?php endif; ?>
                                         </p>
                                         <p class="mb-0">
-                                            <strong>Para:</strong> <?php echo htmlspecialchars($empresa['nome_empresa'] ?: $mensagem['destinatario_nome']); ?>
+                                            <strong>Para:</strong> <?php echo htmlspecialchars((string)$empresa['nome_empresa'] ?: $mensagem['destinatario_nome']); ?>
                                         </p>
                                     </div>
                                 </div>
                             </div>
                             
                             <div class="mensagem-corpo p-3 bg-light rounded mb-4">
-                                <?php echo nl2br(htmlspecialchars($mensagem['mensagem'])); ?>
+                                <?php echo nl2br(htmlspecialchars((string)$mensagem['mensagem'])); ?>
                             </div>
                             
                             <div class="mensagem-acoes d-flex justify-content-between">

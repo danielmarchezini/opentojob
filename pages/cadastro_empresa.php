@@ -136,12 +136,12 @@ require_once 'includes/SmtpMailer.php';
         <form method="post" action="<?php echo SITE_URL; ?>/?route=cadastro_empresa" class="auth-form">
             <div class="form-group">
                 <label for="nome" class="form-label">Nome da empresa *</label>
-                <input type="text" id="nome" name="nome" class="form-control" value="<?php echo isset($nome) ? htmlspecialchars($nome) : ''; ?>" required>
+                <input type="text" id="nome" name="nome" class="form-control" value="<?php echo isset($nome) ? htmlspecialchars((string)$nome) : ''; ?>" required>
             </div>
             
             <div class="form-group">
                 <label for="email" class="form-label">E-mail corporativo *</label>
-                <input type="email" id="email" name="email" class="form-control" value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>" required>
+                <input type="email" id="email" name="email" class="form-control" value="<?php echo isset($email) ? htmlspecialchars((string)$email) : ''; ?>" required>
             </div>
             
             <div class="form-row">
@@ -161,7 +161,7 @@ require_once 'includes/SmtpMailer.php';
             
             <div class="form-group">
                 <label for="website" class="form-label">Website</label>
-                <input type="url" id="website" name="website" class="form-control" value="<?php echo isset($website) ? htmlspecialchars($website) : ''; ?>">
+                <input type="url" id="website" name="website" class="form-control" value="<?php echo isset($website) ? htmlspecialchars((string)$website) : ''; ?>">
             </div>
             
             <div class="form-group">
@@ -183,7 +183,7 @@ require_once 'includes/SmtpMailer.php';
             <div class="form-row">
                 <div class="form-group col-md-8">
                     <label for="cidade" class="form-label">Cidade</label>
-                    <input type="text" id="cidade" name="cidade" class="form-control" value="<?php echo isset($cidade) ? htmlspecialchars($cidade) : ''; ?>">
+                    <input type="text" id="cidade" name="cidade" class="form-control" value="<?php echo isset($cidade) ? htmlspecialchars((string)$cidade) : ''; ?>">
                 </div>
                 
                 <div class="form-group col-md-4">

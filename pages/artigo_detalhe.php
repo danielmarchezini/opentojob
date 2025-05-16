@@ -1,21 +1,42 @@
 <?php
-// Obter slug do artigo
+// Verificar se temos um slug ou um ID
 $slug = isset($_GET['slug']) ? $_GET['slug'] : '';
+$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-if (empty($slug)) {
-    echo '<div class="alert alert-danger">Artigo não encontrado.</div>';
+// Registrar informações para depuração
+error_log('Acessando artigo - Slug: ' . $slug . ', ID: ' . $id);
+
+if (empty($slug) && $id <= 0) {
+    echo '<div class="alert alert-danger">Artigo não encontrado. Parâmetros inválidos.</div>';
     exit;
 }
 
-// Buscar artigo pelo slug
+// Buscar artigo pelo slug ou ID
 $db = Database::getInstance();
-$artigo = $db->fetch("
-    SELECT a.*, c.nome as categoria_nome, c.slug as categoria_slug, u.nome as autor_nome
-    FROM artigos_blog a
-    LEFT JOIN categorias_blog c ON a.categoria_id = c.id
-    LEFT JOIN usuarios u ON a.autor_id = u.id
-    WHERE a.slug = :slug AND a.status = 'publicado'
-", ['slug' => $slug]);
+
+if (!empty($slug)) {
+    // Buscar pelo slug
+    $artigo = $db->fetch("
+        SELECT a.*, c.nome as categoria_nome, c.slug as categoria_slug, u.nome as autor_nome
+        FROM artigos_blog a
+        LEFT JOIN categorias_blog c ON a.categoria_id = c.id
+        LEFT JOIN usuarios u ON a.autor_id = u.id
+        WHERE a.slug = :slug AND a.status = 'publicado'
+    ", ['slug' => $slug]);
+    
+    error_log('Busca por slug: ' . ($artigo ? 'Artigo encontrado' : 'Artigo não encontrado'));
+} else {
+    // Buscar pelo ID (para visualização administrativa)
+    $artigo = $db->fetch("
+        SELECT a.*, c.nome as categoria_nome, c.slug as categoria_slug, u.nome as autor_nome
+        FROM artigos_blog a
+        LEFT JOIN categorias_blog c ON a.categoria_id = c.id
+        LEFT JOIN usuarios u ON a.autor_id = u.id
+        WHERE a.id = :id
+    ", ['id' => $id]);
+    
+    error_log('Busca por ID: ' . ($artigo ? 'Artigo encontrado' : 'Artigo não encontrado'));
+}
 
 if (!$artigo) {
     echo '<div class="alert alert-danger">Artigo não encontrado.</div>';

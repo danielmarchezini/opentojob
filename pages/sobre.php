@@ -37,7 +37,7 @@
                     
                     if ($tem_foto): 
                     ?>
-                        <img src="<?php echo SITE_URL . '/open2w/' . $membro['foto']; ?>" alt="Foto de <?php echo htmlspecialchars($membro['nome']); ?>">
+                        <img src="<?php echo SITE_URL . '/open2w/' . $membro['foto']; ?>" alt="Foto de <?php echo htmlspecialchars((string)$membro['nome']); ?>">
                     <?php else: 
                         // Gerar iniciais do nome
                         $nome_partes = explode(' ', $membro['nome']);
@@ -70,22 +70,22 @@
                         </div>
                     <?php endif; ?>
                 </div>
-                <h3 class="member-name"><?php echo htmlspecialchars($membro['nome']); ?></h3>
-                <p class="member-position"><?php echo htmlspecialchars($membro['profissao']); ?></p>
+                <h3 class="member-name"><?php echo htmlspecialchars((string)$membro['nome']); ?></h3>
+                <p class="member-position"><?php echo htmlspecialchars((string)$membro['profissao']); ?></p>
                 
                 <?php if (!empty($membro['subtitulo'])): ?>
-                <p class="member-subtitle"><?php echo htmlspecialchars($membro['subtitulo']); ?></p>
+                <p class="member-subtitle"><?php echo htmlspecialchars((string)$membro['subtitulo']); ?></p>
                 <?php endif; ?>
                 
                 <?php if (!empty($membro['comentarios'])): ?>
                 <div class="member-bio">
-                    <?php echo nl2br(htmlspecialchars($membro['comentarios'])); ?>
+                    <?php echo nl2br(htmlspecialchars((string)$membro['comentarios'])); ?>
                 </div>
                 <?php endif; ?>
                 
                 <?php if (!empty($membro['linkedin'])): ?>
                 <div class="member-social">
-                    <a href="<?php echo htmlspecialchars($membro['linkedin']); ?>" class="social-link" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="<?php echo htmlspecialchars((string)$membro['linkedin']); ?>" class="social-link" target="_blank"><i class="fab fa-linkedin-in"></i></a>
                 </div>
                 <?php endif; ?>
             </div>

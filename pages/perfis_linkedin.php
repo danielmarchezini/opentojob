@@ -80,7 +80,7 @@ $assuntos = $db->fetchAll("
                     
                     <div class="col-md-6">
                         <label for="busca" class="form-label">Buscar por nome ou palavra-chave</label>
-                        <input type="text" class="form-control" id="busca" name="busca" placeholder="Digite um nome ou palavra-chave" value="<?php echo htmlspecialchars($busca); ?>">
+                        <input type="text" class="form-control" id="busca" name="busca" placeholder="Digite um nome ou palavra-chave" value="<?php echo htmlspecialchars((string)$busca); ?>">
                     </div>
                     
                     <div class="col-md-4">
@@ -88,8 +88,8 @@ $assuntos = $db->fetchAll("
                         <select class="form-select" id="assunto" name="assunto">
                             <option value="">Todos os assuntos</option>
                             <?php foreach ($assuntos as $assunto): ?>
-                                <option value="<?php echo htmlspecialchars($assunto['assunto']); ?>" <?php echo ($filtro_assunto == $assunto['assunto']) ? 'selected' : ''; ?>>
-                                    <?php echo htmlspecialchars($assunto['assunto']); ?>
+                                <option value="<?php echo htmlspecialchars((string)$assunto['assunto']); ?>" <?php echo ($filtro_assunto == $assunto['assunto']) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars((string)$assunto['assunto']); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -137,18 +137,18 @@ $assuntos = $db->fetchAll("
                             <?php endif; ?>
                             
                             <div class="profile-img-container">
-                                <img src="<?php echo SITE_URL; ?>/uploads/perfis_linkedin/<?php echo htmlspecialchars($perfil['foto']); ?>" 
+                                <img src="<?php echo SITE_URL; ?>/uploads/perfis_linkedin/<?php echo htmlspecialchars((string)$perfil['foto']); ?>" 
                                      class="card-img-top profile-img" 
-                                     alt="<?php echo htmlspecialchars($perfil['nome']); ?>">
+                                     alt="<?php echo htmlspecialchars((string)$perfil['nome']); ?>">
                             </div>
                             
                             <div class="card-body">
-                                <h5 class="card-title"><?php echo htmlspecialchars($perfil['nome']); ?></h5>
+                                <h5 class="card-title"><?php echo htmlspecialchars((string)$perfil['nome']); ?></h5>
                                 <p class="card-text profile-topic">
-                                    <i class="fas fa-tag me-2"></i><?php echo htmlspecialchars($perfil['assunto']); ?>
+                                    <i class="fas fa-tag me-2"></i><?php echo htmlspecialchars((string)$perfil['assunto']); ?>
                                 </p>
                                 
-                                <a href="<?php echo htmlspecialchars($perfil['link_perfil']); ?>" 
+                                <a href="<?php echo htmlspecialchars((string)$perfil['link_perfil']); ?>" 
                                    class="btn btn-linkedin w-100" 
                                    target="_blank">
                                     <i class="fab fa-linkedin me-2"></i>Ver perfil

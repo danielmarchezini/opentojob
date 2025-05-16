@@ -56,19 +56,64 @@ switch ($acao) {
         break;
         
     case 'excluir':
-        // Excluir talento
-        // Primeiro, excluir registros relacionados na tabela talentos
-        $db->delete('talentos', 'usuario_id = :usuario_id', [
-            'usuario_id' => $talento_id
-        ]);
-        
-        // Em seguida, excluir o usuário
-        $db->delete('usuarios', 'id = :id', [
-            'id' => $talento_id
-        ]);
-        
-        $_SESSION['flash_message'] = "Talento excluído com sucesso!";
-        $_SESSION['flash_type'] = "success";
+        try {
+            // Iniciar transação para garantir que todas as exclusões sejam feitas ou nenhuma
+            $db->beginTransaction();
+            
+            // Registrar a ação para fins de depuração
+            error_log("Iniciando exclusão do talento ID: {$talento_id}");
+            
+            // Excluir depoimentos relacionados ao talento
+            $db->delete('depoimentos', 'talento_id = :talento_id', [
+                'talento_id' => $talento_id
+            ]);
+            error_log("Depoimentos do talento {$talento_id} excluídos");
+            
+            // Excluir registros relacionados na tabela talentos
+            $db->delete('talentos', 'usuario_id = :usuario_id', [
+                'usuario_id' => $talento_id
+            ]);
+            error_log("Registro de talento {$talento_id} excluído");
+            
+            // Excluir registros relacionados na tabela usuarios_senha
+            $db->delete('usuarios_senha', 'usuario_id = :usuario_id', [
+                'usuario_id' => $talento_id
+            ]);
+            error_log("Registros de senha do usuário {$talento_id} excluídos");
+            
+            // Excluir candidaturas do talento
+            $db->delete('candidaturas', 'talento_id = :talento_id', [
+                'talento_id' => $talento_id
+            ]);
+            error_log("Candidaturas do talento {$talento_id} excluídas");
+            
+            // Excluir favoritos relacionados ao talento
+            $db->delete('talentos_favoritos', 'talento_id = :talento_id', [
+                'talento_id' => $talento_id
+            ]);
+            error_log("Favoritos do talento {$talento_id} excluídos");
+            
+            // Por último, excluir o usuário
+            $db->delete('usuarios', 'id = :id', [
+                'id' => $talento_id
+            ]);
+            error_log("Usuário {$talento_id} excluído");
+            
+            // Confirmar transação
+            $db->commit();
+            error_log("Transação confirmada - Talento {$talento_id} completamente excluído");
+            
+            $_SESSION['flash_message'] = "Talento excluído com sucesso!";
+            $_SESSION['flash_type'] = "success";
+        } catch (Exception $e) {
+            // Reverter transação em caso de erro
+            $db->rollBack();
+            
+            error_log('Erro ao excluir talento: ' . $e->getMessage());
+            
+            $_SESSION['flash_message'] = "Erro ao excluir talento: " . $e->getMessage();
+            $_SESSION['flash_type'] = "danger";
+        }
         break;
         
     case 'editar':

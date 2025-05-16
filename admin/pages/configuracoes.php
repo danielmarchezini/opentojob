@@ -9,11 +9,11 @@ $db = Database::getInstance();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['salvar_configuracoes'])) {
     // Validar e salvar configurações
     $configuracoes = [
-        'site_titulo' => htmlspecialchars(trim($_POST['site_titulo'] ?? ''), ENT_QUOTES, 'UTF-8'),
-        'site_descricao' => htmlspecialchars(trim($_POST['site_descricao'] ?? ''), ENT_QUOTES, 'UTF-8'),
+        'site_titulo' => htmlspecialchars((string)trim($_POST['site_titulo'] ?? ''), ENT_QUOTES, 'UTF-8'),
+        'site_descricao' => htmlspecialchars((string)trim($_POST['site_descricao'] ?? ''), ENT_QUOTES, 'UTF-8'),
         'email_contato' => filter_input(INPUT_POST, 'email_contato', FILTER_SANITIZE_EMAIL),
-        'telefone_contato' => htmlspecialchars(trim($_POST['telefone_contato'] ?? ''), ENT_QUOTES, 'UTF-8'),
-        'endereco' => htmlspecialchars(trim($_POST['endereco'] ?? ''), ENT_QUOTES, 'UTF-8'),
+        'telefone_contato' => htmlspecialchars((string)trim($_POST['telefone_contato'] ?? ''), ENT_QUOTES, 'UTF-8'),
+        'endereco' => htmlspecialchars((string)trim($_POST['endereco'] ?? ''), ENT_QUOTES, 'UTF-8'),
         'redes_sociais_facebook' => filter_input(INPUT_POST, 'redes_sociais_facebook', FILTER_SANITIZE_URL),
         'redes_sociais_instagram' => filter_input(INPUT_POST, 'redes_sociais_instagram', FILTER_SANITIZE_URL),
         'redes_sociais_linkedin' => filter_input(INPUT_POST, 'redes_sociais_linkedin', FILTER_SANITIZE_URL),
@@ -155,23 +155,23 @@ endif; ?>
                         <div class="card-body">
                             <div class="mb-3">
                                 <label for="site_titulo" class="form-label">Título do Site</label>
-                                <input type="text" class="form-control" id="site_titulo" name="site_titulo" value="<?php echo htmlspecialchars($configuracoes['site_titulo']); ?>">
+                                <input type="text" class="form-control" id="site_titulo" name="site_titulo" value="<?php echo htmlspecialchars((string)$configuracoes['site_titulo']); ?>">
                             </div>
                             <div class="mb-3">
                                 <label for="site_descricao" class="form-label">Descrição do Site</label>
-                                <textarea class="form-control" id="site_descricao" name="site_descricao" rows="3"><?php echo htmlspecialchars($configuracoes['site_descricao']); ?></textarea>
+                                <textarea class="form-control" id="site_descricao" name="site_descricao" rows="3"><?php echo htmlspecialchars((string)$configuracoes['site_descricao']); ?></textarea>
                             </div>
                             <div class="mb-3">
                                 <label for="email_contato" class="form-label">E-mail de Contato</label>
-                                <input type="email" class="form-control" id="email_contato" name="email_contato" value="<?php echo htmlspecialchars($configuracoes['email_contato']); ?>">
+                                <input type="email" class="form-control" id="email_contato" name="email_contato" value="<?php echo htmlspecialchars((string)$configuracoes['email_contato']); ?>">
                             </div>
                             <div class="mb-3">
                                 <label for="telefone_contato" class="form-label">Telefone de Contato</label>
-                                <input type="text" class="form-control" id="telefone_contato" name="telefone_contato" value="<?php echo htmlspecialchars($configuracoes['telefone_contato']); ?>">
+                                <input type="text" class="form-control" id="telefone_contato" name="telefone_contato" value="<?php echo htmlspecialchars((string)$configuracoes['telefone_contato']); ?>">
                             </div>
                             <div class="mb-3">
                                 <label for="endereco" class="form-label">Endereço</label>
-                                <input type="text" class="form-control" id="endereco" name="endereco" value="<?php echo htmlspecialchars($configuracoes['endereco']); ?>">
+                                <input type="text" class="form-control" id="endereco" name="endereco" value="<?php echo htmlspecialchars((string)$configuracoes['endereco']); ?>">
                             </div>
                         </div>
                     </div>
@@ -186,19 +186,19 @@ endif; ?>
                         <div class="card-body">
                             <div class="mb-3">
                                 <label for="redes_sociais_facebook" class="form-label">Facebook</label>
-                                <input type="url" class="form-control" id="redes_sociais_facebook" name="redes_sociais_facebook" value="<?php echo htmlspecialchars($configuracoes['redes_sociais_facebook']); ?>">
+                                <input type="url" class="form-control" id="redes_sociais_facebook" name="redes_sociais_facebook" value="<?php echo htmlspecialchars((string)$configuracoes['redes_sociais_facebook']); ?>">
                             </div>
                             <div class="mb-3">
                                 <label for="redes_sociais_instagram" class="form-label">Instagram</label>
-                                <input type="url" class="form-control" id="redes_sociais_instagram" name="redes_sociais_instagram" value="<?php echo htmlspecialchars($configuracoes['redes_sociais_instagram']); ?>">
+                                <input type="url" class="form-control" id="redes_sociais_instagram" name="redes_sociais_instagram" value="<?php echo htmlspecialchars((string)$configuracoes['redes_sociais_instagram']); ?>">
                             </div>
                             <div class="mb-3">
                                 <label for="redes_sociais_linkedin" class="form-label">LinkedIn</label>
-                                <input type="url" class="form-control" id="redes_sociais_linkedin" name="redes_sociais_linkedin" value="<?php echo htmlspecialchars($configuracoes['redes_sociais_linkedin']); ?>">
+                                <input type="url" class="form-control" id="redes_sociais_linkedin" name="redes_sociais_linkedin" value="<?php echo htmlspecialchars((string)$configuracoes['redes_sociais_linkedin']); ?>">
                             </div>
                             <div class="mb-3">
                                 <label for="redes_sociais_twitter" class="form-label">Twitter</label>
-                                <input type="url" class="form-control" id="redes_sociais_twitter" name="redes_sociais_twitter" value="<?php echo htmlspecialchars($configuracoes['redes_sociais_twitter']); ?>">
+                                <input type="url" class="form-control" id="redes_sociais_twitter" name="redes_sociais_twitter" value="<?php echo htmlspecialchars((string)$configuracoes['redes_sociais_twitter']); ?>">
                             </div>
                         </div>
                     </div>

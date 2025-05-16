@@ -85,7 +85,7 @@ $is_logged_in = isset($_SESSION['user_id']);
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>">Home</a></li>
                         <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>/?route=empresas">Empresas</a></li>
-                        <li class="breadcrumb-item active" aria-current="page"><?php echo htmlspecialchars($empresa['razao_social'] ?: $empresa['nome']); ?></li>
+                        <li class="breadcrumb-item active" aria-current="page"><?php echo htmlspecialchars((string)$empresa['razao_social'] ?: $empresa['nome']); ?></li>
                     </ol>
                 </nav>
             </div>
@@ -102,7 +102,7 @@ $is_logged_in = isset($_SESSION['user_id']);
                     <div class="col-lg-2 col-md-3 text-center mb-3 mb-md-0">
                         <div class="perfil-logo">
                             <?php if (!empty($empresa['logo'])): ?>
-                                <img src="<?php echo SITE_URL; ?>/uploads/empresas/<?php echo $empresa['logo']; ?>" alt="<?php echo htmlspecialchars($empresa['razao_social'] ?: $empresa['nome']); ?>" class="img-fluid rounded-circle shadow">
+                                <img src="<?php echo SITE_URL; ?>/uploads/empresas/<?php echo $empresa['logo']; ?>" alt="<?php echo htmlspecialchars((string)$empresa['razao_social'] ?: $empresa['nome']); ?>" class="img-fluid rounded-circle shadow">
                             <?php else: ?>
                                 <div class="logo-placeholder rounded-circle shadow bg-primary text-white">
                                     <?php echo strtoupper(substr($empresa['razao_social'] ?: $empresa['nome'], 0, 1)); ?>
@@ -112,12 +112,12 @@ $is_logged_in = isset($_SESSION['user_id']);
                     </div>
                     <div class="col-lg-7 col-md-6">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h1 class="display-6 mb-1"><?php echo htmlspecialchars($empresa['razao_social'] ?: $empresa['nome']); ?></h1>
+                            <h1 class="display-6 mb-1"><?php echo htmlspecialchars((string)$empresa['razao_social'] ?: $empresa['nome']); ?></h1>
                             <button type="button" class="btn btn-link text-muted" style="font-size: 0.8rem; padding: 0;" data-bs-toggle="modal" data-bs-target="#reportarModal" title="Reportar perfil">
                                 <i class="fas fa-flag"></i>
                             </button>
                         </div>
-                        <p class="lead text-muted mb-2"><?php echo htmlspecialchars($empresa['segmento'] ?? 'Empresa'); ?></p>
+                        <p class="lead text-muted mb-2"><?php echo htmlspecialchars((string)$empresa['segmento'] ?? 'Empresa'); ?></p>
                         <div class="d-flex flex-wrap align-items-center">
                             <span class="badge bg-light text-dark me-2 mb-2">
                                 <i class="fas fa-calendar-alt me-1"></i>
@@ -125,27 +125,27 @@ $is_logged_in = isset($_SESSION['user_id']);
                             </span>
                             
                             <?php if (!empty($empresa['site'])): ?>
-                                <a href="<?php echo htmlspecialchars($empresa['site']); ?>" target="_blank" class="badge bg-light text-dark me-2 mb-2">
+                                <a href="<?php echo htmlspecialchars((string)$empresa['site']); ?>" target="_blank" class="badge bg-light text-dark me-2 mb-2">
                                     <i class="fas fa-globe me-1"></i>
-                                    <?php echo htmlspecialchars(preg_replace('#^https?://#', '', $empresa['site'])); ?>
+                                    <?php echo htmlspecialchars((string)preg_replace('#^https?://#', '', $empresa['site'])); ?>
                                 </a>
                             <?php endif; ?>
                             
                             <!-- Redes sociais -->
                             <?php if (!empty($empresa['linkedin'])): ?>
-                                <a href="<?php echo htmlspecialchars($empresa['linkedin']); ?>" class="badge bg-light text-dark me-2 mb-2" target="_blank" title="LinkedIn">
+                                <a href="<?php echo htmlspecialchars((string)$empresa['linkedin']); ?>" class="badge bg-light text-dark me-2 mb-2" target="_blank" title="LinkedIn">
                                     <i class="fab fa-linkedin me-1"></i> LinkedIn
                                 </a>
                             <?php endif; ?>
                             
                             <?php if (!empty($empresa['facebook'])): ?>
-                                <a href="<?php echo htmlspecialchars($empresa['facebook']); ?>" class="badge bg-light text-dark me-2 mb-2" target="_blank" title="Facebook">
+                                <a href="<?php echo htmlspecialchars((string)$empresa['facebook']); ?>" class="badge bg-light text-dark me-2 mb-2" target="_blank" title="Facebook">
                                     <i class="fab fa-facebook me-1"></i> Facebook
                                 </a>
                             <?php endif; ?>
                             
                             <?php if (!empty($empresa['instagram'])): ?>
-                                <a href="<?php echo htmlspecialchars($empresa['instagram']); ?>" class="badge bg-light text-dark me-2 mb-2" target="_blank" title="Instagram">
+                                <a href="<?php echo htmlspecialchars((string)$empresa['instagram']); ?>" class="badge bg-light text-dark me-2 mb-2" target="_blank" title="Instagram">
                                     <i class="fab fa-instagram me-1"></i> Instagram
                                 </a>
                             <?php endif; ?>
@@ -180,8 +180,8 @@ $is_logged_in = isset($_SESSION['user_id']);
                                         </div>
                                         <div class="flex-grow-1 ms-3">
                                             <h6 class="mb-0">Email</h6>
-                                            <a href="mailto:<?php echo htmlspecialchars($empresa['email']); ?>" class="text-muted">
-                                                <?php echo htmlspecialchars($empresa['email']); ?>
+                                            <a href="mailto:<?php echo htmlspecialchars((string)$empresa['email']); ?>" class="text-muted">
+                                                <?php echo htmlspecialchars((string)$empresa['email']); ?>
                                             </a>
                                         </div>
                                     </div>
@@ -196,8 +196,8 @@ $is_logged_in = isset($_SESSION['user_id']);
                                         </div>
                                         <div class="flex-grow-1 ms-3">
                                             <h6 class="mb-0">Website</h6>
-                                            <a href="<?php echo htmlspecialchars($empresa['site']); ?>" target="_blank" class="text-muted">
-                                                <?php echo htmlspecialchars(preg_replace('#^https?://#', '', $empresa['site'])); ?>
+                                            <a href="<?php echo htmlspecialchars((string)$empresa['site']); ?>" target="_blank" class="text-muted">
+                                                <?php echo htmlspecialchars((string)preg_replace('#^https?://#', '', $empresa['site'])); ?>
                                             </a>
                                         </div>
                                     </div>
@@ -223,7 +223,7 @@ $is_logged_in = isset($_SESSION['user_id']);
                                     </div>
                                     <div class="flex-grow-1 ms-3">
                                         <h6 class="mb-0">Segmento</h6>
-                                        <span class="text-muted"><?php echo htmlspecialchars($empresa['segmento'] ?? 'Não informado'); ?></span>
+                                        <span class="text-muted"><?php echo htmlspecialchars((string)$empresa['segmento'] ?? 'Não informado'); ?></span>
                                     </div>
                                 </div>
                             </li>
@@ -264,12 +264,12 @@ $is_logged_in = isset($_SESSION['user_id']);
                 <!-- Sobre a empresa -->
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header bg-white">
-                        <h5 class="mb-0"><i class="fas fa-building me-2 text-primary"></i>Sobre <?php echo htmlspecialchars($empresa['razao_social'] ?: $empresa['nome']); ?></h5>
+                        <h5 class="mb-0"><i class="fas fa-building me-2 text-primary"></i>Sobre <?php echo htmlspecialchars((string)$empresa['razao_social'] ?: $empresa['nome']); ?></h5>
                     </div>
                     <div class="card-body">
                         <?php if (!empty($empresa['descricao'])): ?>
                             <div class="descricao">
-                                <?php echo nl2br(htmlspecialchars($empresa['descricao'])); ?>
+                                <?php echo nl2br(htmlspecialchars((string)$empresa['descricao'])); ?>
                             </div>
                         <?php else: ?>
                             <div class="alert alert-light border">
@@ -299,17 +299,17 @@ $is_logged_in = isset($_SESSION['user_id']);
                                             <div class="card-body">
                                                 <h5 class="card-title">
                                                     <a href="<?php echo SITE_URL; ?>/?route=visualizar_demanda&id=<?php echo $demanda['id']; ?>" class="text-decoration-none">
-                                                        <?php echo htmlspecialchars($demanda['titulo']); ?>
+                                                        <?php echo htmlspecialchars((string)$demanda['titulo']); ?>
                                                     </a>
                                                 </h5>
                                                 <div class="d-flex flex-wrap mb-2">
                                                     <?php if (!empty($demanda['tipo_contrato'])): ?>
-                                                    <span class="badge bg-accent text-white me-2 mb-1"><?php echo htmlspecialchars($demanda['tipo_contrato']); ?></span>
+                                                    <span class="badge bg-accent text-white me-2 mb-1"><?php echo htmlspecialchars((string)$demanda['tipo_contrato']); ?></span>
                                                     <?php endif; ?>
                                                     <?php if (!empty($demanda['nivel_experiencia'])): ?>
                                                     <span class="badge bg-light text-dark mb-1">
                                                         <i class="fas fa-user-graduate me-1"></i>
-                                                        <?php echo htmlspecialchars($demanda['nivel_experiencia']); ?>
+                                                        <?php echo htmlspecialchars((string)$demanda['nivel_experiencia']); ?>
                                                     </span>
                                                     <?php endif; ?>
                                                 </div>
@@ -357,14 +357,14 @@ $is_logged_in = isset($_SESSION['user_id']);
                                             <div class="card-body">
                                                 <h5 class="card-title">
                                                     <a href="<?php echo SITE_URL; ?>/?route=vaga&id=<?php echo $vaga['id']; ?>" class="text-decoration-none">
-                                                        <?php echo htmlspecialchars($vaga['titulo']); ?>
+                                                        <?php echo htmlspecialchars((string)$vaga['titulo']); ?>
                                                     </a>
                                                 </h5>
                                                 <div class="d-flex flex-wrap mb-2">
-                                                    <span class="badge bg-primary me-2 mb-1"><?php echo htmlspecialchars($vaga['tipo_contrato']); ?></span>
+                                                    <span class="badge bg-primary me-2 mb-1"><?php echo htmlspecialchars((string)$vaga['tipo_contrato']); ?></span>
                                                     <span class="badge bg-light text-dark mb-1">
                                                         <i class="fas fa-map-marker-alt me-1"></i>
-                                                        <?php echo htmlspecialchars($vaga['cidade'] . ($vaga['estado'] ? ' - ' . $vaga['estado'] : '')); ?>
+                                                        <?php echo htmlspecialchars((string)$vaga['cidade'] . ($vaga['estado'] ? ' - ' . $vaga['estado'] : '')); ?>
                                                     </span>
                                                 </div>
                                                 <p class="card-text small text-muted">

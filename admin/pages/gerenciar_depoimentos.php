@@ -1,4 +1,9 @@
 <?php
+// Garantir que o buffer de saída esteja ativo para evitar erros de headers already sent
+if (!ob_get_level()) {
+    ob_start();
+}
+
 // Verificar se o usuário está logado e é um administrador
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'admin') {
     header('Location: ' . SITE_URL . '/admin/login.php');
@@ -126,21 +131,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Excluir depoimento
     if (isset($_POST['action']) && $_POST['action'] === 'delete') {
+        // Registrar dados recebidos para depuração
+        error_log('Ação de exclusão recebida. POST: ' . print_r($_POST, true));
+        
         $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
+        error_log('ID a ser excluído: ' . $id);
         
         if ($id > 0) {
             try {
-                $db->execute("DELETE FROM depoimentos WHERE id = :id", ['id' => $id]);
+                // Iniciar transação para garantir integridade dos dados
+                $db->beginTransaction();
                 
-                $_SESSION['flash_message'] = "Depoimento excluído com sucesso!";
-                $_SESSION['flash_type'] = "success";
+                // Obter informações do depoimento antes de excluir
+                $depoimento = $db->fetchRow("SELECT * FROM depoimentos WHERE id = :id", ['id' => $id]);
+                error_log('Depoimento encontrado: ' . ($depoimento ? 'Sim' : 'Não'));
+                
+                if ($depoimento) {
+                    // Obter o ID do usuário associado ao talento
+                    $talento_id = $depoimento['talento_id'];
+                    error_log('ID do talento associado: ' . $talento_id);
+                    
+                    // Excluir o depoimento
+                    $db->execute("DELETE FROM depoimentos WHERE id = :id", ['id' => $id]);
+                    error_log('Depoimento excluído com sucesso');
+                    
+                    // Verificar se o usuário existe
+                    $usuario_existe = $db->fetchColumn("SELECT COUNT(*) FROM usuarios WHERE id = :id", ['id' => $talento_id]);
+                    error_log('Usuário existe? ' . ($usuario_existe ? 'Sim' : 'Não'));
+                    
+                    if ($usuario_existe) {
+                        // Excluir o usuário associado ao talento
+                        $db->execute("DELETE FROM usuarios WHERE id = :id", ['id' => $talento_id]);
+                        error_log('Usuário ' . $talento_id . ' excluído com sucesso');
+                        
+                        $_SESSION['flash_message'] = "Depoimento e usuário associado excluídos com sucesso!";
+                    } else {
+                        $_SESSION['flash_message'] = "Depoimento excluído com sucesso! (Usuário não encontrado)";
+                    }
+                    
+                    $_SESSION['flash_type'] = "success";
+                    
+                    // Confirmar a transação
+                    $db->commit();
+                } else {
+                    $db->rollBack();
+                    $_SESSION['flash_message'] = "Depoimento não encontrado";
+                    $_SESSION['flash_type'] = "danger";
+                    error_log('Depoimento ' . $id . ' não encontrado');
+                }
             } catch (PDOException $e) {
+                // Reverter a transação em caso de erro
+                $db->rollBack();
                 $_SESSION['flash_message'] = "Erro ao excluir depoimento: " . $e->getMessage();
                 $_SESSION['flash_type'] = "danger";
+                error_log('Erro ao excluir depoimento: ' . $e->getMessage());
             }
         } else {
             $_SESSION['flash_message'] = "ID de depoimento inválido";
             $_SESSION['flash_type'] = "danger";
+            error_log('ID de depoimento inválido: ' . $id);
         }
     }
     
@@ -162,7 +211,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     // Redirecionar para evitar reenvio do formulário
-    header('Location: ' . SITE_URL . '/admin/?page=gerenciar_depoimentos');
+    echo "<script>window.location.href = '" . SITE_URL . "/admin/?page=gerenciar_depoimentos';</script>";
     exit;
 }
 
@@ -256,7 +305,7 @@ try {
                         <select class="form-select" id="talento_id" name="talento_id" required>
                             <option value="">Selecione um talento</option>
                             <?php foreach ($talentos as $talento): ?>
-                                <option value="<?php echo $talento['id']; ?>"><?php echo htmlspecialchars($talento['nome']); ?> - <?php echo htmlspecialchars($talento['profissao']); ?></option>
+                                <option value="<?php echo $talento['id']; ?>"><?php echo htmlspecialchars((string)$talento['nome']); ?> - <?php echo htmlspecialchars((string)$talento['profissao']); ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -313,10 +362,10 @@ try {
                     <?php foreach ($depoimentos as $depoimento): ?>
                         <tr>
                             <td><?php echo $depoimento['id']; ?></td>
-                            <td><?php echo htmlspecialchars($depoimento['talento_nome']); ?></td>
-                            <td><?php echo htmlspecialchars($depoimento['nome']); ?></td>
-                            <td><?php echo htmlspecialchars($depoimento['empresa']); ?></td>
-                            <td><?php echo htmlspecialchars($depoimento['cargo']); ?></td>
+                            <td><?php echo htmlspecialchars((string)$depoimento['talento_nome']); ?></td>
+                            <td><?php echo htmlspecialchars((string)$depoimento['nome']); ?></td>
+                            <td><?php echo htmlspecialchars((string)$depoimento['empresa']); ?></td>
+                            <td><?php echo htmlspecialchars((string)$depoimento['cargo']); ?></td>
                             <td><?php echo htmlspecialchars(substr($depoimento['depoimento'], 0, 100)) . (strlen($depoimento['depoimento']) > 100 ? '...' : ''); ?></td>
                             <td>
                                 <span class="badge bg-<?php 
@@ -338,7 +387,7 @@ try {
                                             <input type="hidden" name="action" value="update_status">
                                             <input type="hidden" name="id" value="<?php echo $depoimento['id']; ?>">
                                             <input type="hidden" name="status" value="aprovado">
-                                            <button type="submit" class="btn btn-sm btn-success" onclick="return confirm('Aprovar este depoimento?')">
+                                            <button type="submit" class="btn btn-sm btn-success confirm-action" data-message="Aprovar este depoimento?">
                                                 <i class="fas fa-check"></i>
                                             </button>
                                         </form>
@@ -349,16 +398,16 @@ try {
                                             <input type="hidden" name="action" value="update_status">
                                             <input type="hidden" name="id" value="<?php echo $depoimento['id']; ?>">
                                             <input type="hidden" name="status" value="rejeitado">
-                                            <button type="submit" class="btn btn-sm btn-warning" onclick="return confirm('Rejeitar este depoimento?')">
+                                            <button type="submit" class="btn btn-sm btn-warning confirm-action" data-message="Rejeitar este depoimento?">
                                                 <i class="fas fa-ban"></i>
                                             </button>
                                         </form>
                                     <?php endif; ?>
                                     
-                                    <form method="post" action="" class="d-inline">
+                                    <form method="post" action="" class="d-inline delete-form" id="delete-form-<?php echo $depoimento['id']; ?>">
                                         <input type="hidden" name="action" value="delete">
                                         <input type="hidden" name="id" value="<?php echo $depoimento['id']; ?>">
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir este depoimento?')">
+                                        <button type="button" class="btn btn-sm btn-danger delete-btn" data-id="<?php echo $depoimento['id']; ?>">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
@@ -369,16 +418,16 @@ try {
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="viewDepoimentoModalLabel<?php echo $depoimento['id']; ?>">Depoimento de <?php echo htmlspecialchars($depoimento['nome']); ?></h5>
+                                                <h5 class="modal-title" id="viewDepoimentoModalLabel<?php echo $depoimento['id']; ?>">Depoimento de <?php echo htmlspecialchars((string)$depoimento['nome']); ?></h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
                                                 <div class="row mb-3">
                                                     <div class="col-md-6">
-                                                        <p><strong>Talento:</strong> <?php echo htmlspecialchars($depoimento['talento_nome']); ?></p>
-                                                        <p><strong>Nome exibido:</strong> <?php echo htmlspecialchars($depoimento['nome']); ?></p>
-                                                        <p><strong>Empresa:</strong> <?php echo htmlspecialchars($depoimento['empresa']); ?></p>
-                                                        <p><strong>Cargo:</strong> <?php echo htmlspecialchars($depoimento['cargo']); ?></p>
+                                                        <p><strong>Talento:</strong> <?php echo htmlspecialchars((string)$depoimento['talento_nome']); ?></p>
+                                                        <p><strong>Nome exibido:</strong> <?php echo htmlspecialchars((string)$depoimento['nome']); ?></p>
+                                                        <p><strong>Empresa:</strong> <?php echo htmlspecialchars((string)$depoimento['empresa']); ?></p>
+                                                        <p><strong>Cargo:</strong> <?php echo htmlspecialchars((string)$depoimento['cargo']); ?></p>
                                                         <p><strong>Status:</strong> 
                                                             <span class="badge bg-<?php 
                                                                 echo $depoimento['status'] === 'aprovado' ? 'success' : 
@@ -391,7 +440,7 @@ try {
                                                     </div>
                                                     <div class="col-md-6">
                                                         <?php if (!empty($depoimento['foto'])): ?>
-                                                            <img src="<?php echo SITE_URL; ?>/uploads/perfil/<?php echo $depoimento['foto']; ?>" alt="<?php echo htmlspecialchars($depoimento['nome']); ?>" class="img-fluid rounded" style="max-height: 200px;">
+                                                            <img src="<?php echo SITE_URL; ?>/uploads/perfil/<?php echo $depoimento['foto']; ?>" alt="<?php echo htmlspecialchars((string)$depoimento['nome']); ?>" class="img-fluid rounded" style="max-height: 200px;">
                                                         <?php else: ?>
                                                             <div class="alert alert-info">Sem foto de perfil</div>
                                                         <?php endif; ?>
@@ -401,7 +450,7 @@ try {
                                                 <div class="card">
                                                     <div class="card-header">Depoimento</div>
                                                     <div class="card-body">
-                                                        <p><?php echo nl2br(htmlspecialchars($depoimento['depoimento'])); ?></p>
+                                                        <p><?php echo nl2br(htmlspecialchars((string)$depoimento['depoimento'])); ?></p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -463,5 +512,32 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    
+    // Adicionar confirmação aos botões com a classe confirm-action
+    document.querySelectorAll('.confirm-action').forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            e.preventDefault(); // Impedir o envio do formulário
+            
+            const message = this.getAttribute('data-message') || 'Confirmar esta ação?';
+            
+            if (confirm(message)) {
+                // Se o usuário confirmar, enviar o formulário
+                this.closest('form').submit();
+            }
+        });
+    });
+    
+    // Manipular botões de exclusão separadamente
+    document.querySelectorAll('.delete-btn').forEach(function(button) {
+        button.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            const form = document.getElementById('delete-form-' + id);
+            
+            if (confirm('Tem certeza que deseja excluir este depoimento?')) {
+                // Enviar o formulário diretamente via JavaScript
+                form.submit();
+            }
+        });
+    });
 });
 </script>

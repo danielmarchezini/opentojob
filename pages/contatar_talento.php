@@ -109,14 +109,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="row">
             <div class="col-lg-8">
                 <h1>Contatar Talento</h1>
-                <p class="lead">Envie uma mensagem para <?php echo htmlspecialchars($talento['nome']); ?></p>
+                <p class="lead">Envie uma mensagem para <?php echo htmlspecialchars((string)$talento['nome']); ?></p>
             </div>
             <div class="col-lg-4">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>">Home</a></li>
                         <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>/?route=talentos">Talentos</a></li>
-                        <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>/?route=perfil_talento&id=<?php echo $talento_id; ?>"><?php echo htmlspecialchars($talento['nome']); ?></a></li>
+                        <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>/?route=perfil_talento&id=<?php echo $talento_id; ?>"><?php echo htmlspecialchars((string)$talento['nome']); ?></a></li>
                         <li class="breadcrumb-item active" aria-current="page">Contatar</li>
                     </ol>
                 </nav>
@@ -138,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="d-flex align-items-center mb-3">
                             <div class="talento-avatar me-3">
                                 <?php if (!empty($talento['foto_perfil'])): ?>
-                                    <img src="<?php echo SITE_URL; ?>/uploads/perfil/<?php echo $talento['foto_perfil']; ?>" alt="<?php echo htmlspecialchars($talento['nome']); ?>" class="rounded-circle">
+                                    <img src="<?php echo SITE_URL; ?>/uploads/perfil/<?php echo $talento['foto_perfil']; ?>" alt="<?php echo htmlspecialchars((string)$talento['nome']); ?>" class="rounded-circle">
                                 <?php else: ?>
                                     <div class="avatar-placeholder rounded-circle bg-primary text-white">
                                         <?php echo strtoupper(substr($talento['nome'], 0, 1)); ?>
@@ -146,8 +146,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <?php endif; ?>
                             </div>
                             <div>
-                                <h5 class="card-title mb-0"><?php echo htmlspecialchars($talento['nome']); ?></h5>
-                                <p class="text-muted mb-0"><?php echo htmlspecialchars($talento['profissao'] ?? 'Profissional'); ?></p>
+                                <h5 class="card-title mb-0"><?php echo htmlspecialchars((string)$talento['nome']); ?></h5>
+                                <p class="text-muted mb-0"><?php echo htmlspecialchars((string)$talento['profissao'] ?? 'Profissional'); ?></p>
                             </div>
                         </div>
                         
@@ -165,7 +165,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="d-flex align-items-center mb-3">
                             <div class="empresa-avatar me-3">
                                 <?php if (!empty($empresa['logo'])): ?>
-                                    <img src="<?php echo SITE_URL; ?>/uploads/empresas/<?php echo $empresa['logo']; ?>" alt="<?php echo htmlspecialchars($empresa['nome_empresa']); ?>" class="rounded">
+                                    <img src="<?php echo SITE_URL; ?>/uploads/empresas/<?php echo $empresa['logo']; ?>" alt="<?php echo htmlspecialchars((string)$empresa['nome_empresa']); ?>" class="rounded">
                                 <?php else: ?>
                                     <div class="avatar-placeholder rounded bg-secondary text-white">
                                         <?php echo strtoupper(substr($empresa['nome_empresa'] ?: $empresa['nome'], 0, 1)); ?>
@@ -173,7 +173,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <?php endif; ?>
                             </div>
                             <div>
-                                <h5 class="card-title mb-0"><?php echo htmlspecialchars($empresa['nome_empresa'] ?: $empresa['nome']); ?></h5>
+                                <h5 class="card-title mb-0"><?php echo htmlspecialchars((string)$empresa['nome_empresa'] ?: $empresa['nome']); ?></h5>
                                 <p class="text-muted mb-0">Empresa</p>
                             </div>
                         </div>

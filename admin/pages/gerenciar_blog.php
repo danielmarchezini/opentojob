@@ -163,9 +163,9 @@ try {
                         <?php foreach ($artigos as $artigo): ?>
                             <tr>
                                 <td><?php echo $artigo['id']; ?></td>
-                                <td><?php echo htmlspecialchars($artigo['titulo']); ?></td>
-                                <td><?php echo htmlspecialchars($artigo['categoria_nome']); ?></td>
-                                <td><?php echo htmlspecialchars($artigo['autor_nome']); ?></td>
+                                <td><?php echo htmlspecialchars((string)$artigo['titulo']); ?></td>
+                                <td><?php echo htmlspecialchars((string)$artigo['categoria_nome']); ?></td>
+                                <td><?php echo htmlspecialchars((string)$artigo['autor_nome']); ?></td>
                                 <td><?php echo date('d/m/Y H:i', strtotime($artigo['data_publicacao'])); ?></td>
                                 <td>
                                     <?php if ($artigo['status'] == 'publicado'): ?>
@@ -559,25 +559,43 @@ function excluirArtigo(id, titulo) {
 }
 
 // Função para pesquisar artigos na tabela
-document.getElementById('pesquisarArtigo').addEventListener('keyup', function() {
-    const termo = this.value.toLowerCase();
-    const tabela = document.querySelector('table tbody');
-    const linhas = tabela.querySelectorAll('tr');
+document.addEventListener('DOMContentLoaded', function() {
+    const pesquisarArtigo = document.getElementById('pesquisarArtigo');
     
-    linhas.forEach(linha => {
-        const texto = linha.textContent.toLowerCase();
-        if (texto.includes(termo)) {
-            linha.style.display = '';
-        } else {
-            linha.style.display = 'none';
-        }
-    });
+    if (pesquisarArtigo) {
+        pesquisarArtigo.addEventListener('keyup', function() {
+            const termo = this.value.toLowerCase();
+            const tabela = document.querySelector('table tbody');
+            const linhas = tabela.querySelectorAll('tr');
+            
+            linhas.forEach(linha => {
+                const texto = linha.textContent.toLowerCase();
+                if (texto.includes(termo)) {
+                    linha.style.display = '';
+                } else {
+                    linha.style.display = 'none';
+                }
+            });
+        });
+    }
 });
 
 // Mostrar nome do arquivo selecionado no input de arquivo
-document.querySelector('.custom-file-input').addEventListener('change', function(e) {
-    const fileName = e.target.files[0].name;
-    const label = e.target.nextElementSibling;
-    label.textContent = fileName;
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInputs = document.querySelectorAll('.custom-file-input');
+    
+    if (fileInputs.length > 0) {
+        fileInputs.forEach(input => {
+            input.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    const fileName = e.target.files[0].name;
+                    const label = e.target.nextElementSibling;
+                    if (label) {
+                        label.textContent = fileName;
+                    }
+                }
+            });
+        });
+    }
 });
 </script>

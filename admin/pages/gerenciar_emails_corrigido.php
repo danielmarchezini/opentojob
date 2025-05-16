@@ -75,9 +75,9 @@ unset($_SESSION['flash_type']);
                             <?php if (!empty($modelos)): ?>
                                 <?php foreach ($modelos as $modelo): ?>
                                     <tr>
-                                        <td><?php echo htmlspecialchars($modelo['codigo']); ?></td>
-                                        <td><?php echo htmlspecialchars($modelo['nome']); ?></td>
-                                        <td><?php echo htmlspecialchars($modelo['assunto']); ?></td>
+                                        <td><?php echo htmlspecialchars((string)$modelo['codigo']); ?></td>
+                                        <td><?php echo htmlspecialchars((string)$modelo['nome']); ?></td>
+                                        <td><?php echo htmlspecialchars((string)$modelo['assunto']); ?></td>
                                         <td>
                                             <?php 
                                             if (!empty($modelo['data_atualizacao'])) {
@@ -89,13 +89,13 @@ unset($_SESSION['flash_type']);
                                         </td>
                                         <td>
                                             <div class="btn-group">
-                                                <button type="button" class="btn btn-sm btn-info" onclick="visualizarModelo(<?php echo $modelo['id']; ?>, '<?php echo addslashes(htmlspecialchars($modelo['nome'])); ?>')">
+                                                <button type="button" class="btn btn-sm btn-info" onclick="visualizarModelo(<?php echo $modelo['id']; ?>, '<?php echo addslashes(htmlspecialchars((string)$modelo['nome'])); ?>')">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
-                                                <button type="button" class="btn btn-sm btn-primary" onclick="editarModelo(<?php echo $modelo['id']; ?>, '<?php echo addslashes(htmlspecialchars($modelo['nome'])); ?>')">
+                                                <button type="button" class="btn btn-sm btn-primary" onclick="editarModelo(<?php echo $modelo['id']; ?>, '<?php echo addslashes(htmlspecialchars((string)$modelo['nome'])); ?>')">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
-                                                <button type="button" class="btn btn-sm btn-danger" onclick="confirmarExclusao(<?php echo $modelo['id']; ?>, '<?php echo addslashes(htmlspecialchars($modelo['nome'])); ?>')">
+                                                <button type="button" class="btn btn-sm btn-danger" onclick="confirmarExclusao(<?php echo $modelo['id']; ?>, '<?php echo addslashes(htmlspecialchars((string)$modelo['nome'])); ?>')">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </div>

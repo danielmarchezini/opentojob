@@ -64,25 +64,25 @@ $talentos = $db->fetchAll("
                             <td><?php echo formatAdminDate($talento['data_cadastro']); ?></td>
                             <td>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-info" data-id="<?php echo $talento['id']; ?>" data-nome="<?php echo htmlspecialchars($talento['nome']); ?>" data-action="visualizar">
+                                    <button type="button" class="btn btn-sm btn-info" data-id="<?php echo $talento['id']; ?>" data-nome="<?php echo htmlspecialchars((string)$talento['nome']); ?>" data-action="visualizar">
                                         <i class="fas fa-eye"></i>
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-primary" data-id="<?php echo $talento['id']; ?>" data-nome="<?php echo htmlspecialchars($talento['nome']); ?>" data-action="editar">
+                                    <button type="button" class="btn btn-sm btn-primary" data-id="<?php echo $talento['id']; ?>" data-nome="<?php echo htmlspecialchars((string)$talento['nome']); ?>" data-action="editar">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-secondary" data-id="<?php echo $talento['id']; ?>" data-nome="<?php echo htmlspecialchars($talento['nome']); ?>" data-action="senha">
+                                    <button type="button" class="btn btn-sm btn-secondary" data-id="<?php echo $talento['id']; ?>" data-nome="<?php echo htmlspecialchars((string)$talento['nome']); ?>" data-action="senha">
                                         <i class="fas fa-key"></i>
                                     </button>
                                     <?php if ($talento['status'] !== 'bloqueado'): ?>
-                                    <button type="button" class="btn btn-sm btn-warning" data-id="<?php echo $talento['id']; ?>" data-nome="<?php echo htmlspecialchars($talento['nome']); ?>" data-action="bloquear">
+                                    <button type="button" class="btn btn-sm btn-warning" data-id="<?php echo $talento['id']; ?>" data-nome="<?php echo htmlspecialchars((string)$talento['nome']); ?>" data-action="bloquear">
                                         <i class="fas fa-ban"></i>
                                     </button>
                                     <?php else: ?>
-                                    <button type="button" class="btn btn-sm btn-success" data-id="<?php echo $talento['id']; ?>" data-nome="<?php echo htmlspecialchars($talento['nome']); ?>" data-action="ativar">
+                                    <button type="button" class="btn btn-sm btn-success" data-id="<?php echo $talento['id']; ?>" data-nome="<?php echo htmlspecialchars((string)$talento['nome']); ?>" data-action="ativar">
                                         <i class="fas fa-check"></i>
                                     </button>
                                     <?php endif; ?>
-                                    <button type="button" class="btn btn-sm btn-danger" data-id="<?php echo $talento['id']; ?>" data-nome="<?php echo htmlspecialchars($talento['nome']); ?>" data-action="excluir">
+                                    <button type="button" class="btn btn-sm btn-danger" data-id="<?php echo $talento['id']; ?>" data-nome="<?php echo htmlspecialchars((string)$talento['nome']); ?>" data-action="excluir">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>

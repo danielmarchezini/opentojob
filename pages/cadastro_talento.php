@@ -138,12 +138,12 @@ require_once 'includes/SmtpMailer.php';
         <form method="post" action="<?php echo SITE_URL; ?>/?route=cadastro_talento" class="auth-form">
             <div class="form-group">
                 <label for="nome" class="form-label">Nome completo *</label>
-                <input type="text" id="nome" name="nome" class="form-control" value="<?php echo isset($nome) ? htmlspecialchars($nome) : ''; ?>" required>
+                <input type="text" id="nome" name="nome" class="form-control" value="<?php echo isset($nome) ? htmlspecialchars((string)$nome) : ''; ?>" required>
             </div>
             
             <div class="form-group">
                 <label for="email" class="form-label">E-mail *</label>
-                <input type="email" id="email" name="email" class="form-control" value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>" required>
+                <input type="email" id="email" name="email" class="form-control" value="<?php echo isset($email) ? htmlspecialchars((string)$email) : ''; ?>" required>
             </div>
             
             <div class="form-row">
@@ -161,14 +161,14 @@ require_once 'includes/SmtpMailer.php';
             
             <div class="form-group">
                 <label for="linkedin" class="form-label">LinkedIn *</label>
-                <input type="url" id="linkedin" name="linkedin" class="form-control" placeholder="https://www.linkedin.com/in/seu-perfil" value="<?php echo isset($linkedin) ? htmlspecialchars($linkedin) : ''; ?>" required>
+                <input type="url" id="linkedin" name="linkedin" class="form-control" placeholder="https://www.linkedin.com/in/seu-perfil" value="<?php echo isset($linkedin) ? htmlspecialchars((string)$linkedin) : ''; ?>" required>
                 <small class="form-text">Informe a URL completa do seu perfil no LinkedIn</small>
             </div>
             
             <div class="form-row">
                 <div class="form-group col-md-8">
                     <label for="cidade" class="form-label">Cidade</label>
-                    <input type="text" id="cidade" name="cidade" class="form-control" value="<?php echo isset($cidade) ? htmlspecialchars($cidade) : ''; ?>">
+                    <input type="text" id="cidade" name="cidade" class="form-control" value="<?php echo isset($cidade) ? htmlspecialchars((string)$cidade) : ''; ?>">
                 </div>
                 
                 <div class="form-group col-md-4">

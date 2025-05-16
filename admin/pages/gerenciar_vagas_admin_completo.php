@@ -149,16 +149,16 @@ try {
                         <?php foreach ($vagas as $vaga): ?>
                             <tr>
                                 <td><?php echo $vaga['id']; ?></td>
-                                <td><?php echo htmlspecialchars($vaga['titulo']); ?></td>
+                                <td><?php echo htmlspecialchars((string)$vaga['titulo']); ?></td>
                                 <td>
                                     <?php echo ($vaga['tipo_vaga'] == 'interna') ? 'Interna' : 'Externa'; ?>
                                 </td>
                                 <td>
                                     <?php 
                                     if ($vaga['tipo_vaga'] == 'interna') {
-                                        echo htmlspecialchars($vaga['empresa_nome'] ?? 'Não informada');
+                                        echo htmlspecialchars((string)$vaga['empresa_nome'] ?? 'Não informada');
                                     } else {
-                                        echo htmlspecialchars($vaga['empresa_externa'] ?? 'Não informada');
+                                        echo htmlspecialchars((string)$vaga['empresa_externa'] ?? 'Não informada');
                                     }
                                     ?>
                                 </td>
@@ -170,9 +170,9 @@ try {
                                     echo !empty($localizacao) ? htmlspecialchars(implode(' - ', $localizacao)) : 'Não informada';
                                     ?>
                                 </td>
-                                <td><?php echo !empty($vaga['tipo_contrato']) ? htmlspecialchars($vaga['tipo_contrato']) : 'Não informado'; ?></td>
-                                <td><?php echo !empty($vaga['regime_trabalho']) ? htmlspecialchars($vaga['regime_trabalho']) : 'Não informado'; ?></td>
-                                <td><?php echo !empty($vaga['nivel_experiencia']) ? htmlspecialchars($vaga['nivel_experiencia']) : 'Não informado'; ?></td>
+                                <td><?php echo !empty($vaga['tipo_contrato']) ? htmlspecialchars((string)$vaga['tipo_contrato']) : 'Não informado'; ?></td>
+                                <td><?php echo !empty($vaga['regime_trabalho']) ? htmlspecialchars((string)$vaga['regime_trabalho']) : 'Não informado'; ?></td>
+                                <td><?php echo !empty($vaga['nivel_experiencia']) ? htmlspecialchars((string)$vaga['nivel_experiencia']) : 'Não informado'; ?></td>
                                 <td>
                                     <?php
                                     $status = isset($vaga['status']) ? $vaga['status'] : 'pendente';

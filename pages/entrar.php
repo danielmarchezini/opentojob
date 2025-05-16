@@ -94,7 +94,7 @@ if (isset($_GET['redirect']) && !empty($_GET['redirect'])) {
 <form method="post" action="<?php echo SITE_URL; ?>/?route=entrar<?php echo $redirect_params; ?>" class="auth-form">
             <div class="form-group">
                 <label for="email" class="form-label">E-mail</label>
-                <input type="email" id="email" name="email" class="form-control" value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>" required>
+                <input type="email" id="email" name="email" class="form-control" value="<?php echo isset($email) ? htmlspecialchars((string)$email) : ''; ?>" required>
             </div>
             
             <div class="form-group">

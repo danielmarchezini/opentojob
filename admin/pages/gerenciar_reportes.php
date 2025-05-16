@@ -131,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <td><?php echo $reporte['id']; ?></td>
                                 <td>
                                     <a href="<?php echo SITE_URL; ?>/?route=<?php echo $reporte['tipo_usuario_reportado'] === 'talento' ? 'perfil_talento' : 'perfil_empresa'; ?>&id=<?php echo $reporte['usuario_reportado_id']; ?>" target="_blank">
-                                        <?php echo htmlspecialchars($reporte['usuario_reportado_nome']); ?>
+                                        <?php echo htmlspecialchars((string)$reporte['usuario_reportado_nome']); ?>
                                     </a>
                                     <span class="badge bg-<?php echo $reporte['tipo_usuario_reportado'] === 'talento' ? 'info' : 'primary'; ?>">
                                         <?php echo $reporte['tipo_usuario_reportado'] === 'talento' ? 'Talento' : 'Empresa'; ?>
@@ -139,12 +139,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </td>
                                 <td>
                                     <?php if (!empty($reporte['usuario_reportante_id'])): ?>
-                                        <?php echo htmlspecialchars($reporte['usuario_reportante_nome']); ?>
+                                        <?php echo htmlspecialchars((string)$reporte['usuario_reportante_nome']); ?>
                                     <?php else: ?>
                                         <span class="text-muted">Anônimo</span>
                                     <?php endif; ?>
                                 </td>
-                                <td><?php echo htmlspecialchars($reporte['motivo']); ?></td>
+                                <td><?php echo htmlspecialchars((string)$reporte['motivo']); ?></td>
                                 <td><?php echo date('d/m/Y H:i', strtotime($reporte['data_reporte'])); ?></td>
                                 <td>
                                     <?php 
@@ -198,7 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 <div class="col-md-4 text-right"><strong>Usuário Reportado:</strong></div>
                                                 <div class="col-md-8">
                                                     <a href="<?php echo SITE_URL; ?>/?route=<?php echo $reporte['tipo_usuario_reportado'] === 'talento' ? 'perfil_talento' : 'perfil_empresa'; ?>&id=<?php echo $reporte['usuario_reportado_id']; ?>" target="_blank">
-                                                        <?php echo htmlspecialchars($reporte['usuario_reportado_nome']); ?>
+                                                        <?php echo htmlspecialchars((string)$reporte['usuario_reportado_nome']); ?>
                                                     </a>
                                                     <span class="badge bg-<?php echo $reporte['tipo_usuario_reportado'] === 'talento' ? 'info' : 'primary'; ?>">
                                                         <?php echo $reporte['tipo_usuario_reportado'] === 'talento' ? 'Talento' : 'Empresa'; ?>
@@ -209,7 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 <div class="col-md-4 text-right"><strong>Reportado por:</strong></div>
                                                 <div class="col-md-8">
                                                     <?php if (!empty($reporte['usuario_reportante_id'])): ?>
-                                                        <?php echo htmlspecialchars($reporte['usuario_reportante_nome']); ?>
+                                                        <?php echo htmlspecialchars((string)$reporte['usuario_reportante_nome']); ?>
                                                     <?php else: ?>
                                                         <span class="text-muted">Anônimo</span>
                                                     <?php endif; ?>
@@ -217,7 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-4 text-right"><strong>Motivo:</strong></div>
-                                                <div class="col-md-8"><?php echo htmlspecialchars($reporte['motivo']); ?></div>
+                                                <div class="col-md-8"><?php echo htmlspecialchars((string)$reporte['motivo']); ?></div>
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-md-4 text-right"><strong>Data:</strong></div>
@@ -238,7 +238,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 <div class="col-md-4 text-right"><strong>Descrição:</strong></div>
                                                 <div class="col-md-8">
                                                     <div class="p-2 bg-light rounded">
-                                                        <?php echo nl2br(htmlspecialchars($reporte['descricao'])); ?>
+                                                        <?php echo nl2br(htmlspecialchars((string)$reporte['descricao'])); ?>
                                                     </div>
                                                 </div>
                                             </div>

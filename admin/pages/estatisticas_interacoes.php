@@ -294,8 +294,8 @@ foreach ($interacoes_por_tipo as $interacao) {
                                 <?php else: ?>
                                     <?php foreach ($empresas_mais_ativas as $empresa): ?>
                                         <tr>
-                                            <td><?php echo htmlspecialchars($empresa['nome_empresa'] ?: 'N/A'); ?></td>
-                                            <td><?php echo htmlspecialchars($empresa['nome']); ?></td>
+                                            <td><?php echo htmlspecialchars((string)$empresa['nome_empresa'] ?: 'N/A'); ?></td>
+                                            <td><?php echo htmlspecialchars((string)$empresa['nome']); ?></td>
                                             <td><?php echo $empresa['total_interacoes']; ?></td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -328,8 +328,8 @@ foreach ($interacoes_por_tipo as $interacao) {
                                 <?php else: ?>
                                     <?php foreach ($talentos_mais_procurados as $talento): ?>
                                         <tr>
-                                            <td><?php echo htmlspecialchars($talento['nome']); ?></td>
-                                            <td><?php echo htmlspecialchars($talento['profissao'] ?: 'N/A'); ?></td>
+                                            <td><?php echo htmlspecialchars((string)$talento['nome']); ?></td>
+                                            <td><?php echo htmlspecialchars((string)$talento['profissao'] ?: 'N/A'); ?></td>
                                             <td><?php echo $talento['total_interacoes']; ?></td>
                                         </tr>
                                     <?php endforeach; ?>
